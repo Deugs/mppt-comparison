@@ -130,3 +130,24 @@ QL_STEPS_PER_EPISODE = 40
 # the harder cross-shading-pattern generalization test CLAUDE.md's Known
 # Risks section calls for needs Phase 3's multi-panel scenario definitions.
 QL_TRAINING_IRRADIANCES = (600.0, 800.0, 1000.0)  # W/m^2
+
+# --- Sliding Mode Control ---
+# Sliding surface s = dP/dV; exponential reaching law ds/dt = -k*sign(s) - q*s
+# (Gao & Hung 1993), with sign(s) replaced by a boundary-layer saturation for
+# chattering mitigation (Slotine & Li 1991). Gains grid-searched (same method
+# as FUZZY_E_SCALE/FUZZY_CE_SCALE) against the STC convergence + steady-state
+# oscillation sanity checks in tests/test_sliding_mode.py.
+# Citations (CLAUDE.md, mandatory): Utkin, V. (1977). "Variable structure
+# systems with sliding mode control." IEEE Trans. Autom. Control, 22(2),
+# 212-222 (general SMC theory). Gao, W., and Hung, J.C. (1993). "Variable
+# structure control of nonlinear systems: A new approach." IEEE Trans. Ind.
+# Electron., 40(1), 45-55 (exponential reaching law). Slotine, J.J.E., and
+# Li, W. (1991). Applied Nonlinear Control. Prentice Hall (boundary-layer
+# chattering mitigation). Still flagged per CLAUDE.md: find and cite the
+# specific PV-SMC paper whose surface/reaching-law choice most closely
+# matches this one, during the Phase 4 literature review -- not done yet.
+SMC_PHI_SCALE = 80.0  # W/V; normalizes dP/dV to the controller's [-1, 1] range
+SMC_K = 0.03  # switching-term gain (constant-rate component)
+SMC_Q = 0.01  # proportional-term gain (exponential component)
+SMC_BOUNDARY = 0.1  # boundary-layer half-width, normalized units
+SMC_BOOTSTRAP = 0.01  # initial duty-cycle nudge on the first step (no dV history yet)
