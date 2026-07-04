@@ -37,20 +37,26 @@ def pv_operating_point(
 ):
     """Solve for the (V, I) operating point at a given duty cycle.
 
+    Substitutes the load line V = I*R_in directly into the two-diode
+    equation, turning the PV-curve/load-line intersection into a single
+    root-find over I rather than an outer voltage search that calls
+    `current_at_voltage` (itself a root-find) at every trial point. That
+    nested formulation is ~10x slower and matters here: Monte Carlo scenario
+    runs and Q-learning training call this thousands of times.
+
     Args:
-        pv_model: Any object exposing `current_at_voltage` and
-            `open_circuit_voltage` (e.g. `pv_model.TwoDiodeModel`).
+        pv_model: A `pv_model.TwoDiodeModel` (needs `.params.iph` and
+            `.equation_residual`).
         duty_cycle: Converter duty cycle, in [0, 1).
 
     Returns:
         (voltage, current) tuple, in V and A.
     """
     r_in = effective_input_resistance(load_resistance, duty_cycle)
+    iph = pv_model.params.iph * irradiance / config.STC_IRRADIANCE
 
-    def residual(v: float) -> float:
-        return pv_model.current_at_voltage(v, irradiance, temperature_c) - v / r_in
+    def residual(i: float) -> float:
+        return pv_model.equation_residual(i, i * r_in, irradiance, temperature_c)
 
-    voc = pv_model.open_circuit_voltage(irradiance, temperature_c)
-    v = brentq(residual, 1e-6, voc * 0.9999, xtol=1e-10, maxiter=200)
-    i = pv_model.current_at_voltage(v, irradiance, temperature_c)
-    return v, i
+    i = brentq(residual, -1e-3, iph * 1.01, xtol=1e-9, maxiter=100)
+    return i * r_in, i

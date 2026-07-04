@@ -107,3 +107,26 @@ FUZZY_OUTPUT_MIN = -0.1  # duty-cycle-step universe of discourse, per CLAUDE.md
 FUZZY_OUTPUT_MAX = 0.1
 FUZZY_DEFUZZ_POINTS = 201  # discretization resolution for centroid defuzzification
 FUZZY_INITIAL_PERTURBATION = 0.01  # bootstrap duty-cycle nudge on the first step (no dV history yet)
+
+# --- Q-learning ---
+# Citation (CLAUDE.md, mandatory): Kofinas, P., Doltsinis, S., Dounis, A.I.,
+# and Vouros, G.A. (2017). "A reinforcement learning approach for MPPT
+# control method of photovoltaic sources." Renewable Energy, 108, 461-473.
+QL_N_VOLTAGE_BINS = 30  # CLAUDE.md: "bin voltage into ~20-30 levels"
+QL_N_DPDV_BINS = 7  # CLAUDE.md: "dP/dV sign+magnitude into ~5-7 bins"
+QL_DPDV_SCALE = 40.0  # W/V; same empirical grounding as FUZZY_E_SCALE
+QL_ACTION_STEP = 0.005  # duty-cycle step per action, mirrors P&O's step scale
+QL_ALPHA = 0.15  # learning rate
+QL_GAMMA = 0.9  # discount factor
+QL_EPSILON_START = 1.0
+QL_EPSILON_MIN = 0.05
+QL_EPSILON_DECAY = 0.985  # per-episode multiplicative decay
+QL_TRAINING_EPISODES = 2000
+QL_STEPS_PER_EPISODE = 40
+# Train/held-out split (CLAUDE.md, mandatory): 700 W/m2 is deliberately
+# excluded so tests/test_q_learning.py can verify the policy generalizes
+# rather than memorizing the training irradiances. This is a Phase 2
+# placeholder using flat irradiance levels on a single uniform module --
+# the harder cross-shading-pattern generalization test CLAUDE.md's Known
+# Risks section calls for needs Phase 3's multi-panel scenario definitions.
+QL_TRAINING_IRRADIANCES = (600.0, 800.0, 1000.0)  # W/m^2

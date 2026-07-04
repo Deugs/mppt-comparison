@@ -51,7 +51,14 @@ class TwoDiodeModel:
         self.params = params
         self.num_cells = num_cells
 
-    def _residual(self, i: float, v: float, irradiance: float, temperature_c: float) -> float:
+    def equation_residual(self, i: float, v: float, irradiance: float, temperature_c: float) -> float:
+        """Residual of the two-diode equation at (i, v); zero at a valid operating point.
+
+        Public because it's also the building block for solving the combined
+        PV-curve/load-line system in a single root-find (see simulate.py),
+        rather than nesting a full current_at_voltage() solve inside an outer
+        voltage search.
+        """
         p = self.params
         iph = p.iph * irradiance / config.STC_IRRADIANCE
         vt1 = thermal_voltage(temperature_c, p.a1, self.num_cells)
@@ -77,7 +84,7 @@ class TwoDiodeModel:
         iph = p.iph * irradiance / config.STC_IRRADIANCE
         lo, hi = -1e-3, iph + 1.0
         try:
-            return brentq(self._residual, lo, hi, args=(v, irradiance, temperature_c), xtol=1e-10, maxiter=200)
+            return brentq(self.equation_residual, lo, hi, args=(v, irradiance, temperature_c), xtol=1e-10, maxiter=200)
         except ValueError:
             return 0.0
 
@@ -100,7 +107,7 @@ class TwoDiodeModel:
         voc_est = self.open_circuit_voltage(irradiance, temperature_c)
         lo, hi = -1e-2, voc_est * 1.3
         return brentq(
-            lambda v: self._residual(i, v, irradiance, temperature_c),
+            lambda v: self.equation_residual(i, v, irradiance, temperature_c),
             lo,
             hi,
             xtol=1e-10,
@@ -109,7 +116,7 @@ class TwoDiodeModel:
 
     def open_circuit_voltage(self, irradiance: float, temperature_c: float) -> float:
         return brentq(
-            lambda v: self._residual(0.0, v, irradiance, temperature_c),
+            lambda v: self.equation_residual(0.0, v, irradiance, temperature_c),
             1e-6,
             1.0 * self.num_cells,
             xtol=1e-10,
