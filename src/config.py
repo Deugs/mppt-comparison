@@ -85,3 +85,25 @@ PO_DPDV_THRESHOLD = 2.0  # W/V; |dP/dV| above this counts as "far from MPP"
 INC_COND_STEP = 0.001  # fixed duty-cycle step
 INC_COND_DV_EPSILON = 1e-3  # V; |dV| below this triggers the dV~=0 boundary case
 INC_COND_TOLERANCE = 1e-3  # S; |dI/dV - (-I/V)| below this counts as "at MPP"
+
+# --- Fuzzy Logic Controller ---
+# Citation flags (CLAUDE.md, mandatory): 7x7 membership-function/rule-base
+# precedent needs a literature citation; each rule's physical justification
+# must be derivable (see src/algorithms/fuzzy_logic.py). E_SCALE/CE_SCALE
+# below are normalization gains mapping raw dP/dV (and its step-to-step
+# change) into the fuzzy engine's [-1, 1] universe of discourse. This
+# panel's dP/dV is highly asymmetric (~+8.9 W/V near V=0, vs. a steep
+# negative rolloff to roughly -76 W/V approaching Voc); E_SCALE=40 was
+# chosen from a grid search (tests/test_fuzzy_logic.py's convergence
+# sanity checks) over E_SCALE in [10, 100] and CE_SCALE in [0.2, 1.0] --
+# smaller values saturate too easily near the MPP and sustain a limit-cycle
+# oscillation instead of converging (e.g. E_SCALE=10 gave ~7% steady-state
+# error with the initial values here). Still flagged as needing validation
+# against the full Monte Carlo scenario suite in Phase 3, not just the STC
+# sanity case this grid search used.
+FUZZY_E_SCALE = 40.0  # W/V
+FUZZY_CE_SCALE = 1.0  # normalized-E units per step
+FUZZY_OUTPUT_MIN = -0.1  # duty-cycle-step universe of discourse, per CLAUDE.md
+FUZZY_OUTPUT_MAX = 0.1
+FUZZY_DEFUZZ_POINTS = 201  # discretization resolution for centroid defuzzification
+FUZZY_INITIAL_PERTURBATION = 0.01  # bootstrap duty-cycle nudge on the first step (no dV history yet)

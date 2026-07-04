@@ -474,14 +474,16 @@ cd paper && pdflatex main.tex && bibtex main && pdflatex main.tex
 ### Phase 2: Algorithms (Weeks 3-5, extended for 5th algorithm)
 - [x] Implement P&O with adaptive step size (`src/algorithms/p_and_o.py`)
 - [x] Implement IncCond with boundary condition handling (`src/algorithms/inc_cond.py`)
-- [ ] Design fuzzy rule base with physical justification per rule
-- [ ] Implement fuzzy logic with centroid defuzzification
+- [x] Design fuzzy rule base with physical justification per rule (`src/algorithms/fuzzy_logic.py`: the 49-rule 7x7 table is *generated* from a formula — D_level = clip(round(-(E_level+CE_level)/2)) — rather than hand-transcribed, and verified against CLAUDE.md's literal table entry-for-entry in `tests/test_fuzzy_logic.py`; the formula is the physical justification common to all 49 rules, so no rule needs a bespoke citation, but the 7x7 partition size itself still needs a literature citation — see Citation Flags below)
+- [x] Implement fuzzy logic with centroid defuzzification (`src/algorithms/fuzzy_logic.py`)
 - [ ] Implement Q-learning: discretize state space, define reward, build training loop
 - [ ] Train Q-learning on a subset of shading/irradiance profiles; hold out the rest for evaluation
 - [ ] Implement SMC: choose sliding surface + reaching law, implement chattering mitigation
 - [ ] Derive and document Lyapunov stability argument for SMC
-- [~] pytest sanity tests for each algorithm (must find MPP at STC) — done for P&O and IncCond (`tests/test_p_and_o.py`, `tests/test_inc_cond.py`, backed by the new `src/simulate.py` steady-state PV/converter solver); still needed for fuzzy, Q-learning, SMC
-- [ ] Sensitivity analysis: test 5x5 and 3x3 fuzzy rule bases
+- [~] pytest sanity tests for each algorithm (must find MPP at STC) — done for P&O, IncCond, and Fuzzy (7x7/5x5/3x3 all verified); still needed for Q-learning, SMC
+- [~] Sensitivity analysis: test 5x5 and 3x3 fuzzy rule bases — reduced rule bases derived (same generating formula, fewer labels) and each verified to find the STC MPP in `tests/test_fuzzy_logic.py`; the full performance-tradeoff comparison (tracking efficiency/oscillation across all 9 scenarios, Table VII) is still Phase 3 work pending scenarios.py/metrics.py
+
+**Note on FUZZY_E_SCALE/FUZZY_CE_SCALE (src/config.py):** the initial normalization guess (E_SCALE=10 W/V, matched to dP/dV right at V=0) caused the controller to limit-cycle indefinitely instead of converging — this panel's dP/dV is steeply asymmetric (~+8.9 W/V at V=0 vs. ~-76 W/V approaching Voc), so a gain sized off the small end saturates the fuzzy input too close to the MPP and every correction fires near-maximal. Fixed by grid search to E_SCALE=40, CE_SCALE=1.0, which converges cleanly at STC — but this was tuned against the single STC sanity case, not the full scenario suite, so revisit once Monte Carlo results exist.
 
 ### Phase 3: Scenarios & Metrics (Weeks 6-7, extended for 5th algorithm)
 - [ ] Implement all 9 test scenarios
