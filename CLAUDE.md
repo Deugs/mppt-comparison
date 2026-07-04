@@ -472,15 +472,15 @@ cd paper && pdflatex main.tex && bibtex main && pdflatex main.tex
 - [x] Add DCM check and document implications (`is_discontinuous_conduction()`, `critical_inductance()`; confirmed CCM at full load, DCM at light load in `tests/test_converter.py`)
 
 ### Phase 2: Algorithms (Weeks 3-5, extended for 5th algorithm)
-- [ ] Implement P&O with adaptive step size
-- [ ] Implement IncCond with boundary condition handling
+- [x] Implement P&O with adaptive step size (`src/algorithms/p_and_o.py`)
+- [x] Implement IncCond with boundary condition handling (`src/algorithms/inc_cond.py`)
 - [ ] Design fuzzy rule base with physical justification per rule
 - [ ] Implement fuzzy logic with centroid defuzzification
 - [ ] Implement Q-learning: discretize state space, define reward, build training loop
 - [ ] Train Q-learning on a subset of shading/irradiance profiles; hold out the rest for evaluation
 - [ ] Implement SMC: choose sliding surface + reaching law, implement chattering mitigation
 - [ ] Derive and document Lyapunov stability argument for SMC
-- [ ] pytest sanity tests for each algorithm (must find MPP at STC)
+- [~] pytest sanity tests for each algorithm (must find MPP at STC) — done for P&O and IncCond (`tests/test_p_and_o.py`, `tests/test_inc_cond.py`, backed by the new `src/simulate.py` steady-state PV/converter solver); still needed for fuzzy, Q-learning, SMC
 - [ ] Sensitivity analysis: test 5x5 and 3x3 fuzzy rule bases
 
 ### Phase 3: Scenarios & Metrics (Weeks 6-7, extended for 5th algorithm)

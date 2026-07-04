@@ -97,7 +97,7 @@ class TwoDiodeModel:
         isc_here = self.current_at_voltage(0.0, irradiance, temperature_c)
         if i > isc_here:
             return None
-        voc_est = self._open_circuit_voltage(irradiance, temperature_c)
+        voc_est = self.open_circuit_voltage(irradiance, temperature_c)
         lo, hi = -1e-2, voc_est * 1.3
         return brentq(
             lambda v: self._residual(i, v, irradiance, temperature_c),
@@ -107,7 +107,7 @@ class TwoDiodeModel:
             maxiter=200,
         )
 
-    def _open_circuit_voltage(self, irradiance: float, temperature_c: float) -> float:
+    def open_circuit_voltage(self, irradiance: float, temperature_c: float) -> float:
         return brentq(
             lambda v: self._residual(0.0, v, irradiance, temperature_c),
             1e-6,

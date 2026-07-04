@@ -64,3 +64,24 @@ MPPT_CONVERGENCE_THRESHOLD = 0.02  # 2% of MPP, per CLAUDE.md convention
 SETTLING_WINDOW_S = 0.100  # must stay within threshold for >=100ms
 MONTE_CARLO_RUNS = 50
 SENSOR_NOISE_STD_FRAC = 0.01  # +/-1% Gaussian noise on V and I
+
+# Duty cycle clamp shared by all algorithms -- keeps the operating point off
+# the D=0/D=1 singularities of the boost converter's R_in = R*(1-D)^2 relation.
+MPPT_DUTY_MIN = 0.05
+MPPT_DUTY_MAX = 0.90
+
+# --- Perturb & Observe (adaptive step size) ---
+# Citation (CLAUDE.md, mandatory): Femia, N., et al. (2005). "Optimization of
+# perturb and observe maximum power point tracking method." IEEE Trans. Power
+# Electron., 20(4), 963-973.
+PO_STEP_LARGE = 0.01  # duty-cycle step when far from MPP
+PO_STEP_SMALL = 0.001  # duty-cycle step when near MPP
+PO_DPDV_THRESHOLD = 2.0  # W/V; |dP/dV| above this counts as "far from MPP"
+
+# --- Incremental Conductance ---
+# Citation (CLAUDE.md, mandatory): Hussein, K.H., et al. (1995). "Maximum
+# photovoltaic power tracking: an algorithm for rapidly changing atmospheric
+# conditions." IEE Proc.-Gener. Transm. Distrib., 142(1), 59-64.
+INC_COND_STEP = 0.001  # fixed duty-cycle step
+INC_COND_DV_EPSILON = 1e-3  # V; |dV| below this triggers the dV~=0 boundary case
+INC_COND_TOLERANCE = 1e-3  # S; |dI/dV - (-I/V)| below this counts as "at MPP"

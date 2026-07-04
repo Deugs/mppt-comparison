@@ -45,7 +45,7 @@ def test_open_circuit_voltage_matches_datasheet(stc_params):
     from src.pv_model import TwoDiodeModel
 
     model = TwoDiodeModel(stc_params, num_cells=config.PANEL_NS)
-    voc_model = model._open_circuit_voltage(config.STC_IRRADIANCE, config.STC_TEMPERATURE_C)
+    voc_model = model.open_circuit_voltage(config.STC_IRRADIANCE, config.STC_TEMPERATURE_C)
     assert voc_model == pytest.approx(config.PANEL_VOC_STC, rel=0.02)
 
 
