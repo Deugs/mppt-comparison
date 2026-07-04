@@ -17,7 +17,7 @@ single-diode 3-point extraction method.
 from dataclasses import dataclass
 
 import numpy as np
-from scipy.optimize import brentq, least_squares
+from scipy.optimize import brentq, least_squares, minimize_scalar
 
 from . import config
 
@@ -139,12 +139,39 @@ class TwoDiodeModel:
     ) -> float:
         return v * self.current_at_voltage(v, irradiance, temperature_c)
 
+    def find_mpp(
+        self,
+        irradiance: float = config.STC_IRRADIANCE,
+        temperature_c: float = config.STC_TEMPERATURE_C,
+    ):
+        """Find (V_mpp, P_mpp) via bounded scalar search.
+
+        This is the reference the scenario runner and metrics module compare
+        tracked power against, so it needs to be cheap to call at many
+        (irradiance, temperature) pairs -- a bounded 1-D search (~12 function
+        evaluations) rather than a dense voltage sweep (~2000 evaluations).
+        Relies on the two-diode power curve being unimodal in V, which
+        test_pv_model.py's test_power_curve_is_unimodal_under_uniform_illumination
+        verifies for the uniform-illumination case this method is used for.
+        """
+        voc = self.open_circuit_voltage(irradiance, temperature_c)
+        result = minimize_scalar(
+            lambda v: -self.power_at_voltage(v, irradiance, temperature_c),
+            bounds=(1e-3, voc * 0.999),
+            method="bounded",
+            options={"xatol": 1e-4},
+        )
+        return result.x, -result.fun
+
 
 class PVModuleGroup:
     """One bypass-diode-protected group of `CELLS_PER_BYPASS_GROUP` cells."""
 
     def __init__(self, params: TwoDiodeParameters, num_cells: int = config.CELLS_PER_BYPASS_GROUP):
         self.model = TwoDiodeModel(params, num_cells=num_cells)
+        self._cache_key = None
+        self._cached_isc = None
+        self._cached_voc = None
 
     def voltage_at_current(
         self,
@@ -152,12 +179,34 @@ class PVModuleGroup:
         irradiance: float = config.STC_IRRADIANCE,
         temperature_c: float = config.STC_TEMPERATURE_C,
     ) -> float:
-        v = self.model.voltage_at_current(i, irradiance, temperature_c)
-        if v is None:
+        """Solve for this group's voltage at a forced current, or -Vf if bypassed.
+
+        Caches the group's Isc/Voc (computed via TwoDiodeModel.voltage_at_current's
+        own logic) across calls at the same (irradiance, temperature): partial
+        shading scenarios are steady-state -- the shading pattern is fixed for
+        the whole run -- so most calls hit the cache and skip straight to the
+        one remaining brentq solve, instead of the three
+        TwoDiodeModel.voltage_at_current does per call.
+        """
+        key = (irradiance, temperature_c)
+        if key != self._cache_key:
+            self._cached_isc = self.model.current_at_voltage(0.0, irradiance, temperature_c)
+            self._cached_voc = self.model.open_circuit_voltage(irradiance, temperature_c)
+            self._cache_key = key
+
+        if i > self._cached_isc:
             # Forced current exceeds this group's short-circuit current: the
             # group goes into reverse bias and its bypass diode conducts.
             return -config.BYPASS_DIODE_VF
-        return v
+
+        lo, hi = -1e-2, self._cached_voc * 1.3
+        return brentq(
+            lambda v: self.model.equation_residual(i, v, irradiance, temperature_c),
+            lo,
+            hi,
+            xtol=1e-9,
+            maxiter=100,
+        )
 
 
 class PVModule:
@@ -193,6 +242,26 @@ class PVString:
         voltages = np.array([self.voltage_at_current(i, irradiances, temperature_c) for i in currents])
         powers = voltages * currents
         return voltages, powers
+
+    def find_global_mpp(self, irradiances, temperature_c: float = config.STC_TEMPERATURE_C, num_points: int = 300):
+        """Find (V, P) at the *global* MPP via a dense current sweep.
+
+        Unlike TwoDiodeModel.find_mpp's bounded 1-D search, this can't assume
+        unimodality: partial shading with bypass diodes is exactly what
+        creates multiple local maxima (CLAUDE.md's "Bypass Diodes" section),
+        so a local search could converge to the wrong peak. A dense sweep is
+        the reliable way to find the true global maximum; it's only run once
+        per (fixed) shading pattern per scenario, since partial-shading
+        scenarios are steady-state, so the cost is acceptable.
+        """
+        max_current = max(
+            module.groups[0].model.params.iph * irradiance / config.STC_IRRADIANCE
+            for module, irradiance in zip(self.modules, irradiances)
+        )
+        currents = np.linspace(1e-6, max_current * 0.999, num_points)
+        voltages, powers = self.pv_curve(currents, irradiances, temperature_c)
+        peak_index = int(np.argmax(powers))
+        return voltages[peak_index], powers[peak_index]
 
 
 def extract_two_diode_parameters(

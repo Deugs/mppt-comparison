@@ -492,14 +492,16 @@ cd paper && pdflatex main.tex && bibtex main && pdflatex main.tex
 **Note on Q-learning reward choice:** CLAUDE.md lists both raw power P(k) and ΔP as acceptable rewards. Raw P(k) was tried first and rejected — it produced a policy permanently stuck 2-3V past the true MPP for some training irradiances, because coarse voltage-bin discretization can keep the operating point in the same state bin for several consecutive steps while it drifts away from the MPP, and a reward tied only to that bin's power level doesn't register the drift. ΔP = P(k)-P(k-1) fixed this by penalizing power-losing actions immediately regardless of bin. Also worth flagging: `simulate.pv_operating_point()` was rewritten to solve the PV-curve/load-line intersection as a single root-find (substituting V=I*R_in directly into the two-diode equation) instead of nesting a full `current_at_voltage` solve inside an outer voltage search — the nested version made Q-learning training (hundreds of thousands of operating-point evaluations) take ~9 minutes; the single-solve version is numerically identical (cross-checked to ~1e-10) and cut that to under a minute.
 
 ### Phase 3: Scenarios & Metrics (Weeks 6-7, extended for 5th algorithm)
-- [ ] Implement all 9 test scenarios
-- [ ] Add sensor noise injection (+/-1% Gaussian)
-- [ ] Implement Monte Carlo framework (>=50 runs per pair)
-- [ ] Profile full sweep runtime early (5 algorithms x 9 scenarios x 50 runs) — adjust scenario count if wall-clock time is unreasonable, per Known Risks
-- [ ] For Q-learning specifically: report train-distribution and held-out results separately
-- [ ] Add energy yield metrics
-- [ ] Add computational burden metrics
-- [ ] Run full comparison and generate raw results
+- [x] Implement all 9 test scenarios (`src/scenarios.py` for the 7 single-module scenarios 1-5/8/9; `src/scenarios_partial_shading.py` for scenarios 6-7 — separate module because partial shading needs a multi-module `PVString` solve and a dense-sweep global-MPP finder instead of the single-module bounded search, since bypass-diode shading is exactly what creates the multiple local maxima a unimodal search would miss)
+- [x] Add sensor noise injection (+/-1% Gaussian) (`scenario_sensor_noise_robustness()`, perturbs only the measurements passed to `algorithm.step()`, not the recorded physical power)
+- [x] Implement Monte Carlo framework (>=50 runs per pair) (`run_monte_carlo()` / `run_partial_shading_monte_carlo()`; seed = `base_seed + run_id` regardless of algorithm, satisfying "identical random seeds for fair comparison" — verified in `tests/test_scenarios.py::test_run_monte_carlo_uses_identical_seeds_across_algorithms`)
+- [x] Profile full sweep runtime early — measured (see note below): **~89 minutes** for the full 5-algorithm x 50-run x 11-scenario sweep (11, not 9, since Scenario 7's three shading patterns are each their own run). Not yet reduced further; flagging for a decision before actually running it for final results, per Known Risks.
+- [ ] For Q-learning specifically: report train-distribution and held-out results separately — not yet wired into the reporting layer; QL_TRAINING_IRRADIANCES=[600,800,1000] W/m2 overlaps only some scenarios' irradiance levels (e.g. scenario 2 sweeps down to 200 W/m2, never trained on), so whichever code assembles the final comparison table (Phase 4) needs to tag Q-learning rows by whether each scenario's conditions were in the training set — this is a table-generation concern, not an additional scenario to run
+- [x] Add energy yield metrics (`src/metrics.py`: `energy_yield`, `energy_yield_ratio`)
+- [x] Add computational burden metrics (`src/metrics.py`: `mean_step_execution_time`, `relative_computational_burden`)
+- [ ] Run full comparison and generate raw results — framework is ready (`compute_run_metrics()` works on both single-module and partial-shading `RunResult`s); the actual 50-run sweep + `results/comparison_table.csv` long-format writer + CLI entry point (`python -m src.scenarios --monte-carlo 50`) haven't been built/run yet, pending a decision on the ~89-minute runtime above
+
+**Runtime profiling note:** partial shading is the dominant cost (~14s per algorithm per run summed across its 4 scenarios, even after amortizing the one-time global-MPP reference sweep over many Monte Carlo runs) because each operating-point solve needs one root-find per bypass-diode group (~9 for a 3-module string) rather than the single-module case's one; `rapid_fluctuation_cloud_passage` is the next largest single-module cost because its continuously-varying irradiance defeats the reference-curve cache that makes the piecewise-constant scenarios cheap. Both are inherent to what those scenarios test, not obviously fixable without changing what's being measured.
 
 ### Phase 4: Analysis & Paper (Weeks 8-10)
 - [ ] Statistical analysis: ANOVA / t-test between algorithms

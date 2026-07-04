@@ -20,9 +20,7 @@ def run_tracking(algorithm, pv_model, iterations=500, initial_duty=0.3, **operat
     return history
 
 
-def true_mpp_power(pv_model, irradiance=config.STC_IRRADIANCE, temperature_c=config.STC_TEMPERATURE_C, num_points=2000):
-    """Reference MPP power found by a dense voltage sweep, for comparison."""
-    voc = pv_model.open_circuit_voltage(irradiance, temperature_c)
-    voltages = [voc * (k + 1) / (num_points + 1) for k in range(num_points)]
-    powers = [pv_model.power_at_voltage(v, irradiance, temperature_c) for v in voltages]
-    return max(powers)
+def true_mpp_power(pv_model, irradiance=config.STC_IRRADIANCE, temperature_c=config.STC_TEMPERATURE_C):
+    """Reference MPP power, for comparison against tracked power in sanity tests."""
+    _, p_mpp = pv_model.find_mpp(irradiance, temperature_c)
+    return p_mpp

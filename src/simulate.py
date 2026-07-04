@@ -60,3 +60,42 @@ def pv_operating_point(
 
     i = brentq(residual, -1e-3, iph * 1.01, xtol=1e-9, maxiter=100)
     return i * r_in, i
+
+
+def pv_string_operating_point(
+    pv_string,
+    duty_cycle: float,
+    irradiances,
+    load_resistance: float = config.CONVERTER_LOAD_RESISTANCE,
+    temperature_c: float = config.STC_TEMPERATURE_C,
+):
+    """Solve for the (V, I) operating point of a multi-module PVString.
+
+    Unlike the single-module case, this can't be collapsed into one
+    closed-form substitution: each bypass-diode group's two-diode equation is
+    independently transcendental in V given a shared I, so PVString.
+    voltage_at_current already does one root-find per group. This function
+    just brackets and solves the outer root-find over I -- for the group-level
+    solves to be cheap even so, pass the *same* PVString/PVModuleGroup
+    instances across repeated calls at a fixed shading pattern, so
+    PVModuleGroup's per-(irradiance, temperature) Isc/Voc cache actually hits.
+
+    Args:
+        pv_string: A `pv_model.PVString`.
+        irradiances: Per-module irradiance, in `pv_string.modules` order.
+
+    Returns:
+        (voltage, current) tuple, in V and A.
+    """
+    r_in = effective_input_resistance(load_resistance, duty_cycle)
+    max_current = max(
+        module.groups[0].model.params.iph * irradiance / config.STC_IRRADIANCE
+        for module, irradiance in zip(pv_string.modules, irradiances)
+    )
+
+    def residual(i: float) -> float:
+        return pv_string.voltage_at_current(i, irradiances, temperature_c) - i * r_in
+
+    i = brentq(residual, 1e-6, max_current * 1.01, xtol=1e-7, maxiter=100)
+    v = pv_string.voltage_at_current(i, irradiances, temperature_c)
+    return v, i

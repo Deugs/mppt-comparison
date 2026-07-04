@@ -151,3 +151,16 @@ SMC_K = 0.03  # switching-term gain (constant-rate component)
 SMC_Q = 0.01  # proportional-term gain (exponential component)
 SMC_BOUNDARY = 0.1  # boundary-layer half-width, normalized units
 SMC_BOOTSTRAP = 0.01  # initial duty-cycle nudge on the first step (no dV history yet)
+
+# --- Scenario runner ---
+MPPT_SAMPLE_PERIOD_S = 0.001  # 1 ms; ~20 boost-converter switching cycles per MPPT decision at 20 kHz
+
+# Partial-shading operating-point solves cost ~10x a single-module solve (one
+# root-find per bypass-diode group, ~9 groups for a 3-module string) even
+# with PVModuleGroup's Isc/Voc caching. Per CLAUDE.md's Known Risks guidance
+# ("profile early; adjust scenario count/resolution if wall-clock time is
+# unreasonable rather than cutting an algorithm"), these scenarios are
+# steady-state (fixed shading pattern for the whole run) so fine transient
+# resolution isn't the point -- sample 10x coarser than the single-module
+# scenarios to keep a 50-run Monte Carlo sweep tractable.
+PARTIAL_SHADING_SAMPLE_PERIOD_S = 0.01  # 10 ms
