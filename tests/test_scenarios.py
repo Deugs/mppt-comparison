@@ -162,11 +162,11 @@ def test_results_to_rows_has_one_row_per_run_per_metric(pv_model_stc):
     assert all(r["algorithm"] == "p_and_o" and r["scenario"] == "steady_state" for r in rows)
 
 
-def test_results_to_rows_forces_ql_condition_to_na_for_non_q_learning(pv_model_stc):
+def test_results_to_rows_forces_ql_condition_to_not_applicable_for_non_q_learning(pv_model_stc):
     scenario = scenarios.scenario_multi_level_irradiance()
     results = scenarios.run_monte_carlo(scenario, PerturbObserve(), pv_model_stc, num_runs=1, sample_period_s=0.02)
     rows = scenarios.results_to_rows("p_and_o", "multi_level_irradiance", results, ql_condition="held_out")
-    assert all(r["ql_condition"] == "n/a" for r in rows)
+    assert all(r["ql_condition"] == "not_applicable" for r in rows)
 
 
 def test_results_to_rows_keeps_ql_condition_for_q_learning(pv_model_stc):
@@ -176,10 +176,10 @@ def test_results_to_rows_keeps_ql_condition_for_q_learning(pv_model_stc):
     assert all(r["ql_condition"] == "train" for r in rows)
 
 
-def test_computational_burden_rows_ql_condition_always_na():
+def test_computational_burden_rows_ql_condition_always_not_applicable():
     step_times = {"p_and_o": 0.001, "q_learning": 0.002}
     rows = scenarios.computational_burden_rows(step_times, baseline_key="p_and_o")
-    assert all(r["ql_condition"] == "n/a" for r in rows)
+    assert all(r["ql_condition"] == "not_applicable" for r in rows)
 
 
 @pytest.mark.parametrize(

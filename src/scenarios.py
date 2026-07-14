@@ -339,15 +339,15 @@ def results_to_rows(
     scenario_name: str,
     results: List[RunResult],
     base_seed: int = 0,
-    ql_condition: str = "n/a",
+    ql_condition: str = "not_applicable",
 ) -> List[dict]:
     """Flatten a list of per-run RunResults into long-format metric rows.
 
     `ql_condition` is only meaningful for algorithm_name == "q_learning"
-    (see classify_ql_condition); it's forced to "n/a" for every other
+    (see classify_ql_condition); it's forced to "not_applicable" for every other
     algorithm, since the train/held-out distinction doesn't apply to them.
     """
-    tag = ql_condition if algorithm_name == "q_learning" else "n/a"
+    tag = ql_condition if algorithm_name == "q_learning" else "not_applicable"
     rows = []
     for run_id, result in enumerate(results):
         seed = base_seed + run_id
@@ -371,7 +371,7 @@ def computational_burden_rows(step_times: dict, baseline_key: str, base_seed: in
 
     Not scenario-conditioned (it's a single fixed-operating-point measurement
     per algorithm, see metrics.mean_step_execution_time), so ql_condition is
-    always "n/a" here, including for q_learning.
+    always "not_applicable" here, including for q_learning.
     """
     relative_burden = metrics.relative_computational_burden(step_times, baseline_key)
     rows = []
@@ -384,7 +384,7 @@ def computational_burden_rows(step_times: dict, baseline_key: str, base_seed: in
                 "value": step_time,
                 "run_id": 0,
                 "seed": base_seed,
-                "ql_condition": "n/a",
+                "ql_condition": "not_applicable",
             }
         )
         rows.append(
@@ -395,7 +395,7 @@ def computational_burden_rows(step_times: dict, baseline_key: str, base_seed: in
                 "value": relative_burden[algorithm_name],
                 "run_id": 0,
                 "seed": base_seed,
-                "ql_condition": "n/a",
+                "ql_condition": "not_applicable",
             }
         )
     return rows
