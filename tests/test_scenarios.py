@@ -162,6 +162,67 @@ def test_results_to_rows_has_one_row_per_run_per_metric(pv_model_stc):
     assert all(r["algorithm"] == "p_and_o" and r["scenario"] == "steady_state" for r in rows)
 
 
+def test_results_to_rows_forces_ql_condition_to_na_for_non_q_learning(pv_model_stc):
+    scenario = scenarios.scenario_multi_level_irradiance()
+    results = scenarios.run_monte_carlo(scenario, PerturbObserve(), pv_model_stc, num_runs=1, sample_period_s=0.02)
+    rows = scenarios.results_to_rows("p_and_o", "multi_level_irradiance", results, ql_condition="held_out")
+    assert all(r["ql_condition"] == "n/a" for r in rows)
+
+
+def test_results_to_rows_keeps_ql_condition_for_q_learning(pv_model_stc):
+    scenario = scenarios.scenario_steady_state()
+    results = scenarios.run_monte_carlo(scenario, PerturbObserve(), pv_model_stc, num_runs=1, sample_period_s=0.02)
+    rows = scenarios.results_to_rows("q_learning", "steady_state", results, ql_condition="train")
+    assert all(r["ql_condition"] == "train" for r in rows)
+
+
+def test_computational_burden_rows_ql_condition_always_na():
+    step_times = {"p_and_o": 0.001, "q_learning": 0.002}
+    rows = scenarios.computational_burden_rows(step_times, baseline_key="p_and_o")
+    assert all(r["ql_condition"] == "n/a" for r in rows)
+
+
+@pytest.mark.parametrize(
+    "scenario_name,expected",
+    [
+        ("steady_state", "train"),
+        ("step_change_irradiance", "train"),
+        ("multi_level_irradiance", "held_out"),
+        ("rapid_double_step", "held_out"),
+        ("temperature_step", "held_out"),
+        ("rapid_fluctuation_cloud_passage", "held_out"),
+        ("sensor_noise_robustness", "held_out"),
+    ],
+)
+def test_scenario_ql_condition_classifies_single_module_scenarios(scenario_name, expected):
+    scenario = scenarios.SINGLE_MODULE_SCENARIOS[scenario_name]()
+    assert scenarios.scenario_ql_condition(scenario) == expected
+
+
+def test_classify_ql_condition_partial_shading_always_held_out():
+    # Even irradiances entirely within QL_TRAINING_IRRADIANCES don't help --
+    # Q-learning was never trained on a multi-module string at all.
+    assert (
+        scenarios.classify_ql_condition(
+            irradiances=list(config.QL_TRAINING_IRRADIANCES),
+            temperatures_c=[config.STC_TEMPERATURE_C],
+            is_partial_shading=True,
+        )
+        == "held_out"
+    )
+
+
+def test_classify_ql_condition_sensor_noise_is_held_out():
+    assert (
+        scenarios.classify_ql_condition(
+            irradiances=[config.STC_IRRADIANCE],
+            temperatures_c=[config.STC_TEMPERATURE_C],
+            has_sensor_noise=True,
+        )
+        == "held_out"
+    )
+
+
 def test_computational_burden_rows_normalizes_to_baseline():
     step_times = {"p_and_o": 0.001, "fuzzy_logic": 0.004}
     rows = scenarios.computational_burden_rows(step_times, baseline_key="p_and_o")
@@ -187,7 +248,7 @@ def test_run_full_sweep_produces_expected_columns_and_algorithms(pv_model_stc):
     algorithms = {"p_and_o": PerturbObserve()}
     df = scenarios.run_full_sweep(algorithms, pv_model_stc, params, num_runs=1, log=lambda msg: None)
 
-    assert set(df.columns) == {"algorithm", "scenario", "metric", "value", "run_id", "seed"}
+    assert set(df.columns) == {"algorithm", "scenario", "metric", "value", "run_id", "seed", "ql_condition"}
     assert set(df["algorithm"]) == {"p_and_o"}
     expected_scenarios = set(scenarios.SINGLE_MODULE_SCENARIOS) | {"_computational_burden"}
     from src.scenarios_partial_shading import PARTIAL_SHADING_SCENARIOS

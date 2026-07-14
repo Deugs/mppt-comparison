@@ -278,11 +278,76 @@ SINGLE_MODULE_SCENARIOS = {
 
 
 # --- Long-format results table (CLAUDE.md "Results Format") ---
-# Columns: algorithm, scenario, metric, value, run_id, seed.
+# Columns: algorithm, scenario, metric, value, run_id, seed, ql_condition.
 
 
-def results_to_rows(algorithm_name: str, scenario_name: str, results: List[RunResult], base_seed: int = 0) -> List[dict]:
-    """Flatten a list of per-run RunResults into long-format metric rows."""
+def _matches_any(value: float, allowed: tuple, tol: float = 1e-6) -> bool:
+    return any(abs(value - a) < tol for a in allowed)
+
+
+def classify_ql_condition(
+    irradiances,
+    temperatures_c,
+    has_sensor_noise: bool = False,
+    is_partial_shading: bool = False,
+) -> str:
+    """Tag a scenario's physical conditions relative to Q-learning's training
+    distribution -- CLAUDE.md's mandatory "report train-distribution and
+    held-out results separately" requirement (Known Risks / Phase 3 TODO).
+
+    `train_q_learning()` (algorithms/q_learning.py) only ever trains on a
+    single flat-irradiance module, at STC_TEMPERATURE_C, with irradiance in
+    config.QL_TRAINING_IRRADIANCES, and no sensor noise. A scenario counts as
+    "train" only if every condition it exercises matches that regime; any
+    single condition outside it (an untrained irradiance level, a non-STC
+    temperature, sensor noise, or partial shading's multi-module topology)
+    makes the whole scenario "held_out".
+
+    This is a coarse, condition-level classification, not a claim that
+    transient *dynamics* were trained -- train_q_learning() only ever sees
+    static irradiance per episode, so e.g. step_change_irradiance (1000 -> 600
+    -> 1000, both endpoints individually in QL_TRAINING_IRRADIANCES) is
+    tagged "train" even though the mid-run step itself was never trained on.
+    """
+    if is_partial_shading:
+        return "held_out"
+    if has_sensor_noise:
+        return "held_out"
+    if any(not _matches_any(t, (config.STC_TEMPERATURE_C,)) for t in temperatures_c):
+        return "held_out"
+    if any(not _matches_any(irr, config.QL_TRAINING_IRRADIANCES) for irr in irradiances):
+        return "held_out"
+    return "train"
+
+
+def scenario_ql_condition(scenario: Scenario, n_samples: int = 200) -> str:
+    """classify_ql_condition() applied to a single-module Scenario, sampling
+    its irradiance/temperature profiles over their full duration."""
+    sample_times = np.linspace(0.0, scenario.duration_s, n_samples)
+    irradiances = [scenario.irradiance_fn(t) for t in sample_times]
+    temperatures_c = [scenario.temperature_fn(t) for t in sample_times]
+    return classify_ql_condition(
+        irradiances,
+        temperatures_c,
+        has_sensor_noise=scenario.sensor_noise_std_frac > 0,
+        is_partial_shading=False,
+    )
+
+
+def results_to_rows(
+    algorithm_name: str,
+    scenario_name: str,
+    results: List[RunResult],
+    base_seed: int = 0,
+    ql_condition: str = "n/a",
+) -> List[dict]:
+    """Flatten a list of per-run RunResults into long-format metric rows.
+
+    `ql_condition` is only meaningful for algorithm_name == "q_learning"
+    (see classify_ql_condition); it's forced to "n/a" for every other
+    algorithm, since the train/held-out distinction doesn't apply to them.
+    """
+    tag = ql_condition if algorithm_name == "q_learning" else "n/a"
     rows = []
     for run_id, result in enumerate(results):
         seed = base_seed + run_id
@@ -295,13 +360,19 @@ def results_to_rows(algorithm_name: str, scenario_name: str, results: List[RunRe
                     "value": value,
                     "run_id": run_id,
                     "seed": seed,
+                    "ql_condition": tag,
                 }
             )
     return rows
 
 
 def computational_burden_rows(step_times: dict, baseline_key: str, base_seed: int = 0) -> List[dict]:
-    """One row per algorithm for mean step time and burden relative to `baseline_key`."""
+    """One row per algorithm for mean step time and burden relative to `baseline_key`.
+
+    Not scenario-conditioned (it's a single fixed-operating-point measurement
+    per algorithm, see metrics.mean_step_execution_time), so ql_condition is
+    always "n/a" here, including for q_learning.
+    """
     relative_burden = metrics.relative_computational_burden(step_times, baseline_key)
     rows = []
     for algorithm_name, step_time in step_times.items():
@@ -313,6 +384,7 @@ def computational_burden_rows(step_times: dict, baseline_key: str, base_seed: in
                 "value": step_time,
                 "run_id": 0,
                 "seed": base_seed,
+                "ql_condition": "n/a",
             }
         )
         rows.append(
@@ -323,6 +395,7 @@ def computational_burden_rows(step_times: dict, baseline_key: str, base_seed: in
                 "value": relative_burden[algorithm_name],
                 "run_id": 0,
                 "seed": base_seed,
+                "ql_condition": "n/a",
             }
         )
     return rows
@@ -379,7 +452,8 @@ def run_full_sweep(
             log(f"{algorithm_name} x {scenario_name} ({num_runs} runs)")
             scenario = factory()
             results = run_monte_carlo(scenario, algorithm, pv_model, num_runs=num_runs, base_seed=base_seed)
-            rows.extend(results_to_rows(algorithm_name, scenario_name, results, base_seed))
+            ql_condition = scenario_ql_condition(scenario)
+            rows.extend(results_to_rows(algorithm_name, scenario_name, results, base_seed, ql_condition))
 
         for scenario_name, factory in PARTIAL_SHADING_SCENARIOS.items():
             log(f"{algorithm_name} x {scenario_name} ({num_runs} runs)")
@@ -388,7 +462,7 @@ def run_full_sweep(
             results = run_partial_shading_monte_carlo(
                 scenario, algorithm, pv_string, num_runs=num_runs, base_seed=base_seed
             )
-            rows.extend(results_to_rows(algorithm_name, scenario_name, results, base_seed))
+            rows.extend(results_to_rows(algorithm_name, scenario_name, results, base_seed, "held_out"))
 
     log("Measuring computational burden (mean step() time per algorithm)")
     step_times = {

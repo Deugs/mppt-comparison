@@ -1,8 +1,12 @@
 # MPPT Algorithm Comparison — IEEE Journal Publication Plan
 
-**Companion document:** `publication_supplement.md` — IEEE submission checklists, templates,
-and reproduction-package guidance. If algorithm set, panel choice, or target journal change
-here, re-check that file for stale references (it has drifted out of sync before).
+**This is Paper 1 of a multi-paper research program.** See `RESEARCH_PROGRAM.md`
+for the full roadmap (Papers 2-5: learning-based deep dive, metaheuristic
+benchmark, game-theoretic meta-controller, multi-converter cooperative game).
+**Do not add GWO, LSTM-PPO, FOCV-P&O, SM-Fuzzy, ANN-MPPT, or any game-theory
+content to this file or this codebase** — each belongs to a later paper with
+its own scope, and mixing them back in here recreates the exact incoherence
+problem the roadmap split was meant to solve.
 
 ## Timeline Reality Check
 The phased plan below gets you to **submission-ready**, not to acceptance.
@@ -119,8 +123,7 @@ mppt-comparison/
 ├── pyproject.toml             # Modern Python packaging + pytest config
 ├── README.md                  # Exact reproduction steps
 ├── LICENSE                    # Open-source license (MIT or BSD-3)
-├── claude.md                  # This file
-└── publication_supplement.md  # Companion: IEEE submission checklists & templates
+└── claude.md                  # This file
 ```
 
 ---
@@ -469,7 +472,7 @@ cd paper && pdflatex main.tex && bibtex main && pdflatex main.tex
 - [~] Validate simulated I-V/P-V curves against datasheet (RMSE < 2%) — validated against the four STC key points (Voc, Isc, Vmp, Imp) in `tests/test_pv_model.py`, all within 2%; NOCT and low-irradiance curve validation still blocked on the full datasheet PDF (see `data/README.md`)
 - [x] Implement boost converter with state-space averaged model (`src/converter.py`: `design_boost_converter()`, `small_signal_model()` — includes the RHP zero CLAUDE.md's worked equation omits)
 - [x] Document converter component sizing with equations (docstrings in `src/converter.py`; worked-example values matched by `tests/test_converter.py`)
-- [x] Add DCM check and document implications (`is_discontinuous_conduction()`, `critical_inductance()`; confirmed CCM at full load, DCM at light load in `tests/test_converter.py`)
+- [x] Add DCM check and document implications (`is_discontinuous_conduction()`, `critical_inductance()`; confirmed CCM at full load, DCM at light load in `tests/test_converter.py`; the "document implications" half was added later as a docstring note on `is_discontinuous_conduction()` — in DCM, Vout/Vin depends on L/fs/load rather than just D, so every algorithm's duty-cycle-perturbation reasoning (dP/dV for P&O/IncCond/fuzzy/SMC, reward for Q-learning) sees a non-CCM sensitivity at light load; flagged as a candidate confound to check for in Phase 4's low-irradiance/partial-shading results discussion, not something fixed by algorithm changes)
 
 ### Phase 2: Algorithms (Weeks 3-5, extended for 5th algorithm)
 - [x] Implement P&O with adaptive step size (`src/algorithms/p_and_o.py`)

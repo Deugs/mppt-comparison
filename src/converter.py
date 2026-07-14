@@ -125,6 +125,23 @@ def is_discontinuous_conduction(
 
     Equivalent DCM condition: average inductor current is less than half the
     peak-to-peak ripple, i.e. inductor current would reach zero mid-cycle.
+
+    Impact on MPPT behavior (CLAUDE.md's DCM checklist item, second half):
+    `small_signal_model()` above -- and by extension every algorithm's
+    implicit assumption that perturbing duty cycle moves the operating point
+    predictably along a fixed dP/dV curve -- is a CCM result. In DCM, Vout/Vin
+    depends on L, fs, and load in addition to D, so the same duty-cycle step
+    produces a different, load-dependent voltage/power response than in CCM.
+    Every algorithm here infers direction from a duty-cycle perturbation's
+    effect on (dP/dV for P&O/IncCond/fuzzy/SMC's sliding surface, or reward
+    for Q-learning) -- none of them re-derive or re-tune against a DCM model,
+    so a spurious sensitivity change at light load (this design enters DCM
+    around 5% of full load, confirmed in tests/test_converter.py) is a
+    plausible confound if any algorithm's convergence or oscillation metrics
+    degrade specifically in the low-irradiance scenarios (200 W/m^2 in
+    multi_level_irradiance/rapid_double_step, or the low-irradiance modules
+    in partial shading) -- worth checking for in the Phase 4 results
+    discussion before attributing such degradation purely to the algorithm.
     """
     if power <= 0:
         return True
