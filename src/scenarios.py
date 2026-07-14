@@ -425,6 +425,23 @@ def build_default_algorithms(pv_model_for_training) -> dict:
     }
 
 
+def build_fuzzy_rule_base_variants() -> dict:
+    """Reduced-rule-base fuzzy controllers (5x5, 3x3) for CLAUDE.md's fuzzy
+    "Sensitivity Analysis (Contribution)" section -- run through the same
+    sweep as build_default_algorithms()'s 7x7 `fuzzy_logic`, but kept as
+    separate algorithm entries (not folded into it) so the three rule-base
+    sizes are directly comparable, and so they can be excluded from the main
+    cross-paradigm ANOVA/t-tests in analysis.py (they're a rule-base
+    ablation of one paradigm, not a 6th/7th distinct paradigm).
+    """
+    from .algorithms.fuzzy_logic import FIVE_LABELS, THREE_LABELS, FuzzyLogicController
+
+    return {
+        "fuzzy_5x5": FuzzyLogicController(labels=FIVE_LABELS),
+        "fuzzy_3x3": FuzzyLogicController(labels=THREE_LABELS),
+    }
+
+
 def run_full_sweep(
     algorithms: dict,
     pv_model,
@@ -432,6 +449,7 @@ def run_full_sweep(
     num_runs: int = config.MONTE_CARLO_RUNS,
     base_seed: int = 0,
     log=print,
+    baseline_key: str = "p_and_o",
 ) -> "pd.DataFrame":
     """Run every algorithm against every scenario (single-module and partial-
     shading) for `num_runs` Monte Carlo runs each, returning the long-format
@@ -464,12 +482,18 @@ def run_full_sweep(
             )
             rows.extend(results_to_rows(algorithm_name, scenario_name, results, base_seed, "held_out"))
 
-    log("Measuring computational burden (mean step() time per algorithm)")
-    step_times = {
-        name: metrics.mean_step_execution_time(algorithm, config.PANEL_VMP_STC, config.PANEL_IMP_STC, 0.3)
-        for name, algorithm in algorithms.items()
-    }
-    rows.extend(computational_burden_rows(step_times, baseline_key="p_and_o", base_seed=base_seed))
+    if baseline_key in algorithms:
+        log("Measuring computational burden (mean step() time per algorithm)")
+        step_times = {
+            name: metrics.mean_step_execution_time(algorithm, config.PANEL_VMP_STC, config.PANEL_IMP_STC, 0.3)
+            for name, algorithm in algorithms.items()
+        }
+        rows.extend(computational_burden_rows(step_times, baseline_key=baseline_key, base_seed=base_seed))
+    else:
+        # e.g. a fuzzy-rule-base-variants-only sweep, which has no "p_and_o"
+        # entry to normalize against -- skip rather than crash; the core
+        # sweep already recorded computational burden for the baseline.
+        log(f"Skipping computational burden measurement (baseline '{baseline_key}' not in this sweep's algorithms)")
 
     return pd.DataFrame(rows)
 
@@ -477,12 +501,23 @@ def run_full_sweep(
 def main():
     import argparse
 
+    import pandas as pd
+
     from .pv_model import TwoDiodeModel, extract_two_diode_parameters
 
     parser = argparse.ArgumentParser(description="Run the full MPPT algorithm comparison sweep.")
     parser.add_argument("--monte-carlo", type=int, default=config.MONTE_CARLO_RUNS, dest="num_runs")
     parser.add_argument("--output", type=str, default="results/")
     parser.add_argument("--base-seed", type=int, default=0)
+    parser.add_argument(
+        "--fuzzy-variants-only",
+        action="store_true",
+        help=(
+            "Sweep only the reduced-rule-base fuzzy variants (fuzzy_5x5, fuzzy_3x3) -- "
+            "for CLAUDE.md's fuzzy sensitivity analysis -- and append their rows onto an "
+            "existing comparison_table.csv at --output, instead of overwriting the full sweep."
+        ),
+    )
     args = parser.parse_args()
 
     panel_params = extract_two_diode_parameters(
@@ -493,15 +528,26 @@ def main():
     )
     pv_model = TwoDiodeModel(panel_params, num_cells=config.PANEL_NS)
 
+    import os
+
+    os.makedirs(args.output, exist_ok=True)
+    output_path = os.path.join(args.output, "comparison_table.csv")
+
+    if args.fuzzy_variants_only:
+        algorithms = build_fuzzy_rule_base_variants()
+        df = run_full_sweep(algorithms, pv_model, panel_params, num_runs=args.num_runs, base_seed=args.base_seed)
+        if os.path.exists(output_path):
+            existing = pd.read_csv(output_path)
+            df = pd.concat([existing, df], ignore_index=True)
+        df.to_csv(output_path, index=False)
+        print(f"Wrote {len(df)} rows to {output_path} (fuzzy variants appended)")
+        return
+
     print("Training Q-learning agent...")
     algorithms = build_default_algorithms(pv_model)
 
     df = run_full_sweep(algorithms, pv_model, panel_params, num_runs=args.num_runs, base_seed=args.base_seed)
 
-    import os
-
-    os.makedirs(args.output, exist_ok=True)
-    output_path = os.path.join(args.output, "comparison_table.csv")
     df.to_csv(output_path, index=False)
     print(f"Wrote {len(df)} rows to {output_path}")
 

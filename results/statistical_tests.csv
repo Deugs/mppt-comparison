@@ -1,0 +1,848 @@
+scenario,metric,algorithms_used,f_stat,p_value,note,test,algorithm_a,algorithm_b,n_pairs,t_stat
+steady_state,tracking_efficiency_pct,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",11.653247022322676,1.1155070655891566e-08,,anova,,,,
+steady_state,convergence_time_s,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",57.65361523562903,7.579871577175131e-34,,anova,,,,
+steady_state,settling_time_s,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",57.65361523562903,7.579871577175131e-34,,anova,,,,
+steady_state,oscillation_p2p_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",21.87963109489279,1.8710691167287615e-15,,anova,,,,
+steady_state,oscillation_std_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",91.98902470352965,1.2165114697471188e-47,,anova,,,,
+steady_state,energy_yield_j,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",11.653247022322665,1.1155070655891916e-08,,anova,,,,
+steady_state,energy_yield_ratio,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",11.653247022322674,1.1155070655891566e-08,,anova,,,,
+multi_level_irradiance,tracking_efficiency_pct,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",107826.04574481263,0.0,,anova,,,,
+multi_level_irradiance,convergence_time_s,"p_and_o,fuzzy_logic,q_learning",42612.46788988275,7.017171995092681e-204,,anova,,,,
+multi_level_irradiance,settling_time_s,"p_and_o,fuzzy_logic,q_learning",42612.46788988275,7.017171995092681e-204,,anova,,,,
+multi_level_irradiance,oscillation_p2p_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",5569591361.65023,0.0,,anova,,,,
+multi_level_irradiance,oscillation_std_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",68113469993.68533,0.0,,anova,,,,
+multi_level_irradiance,energy_yield_j,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",107826.0457447489,0.0,,anova,,,,
+multi_level_irradiance,energy_yield_ratio,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",107826.04574479428,0.0,,anova,,,,
+step_change_irradiance,tracking_efficiency_pct,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",1427.874275994482,2.0418912325518802e-168,,anova,,,,
+step_change_irradiance,convergence_time_s,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",15.050343454570651,5.149539406169197e-11,,anova,,,,
+step_change_irradiance,settling_time_s,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",15.050343454570651,5.149539406169197e-11,,anova,,,,
+step_change_irradiance,oscillation_p2p_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",10.96593665548877,3.39029919821226e-08,,anova,,,,
+step_change_irradiance,oscillation_std_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",59.048833143624634,7.494149422863675e-35,,anova,,,,
+step_change_irradiance,energy_yield_j,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",1427.8742759944691,2.0418912325539714e-168,,anova,,,,
+step_change_irradiance,energy_yield_ratio,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",1427.874275994481,2.041891232552041e-168,,anova,,,,
+rapid_double_step,tracking_efficiency_pct,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",545.7506965329392,1.0609312579923527e-120,,anova,,,,
+rapid_double_step,convergence_time_s,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",57.65361523562903,7.579871577175131e-34,,anova,,,,
+rapid_double_step,settling_time_s,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",57.65361523562903,7.579871577175131e-34,,anova,,,,
+rapid_double_step,oscillation_p2p_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",12.279940611227266,4.075904597665123e-09,,anova,,,,
+rapid_double_step,oscillation_std_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",34.526237514871994,7.433130861469833e-23,,anova,,,,
+rapid_double_step,energy_yield_j,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",545.750696532939,1.0609312579924362e-120,,anova,,,,
+rapid_double_step,energy_yield_ratio,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",545.7506965329397,1.060931257992269e-120,,anova,,,,
+temperature_step,tracking_efficiency_pct,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",15.780948123445325,1.6617951423241723e-11,,anova,,,,
+temperature_step,convergence_time_s,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",57.65361523562903,7.579871577175131e-34,,anova,,,,
+temperature_step,settling_time_s,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",57.65361523562903,7.579871577175131e-34,,anova,,,,
+temperature_step,oscillation_p2p_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",211.9016199712048,2.7761696859775698e-78,,anova,,,,
+temperature_step,oscillation_std_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",94.58194984767333,1.574579514118853e-48,,anova,,,,
+temperature_step,energy_yield_j,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",15.780948123445322,1.6617951423241723e-11,,anova,,,,
+temperature_step,energy_yield_ratio,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",15.780948123445333,1.6617951423241723e-11,,anova,,,,
+rapid_fluctuation_cloud_passage,tracking_efficiency_pct,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",56.09867375206249,1.5289124347545287e-33,,anova,,,,
+rapid_fluctuation_cloud_passage,convergence_time_s,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",10.687005411799671,5.334628126146467e-08,,anova,,,,
+rapid_fluctuation_cloud_passage,settling_time_s,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",9.274786070369968,5.39363043279916e-07,,anova,,,,
+rapid_fluctuation_cloud_passage,oscillation_p2p_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",11.202885912761747,2.3090242377361355e-08,,anova,,,,
+rapid_fluctuation_cloud_passage,oscillation_std_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",18.28392582268976,3.695151462450983e-13,,anova,,,,
+rapid_fluctuation_cloud_passage,energy_yield_j,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",56.098673752062474,1.528912434754559e-33,,anova,,,,
+rapid_fluctuation_cloud_passage,energy_yield_ratio,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",56.09867375206251,1.5289124347545287e-33,,anova,,,,
+sensor_noise_robustness,tracking_efficiency_pct,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",5883.389644934181,4.7569018426914176e-242,,anova,,,,
+sensor_noise_robustness,convergence_time_s,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",56.93385431153866,1.0643990843727583e-32,,anova,,,,
+sensor_noise_robustness,settling_time_s,"p_and_o,inc_cond",1.086594416041437,0.3007634572423786,,anova,,,,
+sensor_noise_robustness,oscillation_p2p_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",45.69316308359058,1.1920771967949318e-28,,anova,,,,
+sensor_noise_robustness,oscillation_std_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",46.63615185070553,4.113541590398453e-29,,anova,,,,
+sensor_noise_robustness,energy_yield_j,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",5883.389644934032,4.7569018427060354e-242,,anova,,,,
+sensor_noise_robustness,energy_yield_ratio,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",5883.389644934101,4.756901842698913e-242,,anova,,,,
+partial_shading_simple,tracking_efficiency_pct,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",108.28833619399656,5.421778904418158e-53,,anova,,,,
+partial_shading_simple,convergence_time_s,,,,insufficient data (fewer than 2 algorithms with >=2 valid values),anova,,,,
+partial_shading_simple,settling_time_s,,,,insufficient data (fewer than 2 algorithms with >=2 valid values),anova,,,,
+partial_shading_simple,oscillation_p2p_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",,,,anova,,,,
+partial_shading_simple,oscillation_std_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",,,,anova,,,,
+partial_shading_simple,energy_yield_j,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",108.28833619399647,5.421778904418263e-53,,anova,,,,
+partial_shading_simple,energy_yield_ratio,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",108.28833619399653,5.421778904418158e-53,,anova,,,,
+partial_shading_complex_pattern_a,tracking_efficiency_pct,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",9.672101836331002,2.8046187813287786e-07,,anova,,,,
+partial_shading_complex_pattern_a,convergence_time_s,,,,insufficient data (fewer than 2 algorithms with >=2 valid values),anova,,,,
+partial_shading_complex_pattern_a,settling_time_s,,,,insufficient data (fewer than 2 algorithms with >=2 valid values),anova,,,,
+partial_shading_complex_pattern_a,oscillation_p2p_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",,,,anova,,,,
+partial_shading_complex_pattern_a,oscillation_std_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",,,,anova,,,,
+partial_shading_complex_pattern_a,energy_yield_j,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",9.67210183633101,2.804618781328693e-07,,anova,,,,
+partial_shading_complex_pattern_a,energy_yield_ratio,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",9.672101836331006,2.804618781328693e-07,,anova,,,,
+partial_shading_complex_pattern_b,tracking_efficiency_pct,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",63.08792681702955,1.355074212538788e-36,,anova,,,,
+partial_shading_complex_pattern_b,convergence_time_s,,,,insufficient data (fewer than 2 algorithms with >=2 valid values),anova,,,,
+partial_shading_complex_pattern_b,settling_time_s,,,,insufficient data (fewer than 2 algorithms with >=2 valid values),anova,,,,
+partial_shading_complex_pattern_b,oscillation_p2p_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",,,,anova,,,,
+partial_shading_complex_pattern_b,oscillation_std_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",,,,anova,,,,
+partial_shading_complex_pattern_b,energy_yield_j,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",63.08792681702957,1.3550742125387485e-36,,anova,,,,
+partial_shading_complex_pattern_b,energy_yield_ratio,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",63.087926817029526,1.3550742125388147e-36,,anova,,,,
+partial_shading_complex_pattern_c,tracking_efficiency_pct,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",39.10815832059587,2.619070963178068e-25,,anova,,,,
+partial_shading_complex_pattern_c,convergence_time_s,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",22.482245496073936,1.545786938067237e-15,,anova,,,,
+partial_shading_complex_pattern_c,settling_time_s,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",25.00965128264208,5.441859583508501e-17,,anova,,,,
+partial_shading_complex_pattern_c,oscillation_p2p_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",301.9625379386736,2.0557315936309655e-93,,anova,,,,
+partial_shading_complex_pattern_c,oscillation_std_w,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",402.6486789779819,2.0623718054204545e-106,,anova,,,,
+partial_shading_complex_pattern_c,energy_yield_j,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",39.10815832059589,2.6190709631780164e-25,,anova,,,,
+partial_shading_complex_pattern_c,energy_yield_ratio,"p_and_o,inc_cond,fuzzy_logic,q_learning,sliding_mode",39.10815832059586,2.619070963178068e-25,,anova,,,,
+steady_state,tracking_efficiency_pct,,,6.558181126357737e-06,,paired_ttest,p_and_o,inc_cond,50.0,5.048098382828188
+steady_state,tracking_efficiency_pct,,,2.0680311682813927e-06,,paired_ttest,p_and_o,fuzzy_logic,50.0,-5.381211897594841
+steady_state,tracking_efficiency_pct,,,0.0008813233809863026,,paired_ttest,p_and_o,q_learning,50.0,3.5424995438971014
+steady_state,tracking_efficiency_pct,,,5.217980735838056e-06,,paired_ttest,p_and_o,sliding_mode,50.0,-5.114473654443467
+steady_state,tracking_efficiency_pct,,,6.131733589200183e-06,,paired_ttest,inc_cond,fuzzy_logic,50.0,-5.067642663667666
+steady_state,tracking_efficiency_pct,,,0.016052913399854426,,paired_ttest,inc_cond,q_learning,50.0,2.494033434735883
+steady_state,tracking_efficiency_pct,,,6.4433067971172495e-06,,paired_ttest,inc_cond,sliding_mode,50.0,-5.053236986278835
+steady_state,tracking_efficiency_pct,,,0.0007235258800220892,,paired_ttest,fuzzy_logic,q_learning,50.0,3.6077080351928763
+steady_state,tracking_efficiency_pct,,,0.00016211742308724073,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-4.086169801459471
+steady_state,tracking_efficiency_pct,,,0.0006815173144515773,,paired_ttest,q_learning,sliding_mode,50.0,-3.6273687574505344
+steady_state,convergence_time_s,,,1.5925032740343387e-11,,paired_ttest,p_and_o,inc_cond,50.0,-8.711654892519269
+steady_state,convergence_time_s,,,2.5593369760253313e-12,,paired_ttest,p_and_o,fuzzy_logic,50.0,9.244071836321824
+steady_state,convergence_time_s,,,1.7846878092458945e-08,,paired_ttest,p_and_o,q_learning,40.0,-7.057940651675584
+steady_state,convergence_time_s,,,1.7469963457118134e-11,,paired_ttest,p_and_o,sliding_mode,50.0,8.68490580295383
+steady_state,convergence_time_s,,,1.3883486128587544e-11,,paired_ttest,inc_cond,fuzzy_logic,50.0,8.751325351147178
+steady_state,convergence_time_s,,,2.2141842136068908e-08,,paired_ttest,inc_cond,q_learning,40.0,6.989675382451442
+steady_state,convergence_time_s,,,1.5911707044789255e-11,,paired_ttest,inc_cond,sliding_mode,50.0,8.71189682440521
+steady_state,convergence_time_s,,,1.404331826552578e-08,,paired_ttest,fuzzy_logic,q_learning,40.0,-7.133938641531997
+steady_state,convergence_time_s,,,1.183322112689651e-05,,paired_ttest,fuzzy_logic,sliding_mode,50.0,4.875682232028946
+steady_state,convergence_time_s,,,1.6440534544288772e-08,,paired_ttest,q_learning,sliding_mode,40.0,7.0839512584570326
+steady_state,settling_time_s,,,1.5925032740343387e-11,,paired_ttest,p_and_o,inc_cond,50.0,-8.711654892519269
+steady_state,settling_time_s,,,2.5593369760253313e-12,,paired_ttest,p_and_o,fuzzy_logic,50.0,9.244071836321824
+steady_state,settling_time_s,,,1.7846878092458945e-08,,paired_ttest,p_and_o,q_learning,40.0,-7.057940651675584
+steady_state,settling_time_s,,,1.7469963457118134e-11,,paired_ttest,p_and_o,sliding_mode,50.0,8.68490580295383
+steady_state,settling_time_s,,,1.3883486128587544e-11,,paired_ttest,inc_cond,fuzzy_logic,50.0,8.751325351147178
+steady_state,settling_time_s,,,2.2141842136068908e-08,,paired_ttest,inc_cond,q_learning,40.0,6.989675382451442
+steady_state,settling_time_s,,,1.5911707044789255e-11,,paired_ttest,inc_cond,sliding_mode,50.0,8.71189682440521
+steady_state,settling_time_s,,,1.404331826552578e-08,,paired_ttest,fuzzy_logic,q_learning,40.0,-7.133938641531997
+steady_state,settling_time_s,,,1.183322112689651e-05,,paired_ttest,fuzzy_logic,sliding_mode,50.0,4.875682232028946
+steady_state,settling_time_s,,,1.6440534544288772e-08,,paired_ttest,q_learning,sliding_mode,40.0,7.0839512584570326
+steady_state,oscillation_p2p_w,,,1.8085409024463758e-08,,paired_ttest,p_and_o,inc_cond,50.0,-6.718905886965405
+steady_state,oscillation_p2p_w,,,0.14256109445715795,,paired_ttest,p_and_o,fuzzy_logic,50.0,1.490276223416849
+steady_state,oscillation_p2p_w,,,0.0581371691633603,,paired_ttest,p_and_o,q_learning,50.0,1.940074260812021
+steady_state,oscillation_p2p_w,,,1.0919218617211754e-06,,paired_ttest,p_and_o,sliding_mode,50.0,5.563708011969194
+steady_state,oscillation_p2p_w,,,2.7470218964007052e-09,,paired_ttest,inc_cond,fuzzy_logic,50.0,7.2474198814119575
+steady_state,oscillation_p2p_w,,,1.3974480961517645e-07,,paired_ttest,inc_cond,q_learning,50.0,6.145216691378279
+steady_state,oscillation_p2p_w,,,1.794003055820152e-13,,paired_ttest,inc_cond,sliding_mode,50.0,10.034741797827433
+steady_state,oscillation_p2p_w,,,0.37326277945214337,,paired_ttest,fuzzy_logic,q_learning,50.0,0.8985953948215356
+steady_state,oscillation_p2p_w,,,9.629957659731671e-05,,paired_ttest,fuzzy_logic,sliding_mode,50.0,4.247311819365324
+steady_state,oscillation_p2p_w,,,0.009982049357571915,,paired_ttest,q_learning,sliding_mode,50.0,2.6806434368704375
+steady_state,oscillation_std_w,,,2.682256338578808e-24,,paired_ttest,p_and_o,inc_cond,50.0,-19.049823877293658
+steady_state,oscillation_std_w,,,0.38818310849927207,,paired_ttest,p_and_o,fuzzy_logic,50.0,0.8706643366647493
+steady_state,oscillation_std_w,,,1.4986899842347497e-08,,paired_ttest,p_and_o,q_learning,50.0,-6.7715654507157765
+steady_state,oscillation_std_w,,,8.884658663454268e-07,,paired_ttest,p_and_o,sliding_mode,50.0,5.622400980765894
+steady_state,oscillation_std_w,,,1.833589324316994e-24,,paired_ttest,inc_cond,fuzzy_logic,50.0,19.217799025715355
+steady_state,oscillation_std_w,,,0.015334187726138176,,paired_ttest,inc_cond,q_learning,50.0,2.512371996695901
+steady_state,oscillation_std_w,,,7.78834878379552e-25,,paired_ttest,inc_cond,sliding_mode,50.0,19.60009203651805
+steady_state,oscillation_std_w,,,6.70404819373873e-09,,paired_ttest,fuzzy_logic,q_learning,50.0,-6.997043380074869
+steady_state,oscillation_std_w,,,1.8777786993869934e-05,,paired_ttest,fuzzy_logic,sliding_mode,50.0,4.739603640484644
+steady_state,oscillation_std_w,,,2.567994668320674e-11,,paired_ttest,q_learning,sliding_mode,50.0,8.573821920277993
+steady_state,energy_yield_j,,,6.55818112635763e-06,,paired_ttest,p_and_o,inc_cond,50.0,5.0480983828281945
+steady_state,energy_yield_j,,,2.0680311682814194e-06,,paired_ttest,p_and_o,fuzzy_logic,50.0,-5.381211897594837
+steady_state,energy_yield_j,,,0.0008813233809863068,,paired_ttest,p_and_o,q_learning,50.0,3.5424995438971
+steady_state,energy_yield_j,,,5.217980735838668e-06,,paired_ttest,p_and_o,sliding_mode,50.0,-5.114473654443434
+steady_state,energy_yield_j,,,6.131733589200115e-06,,paired_ttest,inc_cond,fuzzy_logic,50.0,-5.0676426636676695
+steady_state,energy_yield_j,,,0.0160529133998545,,paired_ttest,inc_cond,q_learning,50.0,2.494033434735881
+steady_state,energy_yield_j,,,6.443306797117167e-06,,paired_ttest,inc_cond,sliding_mode,50.0,-5.053236986278838
+steady_state,energy_yield_j,,,0.0007235258800220892,,paired_ttest,fuzzy_logic,q_learning,50.0,3.6077080351928763
+steady_state,energy_yield_j,,,0.0001621174230873015,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-4.086169801459356
+steady_state,energy_yield_j,,,0.0006815173144515791,,paired_ttest,q_learning,sliding_mode,50.0,-3.627368757450533
+steady_state,energy_yield_ratio,,,6.5581811263577135e-06,,paired_ttest,p_and_o,inc_cond,50.0,5.04809838282819
+steady_state,energy_yield_ratio,,,2.068031168281321e-06,,paired_ttest,p_and_o,fuzzy_logic,50.0,-5.381211897594851
+steady_state,energy_yield_ratio,,,0.0008813233809863044,,paired_ttest,p_and_o,q_learning,50.0,3.5424995438971005
+steady_state,energy_yield_ratio,,,5.2179807358370015e-06,,paired_ttest,p_and_o,sliding_mode,50.0,-5.114473654443526
+steady_state,energy_yield_ratio,,,6.131733589200115e-06,,paired_ttest,inc_cond,fuzzy_logic,50.0,-5.0676426636676695
+steady_state,energy_yield_ratio,,,0.01605291339985446,,paired_ttest,inc_cond,q_learning,50.0,2.494033434735882
+steady_state,energy_yield_ratio,,,6.443306797117049e-06,,paired_ttest,inc_cond,sliding_mode,50.0,-5.0532369862788435
+steady_state,energy_yield_ratio,,,0.0007235258800220892,,paired_ttest,fuzzy_logic,q_learning,50.0,3.6077080351928767
+steady_state,energy_yield_ratio,,,0.00016211742308718953,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-4.08616980145957
+steady_state,energy_yield_ratio,,,0.0006815173144515773,,paired_ttest,q_learning,sliding_mode,50.0,-3.6273687574505344
+multi_level_irradiance,tracking_efficiency_pct,,,6.349879360027632e-190,,paired_ttest,p_and_o,inc_cond,50.0,48637.668469543045
+multi_level_irradiance,tracking_efficiency_pct,,,3.8070601481147127e-13,,paired_ttest,p_and_o,fuzzy_logic,50.0,-9.808721890098104
+multi_level_irradiance,tracking_efficiency_pct,,,2.8949731609837973e-09,,paired_ttest,p_and_o,q_learning,50.0,-7.232684669327265
+multi_level_irradiance,tracking_efficiency_pct,,,4.309463019535562e-90,,paired_ttest,p_and_o,sliding_mode,50.0,446.210306330873
+multi_level_irradiance,tracking_efficiency_pct,,,7.679295297827738e-92,,paired_ttest,inc_cond,fuzzy_logic,50.0,-484.4439023667862
+multi_level_irradiance,tracking_efficiency_pct,,,2.7249317132437304e-92,,paired_ttest,inc_cond,q_learning,50.0,-494.7984252410303
+multi_level_irradiance,tracking_efficiency_pct,,,1.1678235736229037e-11,,paired_ttest,inc_cond,sliding_mode,50.0,-8.801404754797728
+multi_level_irradiance,tracking_efficiency_pct,,,2.74113924466348e-59,,paired_ttest,fuzzy_logic,q_learning,50.0,104.71278469601717
+multi_level_irradiance,tracking_efficiency_pct,,,5.923773998554112e-162,,paired_ttest,fuzzy_logic,sliding_mode,50.0,13066.515046939747
+multi_level_irradiance,tracking_efficiency_pct,,,3.6801553513303826e-150,,paired_ttest,q_learning,sliding_mode,50.0,7507.247203991637
+multi_level_irradiance,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,inc_cond,0.0,
+multi_level_irradiance,convergence_time_s,,,6.882058399575547e-54,,paired_ttest,p_and_o,fuzzy_logic,50.0,81.12788635821694
+multi_level_irradiance,convergence_time_s,,,2.0795871124177787e-67,,paired_ttest,p_and_o,q_learning,50.0,-153.5395535209127
+multi_level_irradiance,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,sliding_mode,0.0,
+multi_level_irradiance,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,fuzzy_logic,0.0,
+multi_level_irradiance,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,q_learning,0.0,
+multi_level_irradiance,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,sliding_mode,0.0,
+multi_level_irradiance,convergence_time_s,,,0.0,,paired_ttest,fuzzy_logic,q_learning,50.0,-inf
+multi_level_irradiance,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,sliding_mode,0.0,
+multi_level_irradiance,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,q_learning,sliding_mode,0.0,
+multi_level_irradiance,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,inc_cond,0.0,
+multi_level_irradiance,settling_time_s,,,6.882058399575547e-54,,paired_ttest,p_and_o,fuzzy_logic,50.0,81.12788635821694
+multi_level_irradiance,settling_time_s,,,2.0795871124177787e-67,,paired_ttest,p_and_o,q_learning,50.0,-153.5395535209127
+multi_level_irradiance,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,sliding_mode,0.0,
+multi_level_irradiance,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,fuzzy_logic,0.0,
+multi_level_irradiance,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,q_learning,0.0,
+multi_level_irradiance,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,sliding_mode,0.0,
+multi_level_irradiance,settling_time_s,,,0.0,,paired_ttest,fuzzy_logic,q_learning,50.0,-inf
+multi_level_irradiance,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,sliding_mode,0.0,
+multi_level_irradiance,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,q_learning,sliding_mode,0.0,
+multi_level_irradiance,oscillation_p2p_w,,,0.0,,paired_ttest,p_and_o,inc_cond,50.0,inf
+multi_level_irradiance,oscillation_p2p_w,,,2.6540295344403434e-62,,paired_ttest,p_and_o,fuzzy_logic,50.0,-120.71047885485106
+multi_level_irradiance,oscillation_p2p_w,,,0.0,,paired_ttest,p_and_o,q_learning,50.0,-inf
+multi_level_irradiance,oscillation_p2p_w,,,0.0,,paired_ttest,p_and_o,sliding_mode,50.0,inf
+multi_level_irradiance,oscillation_p2p_w,,,1.0405791689616546e-194,,paired_ttest,inc_cond,fuzzy_logic,50.0,-60902.59782088018
+multi_level_irradiance,oscillation_p2p_w,,,0.0,,paired_ttest,inc_cond,q_learning,50.0,-inf
+multi_level_irradiance,oscillation_p2p_w,,,,,paired_ttest,inc_cond,sliding_mode,50.0,
+multi_level_irradiance,oscillation_p2p_w,,,1.0640158887327354e-74,,paired_ttest,fuzzy_logic,q_learning,50.0,-216.3894866585755
+multi_level_irradiance,oscillation_p2p_w,,,1.0405791689616546e-194,,paired_ttest,fuzzy_logic,sliding_mode,50.0,60902.59782088018
+multi_level_irradiance,oscillation_p2p_w,,,0.0,,paired_ttest,q_learning,sliding_mode,50.0,inf
+multi_level_irradiance,oscillation_std_w,,,2.3495660826466918e-221,,paired_ttest,p_and_o,inc_cond,50.0,213028.44907392078
+multi_level_irradiance,oscillation_std_w,,,7.173668647098265e-61,,paired_ttest,p_and_o,fuzzy_logic,50.0,-112.82898967272494
+multi_level_irradiance,oscillation_std_w,,,4.125324669194066e-60,,paired_ttest,p_and_o,q_learning,50.0,-108.8568151204176
+multi_level_irradiance,oscillation_std_w,,,2.3495660826466918e-221,,paired_ttest,p_and_o,sliding_mode,50.0,213028.44907392078
+multi_level_irradiance,oscillation_std_w,,,8.3e-322,,paired_ttest,inc_cond,fuzzy_logic,50.0,-23903472.058111798
+multi_level_irradiance,oscillation_std_w,,,0.0,,paired_ttest,inc_cond,q_learning,50.0,-4.02158353451574e+16
+multi_level_irradiance,oscillation_std_w,,,,,paired_ttest,inc_cond,sliding_mode,50.0,
+multi_level_irradiance,oscillation_std_w,,,3.54388042053171e-89,,paired_ttest,fuzzy_logic,q_learning,50.0,427.4253556505345
+multi_level_irradiance,oscillation_std_w,,,8.3e-322,,paired_ttest,fuzzy_logic,sliding_mode,50.0,23903472.058111798
+multi_level_irradiance,oscillation_std_w,,,0.0,,paired_ttest,q_learning,sliding_mode,50.0,4.02158353451574e+16
+multi_level_irradiance,energy_yield_j,,,6.349879360132308e-190,,paired_ttest,p_and_o,inc_cond,50.0,48637.66846952676
+multi_level_irradiance,energy_yield_j,,,3.8070601481149313e-13,,paired_ttest,p_and_o,fuzzy_logic,50.0,-9.808721890098088
+multi_level_irradiance,energy_yield_j,,,2.8949731609843834e-09,,paired_ttest,p_and_o,q_learning,50.0,-7.232684669327207
+multi_level_irradiance,energy_yield_j,,,4.309463019536541e-90,,paired_ttest,p_and_o,sliding_mode,50.0,446.2103063308713
+multi_level_irradiance,energy_yield_j,,,7.679295297825337e-92,,paired_ttest,inc_cond,fuzzy_logic,50.0,-484.44390236678913
+multi_level_irradiance,energy_yield_j,,,2.7249317132433434e-92,,paired_ttest,inc_cond,q_learning,50.0,-494.798425241032
+multi_level_irradiance,energy_yield_j,,,1.1678235736227231e-11,,paired_ttest,inc_cond,sliding_mode,50.0,-8.801404754797774
+multi_level_irradiance,energy_yield_j,,,2.7411392446496117e-59,,paired_ttest,fuzzy_logic,q_learning,50.0,104.71278469602808
+multi_level_irradiance,energy_yield_j,,,5.923773998580375e-162,,paired_ttest,fuzzy_logic,sliding_mode,50.0,13066.515046938557
+multi_level_irradiance,energy_yield_j,,,3.680155351333102e-150,,paired_ttest,q_learning,sliding_mode,50.0,7507.2472039915265
+multi_level_irradiance,energy_yield_ratio,,,6.349879360014999e-190,,paired_ttest,p_and_o,inc_cond,50.0,48637.66846954507
+multi_level_irradiance,energy_yield_ratio,,,3.8070601481152176e-13,,paired_ttest,p_and_o,fuzzy_logic,50.0,-9.808721890098065
+multi_level_irradiance,energy_yield_ratio,,,2.8949731609840595e-09,,paired_ttest,p_and_o,q_learning,50.0,-7.232684669327239
+multi_level_irradiance,energy_yield_ratio,,,4.309463019536174e-90,,paired_ttest,p_and_o,sliding_mode,50.0,446.21030633087196
+multi_level_irradiance,energy_yield_ratio,,,7.679295297826647e-92,,paired_ttest,inc_cond,fuzzy_logic,50.0,-484.44390236678754
+multi_level_irradiance,energy_yield_ratio,,,2.724931713243498e-92,,paired_ttest,inc_cond,q_learning,50.0,-494.79842524103145
+multi_level_irradiance,energy_yield_ratio,,,1.1678235736227651e-11,,paired_ttest,inc_cond,sliding_mode,50.0,-8.801404754797764
+multi_level_irradiance,energy_yield_ratio,,,2.7411392446628574e-59,,paired_ttest,fuzzy_logic,q_learning,50.0,104.7127846960177
+multi_level_irradiance,energy_yield_ratio,,,5.923773998552429e-162,,paired_ttest,fuzzy_logic,sliding_mode,50.0,13066.515046939827
+multi_level_irradiance,energy_yield_ratio,,,3.680155351328918e-150,,paired_ttest,q_learning,sliding_mode,50.0,7507.2472039916975
+step_change_irradiance,tracking_efficiency_pct,,,6.566255002940757e-12,,paired_ttest,p_and_o,inc_cond,50.0,8.96862419019691
+step_change_irradiance,tracking_efficiency_pct,,,1.790737812996797e-12,,paired_ttest,p_and_o,fuzzy_logic,50.0,-9.349097188443015
+step_change_irradiance,tracking_efficiency_pct,,,7.712626793404842e-40,,paired_ttest,p_and_o,q_learning,50.0,41.50044352107059
+step_change_irradiance,tracking_efficiency_pct,,,8.879023652089006e-11,,paired_ttest,p_and_o,sliding_mode,50.0,-8.218208954721387
+step_change_irradiance,tracking_efficiency_pct,,,6.007077792599028e-12,,paired_ttest,inc_cond,fuzzy_logic,50.0,-8.994546247498842
+step_change_irradiance,tracking_efficiency_pct,,,7.075006635103289e-36,,paired_ttest,inc_cond,q_learning,50.0,34.23232270027922
+step_change_irradiance,tracking_efficiency_pct,,,7.90570982393062e-12,,paired_ttest,inc_cond,sliding_mode,50.0,-8.9146213449149
+step_change_irradiance,tracking_efficiency_pct,,,5.5720259538157e-40,,paired_ttest,fuzzy_logic,q_learning,50.0,41.78437710444004
+step_change_irradiance,tracking_efficiency_pct,,,9.539112247052391e-05,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-4.250222348938578
+step_change_irradiance,tracking_efficiency_pct,,,4.783137808667352e-40,,paired_ttest,q_learning,sliding_mode,50.0,-41.91834130522798
+step_change_irradiance,convergence_time_s,,,1.5925032740343387e-11,,paired_ttest,p_and_o,inc_cond,50.0,-8.711654892519269
+step_change_irradiance,convergence_time_s,,,2.5593369760253313e-12,,paired_ttest,p_and_o,fuzzy_logic,50.0,9.244071836321824
+step_change_irradiance,convergence_time_s,,,0.0004464219318743483,,paired_ttest,p_and_o,q_learning,50.0,-3.7650572794610158
+step_change_irradiance,convergence_time_s,,,1.7469963457118134e-11,,paired_ttest,p_and_o,sliding_mode,50.0,8.68490580295383
+step_change_irradiance,convergence_time_s,,,1.3883486128587544e-11,,paired_ttest,inc_cond,fuzzy_logic,50.0,8.751325351147178
+step_change_irradiance,convergence_time_s,,,0.18795568472152607,,paired_ttest,inc_cond,q_learning,50.0,-1.335277862431817
+step_change_irradiance,convergence_time_s,,,1.5911707044789255e-11,,paired_ttest,inc_cond,sliding_mode,50.0,8.71189682440521
+step_change_irradiance,convergence_time_s,,,0.00028806579228506937,,paired_ttest,fuzzy_logic,q_learning,50.0,-3.9053042894117547
+step_change_irradiance,convergence_time_s,,,1.183322112689651e-05,,paired_ttest,fuzzy_logic,sliding_mode,50.0,4.875682232028946
+step_change_irradiance,convergence_time_s,,,0.00025025974009085407,,paired_ttest,q_learning,sliding_mode,50.0,3.9498847284018024
+step_change_irradiance,settling_time_s,,,1.5925032740343387e-11,,paired_ttest,p_and_o,inc_cond,50.0,-8.711654892519269
+step_change_irradiance,settling_time_s,,,2.5593369760253313e-12,,paired_ttest,p_and_o,fuzzy_logic,50.0,9.244071836321824
+step_change_irradiance,settling_time_s,,,0.0004464219318743483,,paired_ttest,p_and_o,q_learning,50.0,-3.7650572794610158
+step_change_irradiance,settling_time_s,,,1.7469963457118134e-11,,paired_ttest,p_and_o,sliding_mode,50.0,8.68490580295383
+step_change_irradiance,settling_time_s,,,1.3883486128587544e-11,,paired_ttest,inc_cond,fuzzy_logic,50.0,8.751325351147178
+step_change_irradiance,settling_time_s,,,0.18795568472152607,,paired_ttest,inc_cond,q_learning,50.0,-1.335277862431817
+step_change_irradiance,settling_time_s,,,1.5911707044789255e-11,,paired_ttest,inc_cond,sliding_mode,50.0,8.71189682440521
+step_change_irradiance,settling_time_s,,,0.00028806579228506937,,paired_ttest,fuzzy_logic,q_learning,50.0,-3.9053042894117547
+step_change_irradiance,settling_time_s,,,1.183322112689651e-05,,paired_ttest,fuzzy_logic,sliding_mode,50.0,4.875682232028946
+step_change_irradiance,settling_time_s,,,0.00025025974009085407,,paired_ttest,q_learning,sliding_mode,50.0,3.9498847284018024
+step_change_irradiance,oscillation_p2p_w,,,2.903602624823196e-10,,paired_ttest,p_and_o,inc_cond,50.0,7.881218806057462
+step_change_irradiance,oscillation_p2p_w,,,3.6821211605551015e-10,,paired_ttest,p_and_o,fuzzy_logic,50.0,7.8139281459165
+step_change_irradiance,oscillation_p2p_w,,,0.0010761417700143698,,paired_ttest,p_and_o,q_learning,50.0,3.4759012313555173
+step_change_irradiance,oscillation_p2p_w,,,3.6821273176294354e-10,,paired_ttest,p_and_o,sliding_mode,50.0,7.81392767250802
+step_change_irradiance,oscillation_p2p_w,,,0.3613502849530321,,paired_ttest,inc_cond,fuzzy_logic,50.0,-0.9214112669446287
+step_change_irradiance,oscillation_p2p_w,,,0.0022174791392689987,,paired_ttest,inc_cond,q_learning,50.0,3.2293003782541687
+step_change_irradiance,oscillation_p2p_w,,,0.36134865059973065,,paired_ttest,inc_cond,sliding_mode,50.0,-0.9214144301772954
+step_change_irradiance,oscillation_p2p_w,,,0.0021489377050813918,,paired_ttest,fuzzy_logic,q_learning,50.0,3.240204641307292
+step_change_irradiance,oscillation_p2p_w,,,0.7540978588610304,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-0.31500178339517515
+step_change_irradiance,oscillation_p2p_w,,,0.0021489377504796277,,paired_ttest,q_learning,sliding_mode,50.0,-3.240204633976671
+step_change_irradiance,oscillation_std_w,,,9.570516486876983e-42,,paired_ttest,p_and_o,inc_cond,50.0,-45.49323968309973
+step_change_irradiance,oscillation_std_w,,,1.0562991223922976e-15,,paired_ttest,p_and_o,fuzzy_logic,50.0,11.63137456641193
+step_change_irradiance,oscillation_std_w,,,8.136153290152911e-10,,paired_ttest,p_and_o,q_learning,50.0,7.589889573725616
+step_change_irradiance,oscillation_std_w,,,1.678566448170792e-28,,paired_ttest,p_and_o,sliding_mode,50.0,23.705203368755306
+step_change_irradiance,oscillation_std_w,,,1.146051721909163e-40,,paired_ttest,inc_cond,fuzzy_logic,50.0,43.19200936759988
+step_change_irradiance,oscillation_std_w,,,2.1253834124260488e-10,,paired_ttest,inc_cond,q_learning,50.0,7.9697328322754535
+step_change_irradiance,oscillation_std_w,,,3.503630297043438e-41,,paired_ttest,inc_cond,sliding_mode,50.0,44.27626297201946
+step_change_irradiance,oscillation_std_w,,,8.539966509121186e-10,,paired_ttest,fuzzy_logic,q_learning,50.0,7.576226952783432
+step_change_irradiance,oscillation_std_w,,,1.1475132047394922e-49,,paired_ttest,fuzzy_logic,sliding_mode,50.0,66.40991121153593
+step_change_irradiance,oscillation_std_w,,,9.174996879179881e-10,,paired_ttest,q_learning,sliding_mode,50.0,-7.5560015428572305
+step_change_irradiance,energy_yield_j,,,6.566255002941206e-12,,paired_ttest,p_and_o,inc_cond,50.0,8.96862419019689
+step_change_irradiance,energy_yield_j,,,1.790737812997485e-12,,paired_ttest,p_and_o,fuzzy_logic,50.0,-9.3490971884429
+step_change_irradiance,energy_yield_j,,,7.712626793404952e-40,,paired_ttest,p_and_o,q_learning,50.0,41.50044352107058
+step_change_irradiance,energy_yield_j,,,8.879023652086479e-11,,paired_ttest,p_and_o,sliding_mode,50.0,-8.218208954721467
+step_change_irradiance,energy_yield_j,,,6.007077792599502e-12,,paired_ttest,inc_cond,fuzzy_logic,50.0,-8.994546247498821
+step_change_irradiance,energy_yield_j,,,7.075006635102988e-36,,paired_ttest,inc_cond,q_learning,50.0,34.23232270027924
+step_change_irradiance,energy_yield_j,,,7.90570982393096e-12,,paired_ttest,inc_cond,sliding_mode,50.0,-8.91462134491489
+step_change_irradiance,energy_yield_j,,,5.572025953815778e-40,,paired_ttest,fuzzy_logic,q_learning,50.0,41.78437710444003
+step_change_irradiance,energy_yield_j,,,9.539112247047097e-05,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-4.250222348938749
+step_change_irradiance,energy_yield_j,,,4.7831378086672844e-40,,paired_ttest,q_learning,sliding_mode,50.0,-41.918341305228
+step_change_irradiance,energy_yield_ratio,,,6.566255002940757e-12,,paired_ttest,p_and_o,inc_cond,50.0,8.96862419019691
+step_change_irradiance,energy_yield_ratio,,,1.7907378129983146e-12,,paired_ttest,p_and_o,fuzzy_logic,50.0,-9.349097188442764
+step_change_irradiance,energy_yield_ratio,,,7.712626793404624e-40,,paired_ttest,p_and_o,q_learning,50.0,41.50044352107061
+step_change_irradiance,energy_yield_ratio,,,8.879023652096745e-11,,paired_ttest,p_and_o,sliding_mode,50.0,-8.218208954721137
+step_change_irradiance,energy_yield_ratio,,,6.007077792599287e-12,,paired_ttest,inc_cond,fuzzy_logic,50.0,-8.994546247498832
+step_change_irradiance,energy_yield_ratio,,,7.07500663510319e-36,,paired_ttest,inc_cond,q_learning,50.0,34.23232270027923
+step_change_irradiance,energy_yield_ratio,,,7.90570982393116e-12,,paired_ttest,inc_cond,sliding_mode,50.0,-8.914621344914883
+step_change_irradiance,energy_yield_ratio,,,5.572025953815778e-40,,paired_ttest,fuzzy_logic,q_learning,50.0,41.78437710444003
+step_change_irradiance,energy_yield_ratio,,,9.539112247063385e-05,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-4.250222348938226
+step_change_irradiance,energy_yield_ratio,,,4.783137808667352e-40,,paired_ttest,q_learning,sliding_mode,50.0,-41.91834130522799
+rapid_double_step,tracking_efficiency_pct,,,2.2736627116605396e-45,,paired_ttest,p_and_o,inc_cond,50.0,54.120261410156374
+rapid_double_step,tracking_efficiency_pct,,,5.3863978686049445e-33,,paired_ttest,p_and_o,fuzzy_logic,50.0,-29.706039546458804
+rapid_double_step,tracking_efficiency_pct,,,5.970075081628341e-27,,paired_ttest,p_and_o,q_learning,50.0,21.890822856514944
+rapid_double_step,tracking_efficiency_pct,,,1.8744168710801164e-95,,paired_ttest,p_and_o,sliding_mode,50.0,574.0898448738178
+rapid_double_step,tracking_efficiency_pct,,,8.027904853475163e-45,,paired_ttest,inc_cond,fuzzy_logic,50.0,-52.721836591736256
+rapid_double_step,tracking_efficiency_pct,,,0.20936121394859347,,paired_ttest,inc_cond,q_learning,50.0,1.2720446228545492
+rapid_double_step,tracking_efficiency_pct,,,2.8176885349343776e-07,,paired_ttest,inc_cond,sliding_mode,50.0,-5.947654002805866
+rapid_double_step,tracking_efficiency_pct,,,1.322673540795911e-27,,paired_ttest,fuzzy_logic,q_learning,50.0,22.64186695298642
+rapid_double_step,tracking_efficiency_pct,,,4.970753126609526e-127,,paired_ttest,fuzzy_logic,sliding_mode,50.0,2531.7866785918955
+rapid_double_step,tracking_efficiency_pct,,,0.00032812490435780626,,paired_ttest,q_learning,sliding_mode,50.0,-3.8638518610853074
+rapid_double_step,convergence_time_s,,,1.5925032740343387e-11,,paired_ttest,p_and_o,inc_cond,50.0,-8.711654892519269
+rapid_double_step,convergence_time_s,,,2.5593369760253313e-12,,paired_ttest,p_and_o,fuzzy_logic,50.0,9.244071836321824
+rapid_double_step,convergence_time_s,,,1.7846878092458945e-08,,paired_ttest,p_and_o,q_learning,40.0,-7.057940651675584
+rapid_double_step,convergence_time_s,,,1.7469963457118134e-11,,paired_ttest,p_and_o,sliding_mode,50.0,8.68490580295383
+rapid_double_step,convergence_time_s,,,1.3883486128587544e-11,,paired_ttest,inc_cond,fuzzy_logic,50.0,8.751325351147178
+rapid_double_step,convergence_time_s,,,2.2141842136068908e-08,,paired_ttest,inc_cond,q_learning,40.0,6.989675382451442
+rapid_double_step,convergence_time_s,,,1.5911707044789255e-11,,paired_ttest,inc_cond,sliding_mode,50.0,8.71189682440521
+rapid_double_step,convergence_time_s,,,1.404331826552578e-08,,paired_ttest,fuzzy_logic,q_learning,40.0,-7.133938641531997
+rapid_double_step,convergence_time_s,,,1.183322112689651e-05,,paired_ttest,fuzzy_logic,sliding_mode,50.0,4.875682232028946
+rapid_double_step,convergence_time_s,,,1.6440534544288772e-08,,paired_ttest,q_learning,sliding_mode,40.0,7.0839512584570326
+rapid_double_step,settling_time_s,,,1.5925032740343387e-11,,paired_ttest,p_and_o,inc_cond,50.0,-8.711654892519269
+rapid_double_step,settling_time_s,,,2.5593369760253313e-12,,paired_ttest,p_and_o,fuzzy_logic,50.0,9.244071836321824
+rapid_double_step,settling_time_s,,,1.7846878092458945e-08,,paired_ttest,p_and_o,q_learning,40.0,-7.057940651675584
+rapid_double_step,settling_time_s,,,1.7469963457118134e-11,,paired_ttest,p_and_o,sliding_mode,50.0,8.68490580295383
+rapid_double_step,settling_time_s,,,1.3883486128587544e-11,,paired_ttest,inc_cond,fuzzy_logic,50.0,8.751325351147178
+rapid_double_step,settling_time_s,,,2.2141842136068908e-08,,paired_ttest,inc_cond,q_learning,40.0,6.989675382451442
+rapid_double_step,settling_time_s,,,1.5911707044789255e-11,,paired_ttest,inc_cond,sliding_mode,50.0,8.71189682440521
+rapid_double_step,settling_time_s,,,1.404331826552578e-08,,paired_ttest,fuzzy_logic,q_learning,40.0,-7.133938641531997
+rapid_double_step,settling_time_s,,,1.183322112689651e-05,,paired_ttest,fuzzy_logic,sliding_mode,50.0,4.875682232028946
+rapid_double_step,settling_time_s,,,1.6440534544288772e-08,,paired_ttest,q_learning,sliding_mode,40.0,7.0839512584570326
+rapid_double_step,oscillation_p2p_w,,,2.7975786467197344e-10,,paired_ttest,p_and_o,inc_cond,50.0,7.891763992810155
+rapid_double_step,oscillation_p2p_w,,,3.8211328275393874e-10,,paired_ttest,p_and_o,fuzzy_logic,50.0,7.803437530043666
+rapid_double_step,oscillation_p2p_w,,,0.0009635101120395786,,paired_ttest,p_and_o,q_learning,50.0,3.5128429727685035
+rapid_double_step,oscillation_p2p_w,,,3.8211392065781453e-10,,paired_ttest,p_and_o,sliding_mode,50.0,7.803437057499778
+rapid_double_step,oscillation_p2p_w,,,0.2947404800179074,,paired_ttest,inc_cond,fuzzy_logic,50.0,-1.0591151598516493
+rapid_double_step,oscillation_p2p_w,,,0.0009997568463868893,,paired_ttest,inc_cond,q_learning,50.0,3.500524082122327
+rapid_double_step,oscillation_p2p_w,,,0.2947389533593278,,paired_ttest,inc_cond,sliding_mode,50.0,-1.0591185464718051
+rapid_double_step,oscillation_p2p_w,,,0.0009979444656018832,,paired_ttest,fuzzy_logic,q_learning,50.0,3.501129843386507
+rapid_double_step,oscillation_p2p_w,,,0.7541002136809427,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-0.3149986630888549
+rapid_double_step,oscillation_p2p_w,,,0.000997944466868498,,paired_ttest,q_learning,sliding_mode,50.0,-3.501129842962793
+rapid_double_step,oscillation_std_w,,,2.1715247565961032e-51,,paired_ttest,p_and_o,inc_cond,50.0,72.06912970503987
+rapid_double_step,oscillation_std_w,,,6.621671760749705e-50,,paired_ttest,p_and_o,fuzzy_logic,50.0,67.16741582299639
+rapid_double_step,oscillation_std_w,,,4.83805434422984e-08,,paired_ttest,p_and_o,q_learning,50.0,6.4430953079948035
+rapid_double_step,oscillation_std_w,,,9.64969681869781e-99,,paired_ttest,p_and_o,sliding_mode,50.0,670.0350385980535
+rapid_double_step,oscillation_std_w,,,3.791394025228201e-51,,paired_ttest,inc_cond,fuzzy_logic,50.0,-71.24651073575876
+rapid_double_step,oscillation_std_w,,,0.001173508631193613,,paired_ttest,inc_cond,q_learning,50.0,3.446824952620263
+rapid_double_step,oscillation_std_w,,,0.009905982740219046,,paired_ttest,inc_cond,sliding_mode,50.0,-2.683586268032215
+rapid_double_step,oscillation_std_w,,,8.53432874928013e-08,,paired_ttest,fuzzy_logic,q_learning,50.0,6.283812781469192
+rapid_double_step,oscillation_std_w,,,7.402073430373877e-111,,paired_ttest,fuzzy_logic,sliding_mode,50.0,1184.0266476869924
+rapid_double_step,oscillation_std_w,,,0.0008480643213313768,,paired_ttest,q_learning,sliding_mode,50.0,-3.5552585350997368
+rapid_double_step,energy_yield_j,,,2.2736627116605396e-45,,paired_ttest,p_and_o,inc_cond,50.0,54.120261410156374
+rapid_double_step,energy_yield_j,,,5.386397868608239e-33,,paired_ttest,p_and_o,fuzzy_logic,50.0,-29.706039546458424
+rapid_double_step,energy_yield_j,,,5.970075081628425e-27,,paired_ttest,p_and_o,q_learning,50.0,21.890822856514937
+rapid_double_step,energy_yield_j,,,1.8744168710808093e-95,,paired_ttest,p_and_o,sliding_mode,50.0,574.0898448738137
+rapid_double_step,energy_yield_j,,,8.027904853475277e-45,,paired_ttest,inc_cond,fuzzy_logic,50.0,-52.72183659173624
+rapid_double_step,energy_yield_j,,,0.20936121394859375,,paired_ttest,inc_cond,q_learning,50.0,1.2720446228545481
+rapid_double_step,energy_yield_j,,,2.817688534934367e-07,,paired_ttest,inc_cond,sliding_mode,50.0,-5.9476540028058675
+rapid_double_step,energy_yield_j,,,1.3226735407959487e-27,,paired_ttest,fuzzy_logic,q_learning,50.0,22.64186695298641
+rapid_double_step,energy_yield_j,,,4.970753126605288e-127,,paired_ttest,fuzzy_logic,sliding_mode,50.0,2531.786678591939
+rapid_double_step,energy_yield_j,,,0.0003281249043578071,,paired_ttest,q_learning,sliding_mode,50.0,-3.863851861085306
+rapid_double_step,energy_yield_ratio,,,2.2736627116605075e-45,,paired_ttest,p_and_o,inc_cond,50.0,54.12026141015641
+rapid_double_step,energy_yield_ratio,,,5.386397868608239e-33,,paired_ttest,p_and_o,fuzzy_logic,50.0,-29.706039546458427
+rapid_double_step,energy_yield_ratio,,,5.9700750816282965e-27,,paired_ttest,p_and_o,q_learning,50.0,21.89082285651495
+rapid_double_step,energy_yield_ratio,,,1.8744168710810222e-95,,paired_ttest,p_and_o,sliding_mode,50.0,574.0898448738125
+rapid_double_step,energy_yield_ratio,,,8.027904853474934e-45,,paired_ttest,inc_cond,fuzzy_logic,50.0,-52.72183659173627
+rapid_double_step,energy_yield_ratio,,,0.20936121394859358,,paired_ttest,inc_cond,q_learning,50.0,1.2720446228545488
+rapid_double_step,energy_yield_ratio,,,2.8176885349343776e-07,,paired_ttest,inc_cond,sliding_mode,50.0,-5.947654002805867
+rapid_double_step,energy_yield_ratio,,,1.32267354079593e-27,,paired_ttest,fuzzy_logic,q_learning,50.0,22.641866952986415
+rapid_double_step,energy_yield_ratio,,,4.970753126610656e-127,,paired_ttest,fuzzy_logic,sliding_mode,50.0,2531.7866785918854
+rapid_double_step,energy_yield_ratio,,,0.0003281249043578079,,paired_ttest,q_learning,sliding_mode,50.0,-3.8638518610853057
+temperature_step,tracking_efficiency_pct,,,5.9044721932457355e-06,,paired_ttest,p_and_o,inc_cond,50.0,5.078612790457628
+temperature_step,tracking_efficiency_pct,,,1.8015117089219902e-06,,paired_ttest,p_and_o,fuzzy_logic,50.0,-5.42073431585766
+temperature_step,tracking_efficiency_pct,,,0.00018722122269406144,,paired_ttest,p_and_o,q_learning,50.0,4.04118744959007
+temperature_step,tracking_efficiency_pct,,,4.376922049234339e-06,,paired_ttest,p_and_o,sliding_mode,50.0,-5.165365950269313
+temperature_step,tracking_efficiency_pct,,,5.510579006151103e-06,,paired_ttest,inc_cond,fuzzy_logic,50.0,-5.098651560403539
+temperature_step,tracking_efficiency_pct,,,0.000724638714198013,,paired_ttest,inc_cond,q_learning,50.0,3.607202209631419
+temperature_step,tracking_efficiency_pct,,,5.770489954875841e-06,,paired_ttest,inc_cond,sliding_mode,50.0,-5.085277001256963
+temperature_step,tracking_efficiency_pct,,,0.00017169662202479193,,paired_ttest,fuzzy_logic,q_learning,50.0,4.068257075312819
+temperature_step,tracking_efficiency_pct,,,0.00012261515600102605,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-4.172870014589079
+temperature_step,tracking_efficiency_pct,,,0.00016715168067042165,,paired_ttest,q_learning,sliding_mode,50.0,-4.076631802666634
+temperature_step,convergence_time_s,,,1.5925032740343387e-11,,paired_ttest,p_and_o,inc_cond,50.0,-8.711654892519269
+temperature_step,convergence_time_s,,,2.5593369760253313e-12,,paired_ttest,p_and_o,fuzzy_logic,50.0,9.244071836321824
+temperature_step,convergence_time_s,,,1.7846878092458945e-08,,paired_ttest,p_and_o,q_learning,40.0,-7.057940651675584
+temperature_step,convergence_time_s,,,1.7469963457118134e-11,,paired_ttest,p_and_o,sliding_mode,50.0,8.68490580295383
+temperature_step,convergence_time_s,,,1.3883486128587544e-11,,paired_ttest,inc_cond,fuzzy_logic,50.0,8.751325351147178
+temperature_step,convergence_time_s,,,2.2141842136068908e-08,,paired_ttest,inc_cond,q_learning,40.0,6.989675382451442
+temperature_step,convergence_time_s,,,1.5911707044789255e-11,,paired_ttest,inc_cond,sliding_mode,50.0,8.71189682440521
+temperature_step,convergence_time_s,,,1.404331826552578e-08,,paired_ttest,fuzzy_logic,q_learning,40.0,-7.133938641531997
+temperature_step,convergence_time_s,,,1.183322112689651e-05,,paired_ttest,fuzzy_logic,sliding_mode,50.0,4.875682232028946
+temperature_step,convergence_time_s,,,1.6440534544288772e-08,,paired_ttest,q_learning,sliding_mode,40.0,7.0839512584570326
+temperature_step,settling_time_s,,,1.5925032740343387e-11,,paired_ttest,p_and_o,inc_cond,50.0,-8.711654892519269
+temperature_step,settling_time_s,,,2.5593369760253313e-12,,paired_ttest,p_and_o,fuzzy_logic,50.0,9.244071836321824
+temperature_step,settling_time_s,,,1.7846878092458945e-08,,paired_ttest,p_and_o,q_learning,40.0,-7.057940651675584
+temperature_step,settling_time_s,,,1.7469963457118134e-11,,paired_ttest,p_and_o,sliding_mode,50.0,8.68490580295383
+temperature_step,settling_time_s,,,1.3883486128587544e-11,,paired_ttest,inc_cond,fuzzy_logic,50.0,8.751325351147178
+temperature_step,settling_time_s,,,2.2141842136068908e-08,,paired_ttest,inc_cond,q_learning,40.0,6.989675382451442
+temperature_step,settling_time_s,,,1.5911707044789255e-11,,paired_ttest,inc_cond,sliding_mode,50.0,8.71189682440521
+temperature_step,settling_time_s,,,1.404331826552578e-08,,paired_ttest,fuzzy_logic,q_learning,40.0,-7.133938641531997
+temperature_step,settling_time_s,,,1.183322112689651e-05,,paired_ttest,fuzzy_logic,sliding_mode,50.0,4.875682232028946
+temperature_step,settling_time_s,,,1.6440534544288772e-08,,paired_ttest,q_learning,sliding_mode,40.0,7.0839512584570326
+temperature_step,oscillation_p2p_w,,,0.00011608052750165996,,paired_ttest,p_and_o,inc_cond,50.0,4.189789813752053
+temperature_step,oscillation_p2p_w,,,6.77962357775999e-52,,paired_ttest,p_and_o,fuzzy_logic,50.0,-73.81760867005009
+temperature_step,oscillation_p2p_w,,,4.974170185563847e-10,,paired_ttest,p_and_o,q_learning,50.0,7.728839345577171
+temperature_step,oscillation_p2p_w,,,3.778799623412105e-44,,paired_ttest,p_and_o,sliding_mode,50.0,-51.052369317273545
+temperature_step,oscillation_p2p_w,,,9.371280510774148e-79,,paired_ttest,inc_cond,fuzzy_logic,50.0,-261.85742319090775
+temperature_step,oscillation_p2p_w,,,1.9731165084437596e-09,,paired_ttest,inc_cond,q_learning,50.0,7.340417668070567
+temperature_step,oscillation_p2p_w,,,1.8984495628991273e-71,,paired_ttest,inc_cond,sliding_mode,50.0,-185.69507137437753
+temperature_step,oscillation_p2p_w,,,4.906527453360708e-22,,paired_ttest,fuzzy_logic,q_learning,50.0,16.858665366550728
+temperature_step,oscillation_p2p_w,,,7.64761262648e-311,,paired_ttest,fuzzy_logic,sliding_mode,50.0,14279478.143510783
+temperature_step,oscillation_p2p_w,,,7.0498268362134415e-19,,paired_ttest,q_learning,sliding_mode,50.0,-14.105019205246858
+temperature_step,oscillation_std_w,,,1.192813378842461e-13,,paired_ttest,p_and_o,inc_cond,50.0,-10.158118723441051
+temperature_step,oscillation_std_w,,,0.003162731130849068,,paired_ttest,p_and_o,fuzzy_logic,50.0,-3.104617188371695
+temperature_step,oscillation_std_w,,,5.573499997215998e-13,,paired_ttest,p_and_o,q_learning,50.0,9.694905527938412
+temperature_step,oscillation_std_w,,,0.5277672808390206,,paired_ttest,p_and_o,sliding_mode,50.0,-0.6359516542784759
+temperature_step,oscillation_std_w,,,3.03571070277947e-12,,paired_ttest,inc_cond,fuzzy_logic,50.0,9.193995055830412
+temperature_step,oscillation_std_w,,,3.852607196566283e-13,,paired_ttest,inc_cond,q_learning,50.0,9.80516384514294
+temperature_step,oscillation_std_w,,,2.7190365441946705e-12,,paired_ttest,inc_cond,sliding_mode,50.0,9.226305545414174
+temperature_step,oscillation_std_w,,,5.466433305113444e-13,,paired_ttest,fuzzy_logic,q_learning,50.0,9.700686603683556
+temperature_step,oscillation_std_w,,,5.336357458750854e-11,,paired_ttest,fuzzy_logic,sliding_mode,50.0,8.363785784415482
+temperature_step,oscillation_std_w,,,5.536012447624377e-13,,paired_ttest,q_learning,sliding_mode,50.0,-9.696916808164419
+temperature_step,energy_yield_j,,,5.9044721932460175e-06,,paired_ttest,p_and_o,inc_cond,50.0,5.078612790457614
+temperature_step,energy_yield_j,,,1.8015117089231545e-06,,paired_ttest,p_and_o,fuzzy_logic,50.0,-5.420734315857475
+temperature_step,energy_yield_j,,,0.00018722122269406144,,paired_ttest,p_and_o,q_learning,50.0,4.04118744959007
+temperature_step,energy_yield_j,,,4.376922049233302e-06,,paired_ttest,p_and_o,sliding_mode,50.0,-5.165365950269381
+temperature_step,energy_yield_j,,,5.510579006151579e-06,,paired_ttest,inc_cond,fuzzy_logic,50.0,-5.098651560403514
+temperature_step,energy_yield_j,,,0.000724638714198013,,paired_ttest,inc_cond,q_learning,50.0,3.6072022096314194
+temperature_step,energy_yield_j,,,5.7704899548760115e-06,,paired_ttest,inc_cond,sliding_mode,50.0,-5.085277001256955
+temperature_step,energy_yield_j,,,0.00017169662202479193,,paired_ttest,fuzzy_logic,q_learning,50.0,4.068257075312819
+temperature_step,energy_yield_j,,,0.00012261515600084998,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-4.172870014589523
+temperature_step,energy_yield_j,,,0.00016715168067042214,,paired_ttest,q_learning,sliding_mode,50.0,-4.0766318026666335
+temperature_step,energy_yield_ratio,,,5.904472193246147e-06,,paired_ttest,p_and_o,inc_cond,50.0,5.0786127904576075
+temperature_step,energy_yield_ratio,,,1.801511708922201e-06,,paired_ttest,p_and_o,fuzzy_logic,50.0,-5.420734315857626
+temperature_step,energy_yield_ratio,,,0.00018722122269406144,,paired_ttest,p_and_o,q_learning,50.0,4.04118744959007
+temperature_step,energy_yield_ratio,,,4.376922049233044e-06,,paired_ttest,p_and_o,sliding_mode,50.0,-5.165365950269398
+temperature_step,energy_yield_ratio,,,5.510579006151538e-06,,paired_ttest,inc_cond,fuzzy_logic,50.0,-5.098651560403517
+temperature_step,energy_yield_ratio,,,0.000724638714198013,,paired_ttest,inc_cond,q_learning,50.0,3.607202209631419
+temperature_step,energy_yield_ratio,,,5.770489954876086e-06,,paired_ttest,inc_cond,sliding_mode,50.0,-5.0852770012569515
+temperature_step,energy_yield_ratio,,,0.00017169662202479196,,paired_ttest,fuzzy_logic,q_learning,50.0,4.068257075312818
+temperature_step,energy_yield_ratio,,,0.00012261515600090207,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-4.172870014589391
+temperature_step,energy_yield_ratio,,,0.00016715168067042165,,paired_ttest,q_learning,sliding_mode,50.0,-4.076631802666634
+rapid_fluctuation_cloud_passage,tracking_efficiency_pct,,,6.529406252714042e-22,,paired_ttest,p_and_o,inc_cond,50.0,16.744066346089443
+rapid_fluctuation_cloud_passage,tracking_efficiency_pct,,,2.4972439479612693e-88,,paired_ttest,p_and_o,fuzzy_logic,50.0,410.72372642456577
+rapid_fluctuation_cloud_passage,tracking_efficiency_pct,,,2.048603401150394e-13,,paired_ttest,p_and_o,q_learning,50.0,9.994743604839709
+rapid_fluctuation_cloud_passage,tracking_efficiency_pct,,,2.3036898923767537e-82,,paired_ttest,p_and_o,sliding_mode,50.0,310.2911307955365
+rapid_fluctuation_cloud_passage,tracking_efficiency_pct,,,0.08887574866030588,,paired_ttest,inc_cond,fuzzy_logic,50.0,-1.7358483894727077
+rapid_fluctuation_cloud_passage,tracking_efficiency_pct,,,0.01238047160963681,,paired_ttest,inc_cond,q_learning,50.0,2.597026682811545
+rapid_fluctuation_cloud_passage,tracking_efficiency_pct,,,0.11106312978762303,,paired_ttest,inc_cond,sliding_mode,50.0,-1.6227357729516252
+rapid_fluctuation_cloud_passage,tracking_efficiency_pct,,,0.0006327303518426431,,paired_ttest,fuzzy_logic,q_learning,50.0,3.6517144850145966
+rapid_fluctuation_cloud_passage,tracking_efficiency_pct,,,1.8875101234423355e-10,,paired_ttest,fuzzy_logic,sliding_mode,50.0,8.003446252660432
+rapid_fluctuation_cloud_passage,tracking_efficiency_pct,,,0.0007094634786483813,,paired_ttest,q_learning,sliding_mode,50.0,-3.6141649139842924
+rapid_fluctuation_cloud_passage,convergence_time_s,,,1.0336415940656302e-10,,paired_ttest,p_and_o,inc_cond,50.0,-8.174848212351204
+rapid_fluctuation_cloud_passage,convergence_time_s,,,2.9462810158880914e-12,,paired_ttest,p_and_o,fuzzy_logic,50.0,9.202761551961602
+rapid_fluctuation_cloud_passage,convergence_time_s,,,0.0015142909737238914,,paired_ttest,p_and_o,q_learning,50.0,-3.3605295076178803
+rapid_fluctuation_cloud_passage,convergence_time_s,,,2.13004203753019e-11,,paired_ttest,p_and_o,sliding_mode,50.0,8.627699200089
+rapid_fluctuation_cloud_passage,convergence_time_s,,,8.161479841316925e-11,,paired_ttest,inc_cond,fuzzy_logic,50.0,8.242268560807576
+rapid_fluctuation_cloud_passage,convergence_time_s,,,0.013253809076014707,,paired_ttest,inc_cond,q_learning,50.0,-2.5702332544202307
+rapid_fluctuation_cloud_passage,convergence_time_s,,,9.287470698596936e-11,,paired_ttest,inc_cond,sliding_mode,50.0,8.205373181369596
+rapid_fluctuation_cloud_passage,convergence_time_s,,,0.0013375628263919024,,paired_ttest,fuzzy_logic,q_learning,50.0,-3.402669676519962
+rapid_fluctuation_cloud_passage,convergence_time_s,,,8.581542624611127e-06,,paired_ttest,fuzzy_logic,sliding_mode,50.0,4.969739979825406
+rapid_fluctuation_cloud_passage,convergence_time_s,,,0.001285396012309262,,paired_ttest,q_learning,sliding_mode,50.0,3.416123814403265
+rapid_fluctuation_cloud_passage,settling_time_s,,,1.0336415940656302e-10,,paired_ttest,p_and_o,inc_cond,50.0,-8.174848212351204
+rapid_fluctuation_cloud_passage,settling_time_s,,,0.12130456466718653,,paired_ttest,p_and_o,fuzzy_logic,50.0,1.5766782228772953
+rapid_fluctuation_cloud_passage,settling_time_s,,,0.0015142909737238914,,paired_ttest,p_and_o,q_learning,50.0,-3.3605295076178803
+rapid_fluctuation_cloud_passage,settling_time_s,,,7.481406403770771e-08,,paired_ttest,p_and_o,sliding_mode,50.0,-6.32078466277767
+rapid_fluctuation_cloud_passage,settling_time_s,,,2.3760861215582074e-10,,paired_ttest,inc_cond,fuzzy_logic,50.0,7.938082414780326
+rapid_fluctuation_cloud_passage,settling_time_s,,,0.013253809076014707,,paired_ttest,inc_cond,q_learning,50.0,-2.5702332544202307
+rapid_fluctuation_cloud_passage,settling_time_s,,,0.3821190406166717,,paired_ttest,inc_cond,sliding_mode,50.0,-0.8819329590784641
+rapid_fluctuation_cloud_passage,settling_time_s,,,0.0014605720932652718,,paired_ttest,fuzzy_logic,q_learning,50.0,-3.3728215586254215
+rapid_fluctuation_cloud_passage,settling_time_s,,,5.8898618600969917e-08,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-6.387912354749264
+rapid_fluctuation_cloud_passage,settling_time_s,,,0.023109551146926123,,paired_ttest,q_learning,sliding_mode,50.0,2.3452213984853687
+rapid_fluctuation_cloud_passage,oscillation_p2p_w,,,3.985651672010969e-09,,paired_ttest,p_and_o,inc_cond,50.0,7.142917374568508
+rapid_fluctuation_cloud_passage,oscillation_p2p_w,,,1.7400885321829082e-19,,paired_ttest,p_and_o,fuzzy_logic,50.0,14.610061590497649
+rapid_fluctuation_cloud_passage,oscillation_p2p_w,,,0.0002510134817454329,,paired_ttest,p_and_o,q_learning,50.0,3.9489340252865226
+rapid_fluctuation_cloud_passage,oscillation_p2p_w,,,2.2569366919598658e-10,,paired_ttest,p_and_o,sliding_mode,50.0,7.952683195385639
+rapid_fluctuation_cloud_passage,oscillation_p2p_w,,,1.4705949643878874e-07,,paired_ttest,inc_cond,fuzzy_logic,50.0,-6.130863892997367
+rapid_fluctuation_cloud_passage,oscillation_p2p_w,,,0.10064144006801234,,paired_ttest,inc_cond,q_learning,50.0,1.6733007666944055
+rapid_fluctuation_cloud_passage,oscillation_p2p_w,,,0.23377719459090243,,paired_ttest,inc_cond,sliding_mode,50.0,1.20555878960015
+rapid_fluctuation_cloud_passage,oscillation_p2p_w,,,0.0008609585122895594,,paired_ttest,fuzzy_logic,q_learning,50.0,3.5502561880504735
+rapid_fluctuation_cloud_passage,oscillation_p2p_w,,,1.3531758664798789e-08,,paired_ttest,fuzzy_logic,sliding_mode,50.0,6.800185942951483
+rapid_fluctuation_cloud_passage,oscillation_p2p_w,,,0.30312280076870657,,paired_ttest,q_learning,sliding_mode,50.0,-1.0406998180055191
+rapid_fluctuation_cloud_passage,oscillation_std_w,,,1.336022489336575e-15,,paired_ttest,p_and_o,inc_cond,50.0,11.556057819728252
+rapid_fluctuation_cloud_passage,oscillation_std_w,,,1.2769277873633997e-46,,paired_ttest,p_and_o,fuzzy_logic,50.0,57.448138339528356
+rapid_fluctuation_cloud_passage,oscillation_std_w,,,2.6743414093070784e-06,,paired_ttest,p_and_o,q_learning,50.0,5.307406125715343
+rapid_fluctuation_cloud_passage,oscillation_std_w,,,1.0055517607842612e-17,,paired_ttest,p_and_o,sliding_mode,50.0,13.175162522582083
+rapid_fluctuation_cloud_passage,oscillation_std_w,,,5.822393310867709e-07,,paired_ttest,inc_cond,fuzzy_logic,50.0,-5.742392485845399
+rapid_fluctuation_cloud_passage,oscillation_std_w,,,0.046907717826755256,,paired_ttest,inc_cond,q_learning,50.0,2.0385708915868386
+rapid_fluctuation_cloud_passage,oscillation_std_w,,,0.04870759656783204,,paired_ttest,inc_cond,sliding_mode,50.0,2.0214995907794138
+rapid_fluctuation_cloud_passage,oscillation_std_w,,,0.0005625135935031512,,paired_ttest,fuzzy_logic,q_learning,50.0,3.69011712198206
+rapid_fluctuation_cloud_passage,oscillation_std_w,,,2.5230174469036124e-10,,paired_ttest,fuzzy_logic,sliding_mode,50.0,7.921058947484369
+rapid_fluctuation_cloud_passage,oscillation_std_w,,,0.2785990790764096,,paired_ttest,q_learning,sliding_mode,50.0,-1.0956246040707502
+rapid_fluctuation_cloud_passage,energy_yield_j,,,6.529406252714042e-22,,paired_ttest,p_and_o,inc_cond,50.0,16.744066346089443
+rapid_fluctuation_cloud_passage,energy_yield_j,,,2.4972439479646762e-88,,paired_ttest,p_and_o,fuzzy_logic,50.0,410.7237264245546
+rapid_fluctuation_cloud_passage,energy_yield_j,,,2.048603401150416e-13,,paired_ttest,p_and_o,q_learning,50.0,9.994743604839705
+rapid_fluctuation_cloud_passage,energy_yield_j,,,2.303689892378129e-82,,paired_ttest,p_and_o,sliding_mode,50.0,310.2911307955327
+rapid_fluctuation_cloud_passage,energy_yield_j,,,0.08887574866030543,,paired_ttest,inc_cond,fuzzy_logic,50.0,-1.7358483894727104
+rapid_fluctuation_cloud_passage,energy_yield_j,,,0.012380471609636822,,paired_ttest,inc_cond,q_learning,50.0,2.5970266828115447
+rapid_fluctuation_cloud_passage,energy_yield_j,,,0.11106312978762269,,paired_ttest,inc_cond,sliding_mode,50.0,-1.6227357729516267
+rapid_fluctuation_cloud_passage,energy_yield_j,,,0.0006327303518426414,,paired_ttest,fuzzy_logic,q_learning,50.0,3.6517144850145975
+rapid_fluctuation_cloud_passage,energy_yield_j,,,1.8875101234390495e-10,,paired_ttest,fuzzy_logic,sliding_mode,50.0,8.003446252660927
+rapid_fluctuation_cloud_passage,energy_yield_j,,,0.0007094634786483791,,paired_ttest,q_learning,sliding_mode,50.0,-3.614164913984293
+rapid_fluctuation_cloud_passage,energy_yield_ratio,,,6.529406252714276e-22,,paired_ttest,p_and_o,inc_cond,50.0,16.74406634608943
+rapid_fluctuation_cloud_passage,energy_yield_ratio,,,2.4972439479615534e-88,,paired_ttest,p_and_o,fuzzy_logic,50.0,410.72372642456514
+rapid_fluctuation_cloud_passage,energy_yield_ratio,,,2.0486034011503648e-13,,paired_ttest,p_and_o,q_learning,50.0,9.99474360483971
+rapid_fluctuation_cloud_passage,energy_yield_ratio,,,2.3036898923774083e-82,,paired_ttest,p_and_o,sliding_mode,50.0,310.29113079553457
+rapid_fluctuation_cloud_passage,energy_yield_ratio,,,0.0888757486603057,,paired_ttest,inc_cond,fuzzy_logic,50.0,-1.7358483894727088
+rapid_fluctuation_cloud_passage,energy_yield_ratio,,,0.012380471609636802,,paired_ttest,inc_cond,q_learning,50.0,2.5970266828115456
+rapid_fluctuation_cloud_passage,energy_yield_ratio,,,0.1110631297876234,,paired_ttest,inc_cond,sliding_mode,50.0,-1.6227357729516234
+rapid_fluctuation_cloud_passage,energy_yield_ratio,,,0.0006327303518426403,,paired_ttest,fuzzy_logic,q_learning,50.0,3.651714485014599
+rapid_fluctuation_cloud_passage,energy_yield_ratio,,,1.8875101234420087e-10,,paired_ttest,fuzzy_logic,sliding_mode,50.0,8.003446252660481
+rapid_fluctuation_cloud_passage,energy_yield_ratio,,,0.0007094634786483744,,paired_ttest,q_learning,sliding_mode,50.0,-3.614164913984295
+sensor_noise_robustness,tracking_efficiency_pct,,,7.407422992629569e-49,,paired_ttest,p_and_o,inc_cond,50.0,63.90237881859895
+sensor_noise_robustness,tracking_efficiency_pct,,,7.318049729497259e-39,,paired_ttest,p_and_o,fuzzy_logic,50.0,39.58466457191373
+sensor_noise_robustness,tracking_efficiency_pct,,,7.635120249867942e-73,,paired_ttest,p_and_o,q_learning,50.0,198.2982350681802
+sensor_noise_robustness,tracking_efficiency_pct,,,2.0799454116521442e-25,,paired_ttest,p_and_o,sliding_mode,50.0,20.201176440627023
+sensor_noise_robustness,tracking_efficiency_pct,,,5.796459996499525e-48,,paired_ttest,inc_cond,fuzzy_logic,50.0,-61.24329906673917
+sensor_noise_robustness,tracking_efficiency_pct,,,5.1821873474907515e-14,,paired_ttest,inc_cond,q_learning,50.0,10.411896995045135
+sensor_noise_robustness,tracking_efficiency_pct,,,2.2274211914320647e-48,,paired_ttest,inc_cond,sliding_mode,50.0,-62.465719695057224
+sensor_noise_robustness,tracking_efficiency_pct,,,1.8470993683841388e-72,,paired_ttest,fuzzy_logic,q_learning,50.0,194.75069627940917
+sensor_noise_robustness,tracking_efficiency_pct,,,4.367571868427867e-34,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-31.351559558806827
+sensor_noise_robustness,tracking_efficiency_pct,,,2.9614004742977384e-73,,paired_ttest,q_learning,sliding_mode,50.0,-202.1730057051296
+sensor_noise_robustness,convergence_time_s,,,6.336523236499615e-08,,paired_ttest,p_and_o,inc_cond,35.0,-6.8807009235959296
+sensor_noise_robustness,convergence_time_s,,,1.9378362489958425e-09,,paired_ttest,p_and_o,fuzzy_logic,50.0,7.3454909149834355
+sensor_noise_robustness,convergence_time_s,,,3.8276564306900815e-07,,paired_ttest,p_and_o,q_learning,35.0,-6.271990547711428
+sensor_noise_robustness,convergence_time_s,,,1.4107412484201795e-11,,paired_ttest,p_and_o,sliding_mode,50.0,8.74669646856385
+sensor_noise_robustness,convergence_time_s,,,5.940686075161035e-08,,paired_ttest,inc_cond,fuzzy_logic,35.0,6.902713001963131
+sensor_noise_robustness,convergence_time_s,,,5.923362036248223e-08,,paired_ttest,inc_cond,q_learning,35.0,6.903709914280359
+sensor_noise_robustness,convergence_time_s,,,5.9052755782350796e-08,,paired_ttest,inc_cond,sliding_mode,35.0,6.904753847244377
+sensor_noise_robustness,convergence_time_s,,,7.928872914997598e-08,,paired_ttest,fuzzy_logic,q_learning,35.0,-6.804309531303102
+sensor_noise_robustness,convergence_time_s,,,0.00019793406514935984,,paired_ttest,fuzzy_logic,sliding_mode,50.0,4.0237478334260235
+sensor_noise_robustness,convergence_time_s,,,6.836396019513137e-08,,paired_ttest,q_learning,sliding_mode,35.0,6.8548082725915735
+sensor_noise_robustness,settling_time_s,,,0.18103571178319386,,paired_ttest,p_and_o,inc_cond,23.0,1.381368413511295
+sensor_noise_robustness,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,fuzzy_logic,0.0,
+sensor_noise_robustness,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,q_learning,0.0,
+sensor_noise_robustness,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,sliding_mode,0.0,
+sensor_noise_robustness,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,fuzzy_logic,0.0,
+sensor_noise_robustness,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,q_learning,0.0,
+sensor_noise_robustness,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,sliding_mode,0.0,
+sensor_noise_robustness,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,q_learning,0.0,
+sensor_noise_robustness,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,sliding_mode,0.0,
+sensor_noise_robustness,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,q_learning,sliding_mode,0.0,
+sensor_noise_robustness,oscillation_p2p_w,,,1.8825848106068823e-05,,paired_ttest,p_and_o,inc_cond,50.0,-4.738847187915828
+sensor_noise_robustness,oscillation_p2p_w,,,1.3403715456206656e-27,,paired_ttest,p_and_o,fuzzy_logic,50.0,22.635151441433525
+sensor_noise_robustness,oscillation_p2p_w,,,1.3403715456206656e-27,,paired_ttest,p_and_o,q_learning,50.0,22.635151441433525
+sensor_noise_robustness,oscillation_p2p_w,,,1.3403715456206656e-27,,paired_ttest,p_and_o,sliding_mode,50.0,22.635151441433525
+sensor_noise_robustness,oscillation_p2p_w,,,6.6337304433295636e-09,,paired_ttest,inc_cond,fuzzy_logic,50.0,6.999999999868542
+sensor_noise_robustness,oscillation_p2p_w,,,6.6337304433295636e-09,,paired_ttest,inc_cond,q_learning,50.0,6.999999999868542
+sensor_noise_robustness,oscillation_p2p_w,,,6.6337304433295636e-09,,paired_ttest,inc_cond,sliding_mode,50.0,6.999999999868542
+sensor_noise_robustness,oscillation_p2p_w,,,,,paired_ttest,fuzzy_logic,q_learning,50.0,
+sensor_noise_robustness,oscillation_p2p_w,,,,,paired_ttest,fuzzy_logic,sliding_mode,50.0,
+sensor_noise_robustness,oscillation_p2p_w,,,,,paired_ttest,q_learning,sliding_mode,50.0,
+sensor_noise_robustness,oscillation_std_w,,,1.1002911117157448e-07,,paired_ttest,p_and_o,inc_cond,50.0,-6.212436772980807
+sensor_noise_robustness,oscillation_std_w,,,1.3961299713582255e-32,,paired_ttest,p_and_o,fuzzy_logic,50.0,29.10280091341949
+sensor_noise_robustness,oscillation_std_w,,,1.3961299713582255e-32,,paired_ttest,p_and_o,q_learning,50.0,29.10280091341949
+sensor_noise_robustness,oscillation_std_w,,,1.3961299713582255e-32,,paired_ttest,p_and_o,sliding_mode,50.0,29.10280091341949
+sensor_noise_robustness,oscillation_std_w,,,7.159457836453533e-09,,paired_ttest,inc_cond,fuzzy_logic,50.0,6.978615632274699
+sensor_noise_robustness,oscillation_std_w,,,7.159457836453533e-09,,paired_ttest,inc_cond,q_learning,50.0,6.978615632274699
+sensor_noise_robustness,oscillation_std_w,,,7.159457836453533e-09,,paired_ttest,inc_cond,sliding_mode,50.0,6.978615632274699
+sensor_noise_robustness,oscillation_std_w,,,,,paired_ttest,fuzzy_logic,q_learning,50.0,
+sensor_noise_robustness,oscillation_std_w,,,,,paired_ttest,fuzzy_logic,sliding_mode,50.0,
+sensor_noise_robustness,oscillation_std_w,,,,,paired_ttest,q_learning,sliding_mode,50.0,
+sensor_noise_robustness,energy_yield_j,,,7.407422992629569e-49,,paired_ttest,p_and_o,inc_cond,50.0,63.90237881859893
+sensor_noise_robustness,energy_yield_j,,,7.318049729491535e-39,,paired_ttest,p_and_o,fuzzy_logic,50.0,39.58466457191438
+sensor_noise_robustness,energy_yield_j,,,7.63512024986729e-73,,paired_ttest,p_and_o,q_learning,50.0,198.29823506818047
+sensor_noise_robustness,energy_yield_j,,,2.079945411652189e-25,,paired_ttest,p_and_o,sliding_mode,50.0,20.20117644062701
+sensor_noise_robustness,energy_yield_j,,,5.796459996499277e-48,,paired_ttest,inc_cond,fuzzy_logic,50.0,-61.24329906673922
+sensor_noise_robustness,energy_yield_j,,,5.1821873474907326e-14,,paired_ttest,inc_cond,q_learning,50.0,10.411896995045137
+sensor_noise_robustness,energy_yield_j,,,2.2274211914320015e-48,,paired_ttest,inc_cond,sliding_mode,50.0,-62.46571969505726
+sensor_noise_robustness,energy_yield_j,,,1.8470993683838764e-72,,paired_ttest,fuzzy_logic,q_learning,50.0,194.7506962794097
+sensor_noise_robustness,energy_yield_j,,,4.3675718684325875e-34,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-31.351559558806095
+sensor_noise_robustness,energy_yield_j,,,2.961400474297317e-73,,paired_ttest,q_learning,sliding_mode,50.0,-202.17300570513018
+sensor_noise_robustness,energy_yield_ratio,,,7.407422992629361e-49,,paired_ttest,p_and_o,inc_cond,50.0,63.90237881859896
+sensor_noise_robustness,energy_yield_ratio,,,7.318049729498404e-39,,paired_ttest,p_and_o,fuzzy_logic,50.0,39.58466457191359
+sensor_noise_robustness,energy_yield_ratio,,,7.635120249867507e-73,,paired_ttest,p_and_o,q_learning,50.0,198.29823506818028
+sensor_noise_robustness,energy_yield_ratio,,,2.079945411652885e-25,,paired_ttest,p_and_o,sliding_mode,50.0,20.201176440626853
+sensor_noise_robustness,energy_yield_ratio,,,5.796459996499525e-48,,paired_ttest,inc_cond,fuzzy_logic,50.0,-61.24329906673918
+sensor_noise_robustness,energy_yield_ratio,,,5.1821873474907326e-14,,paired_ttest,inc_cond,q_learning,50.0,10.411896995045137
+sensor_noise_robustness,energy_yield_ratio,,,2.2274211914320015e-48,,paired_ttest,inc_cond,sliding_mode,50.0,-62.46571969505726
+sensor_noise_robustness,energy_yield_ratio,,,1.8470993683840337e-72,,paired_ttest,fuzzy_logic,q_learning,50.0,194.75069627940942
+sensor_noise_robustness,energy_yield_ratio,,,4.367571868428177e-34,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-31.351559558806777
+sensor_noise_robustness,energy_yield_ratio,,,2.961400474297654e-73,,paired_ttest,q_learning,sliding_mode,50.0,-202.17300570512978
+partial_shading_simple,tracking_efficiency_pct,,,2.948973449340211e-06,,paired_ttest,p_and_o,inc_cond,50.0,5.279288454252927
+partial_shading_simple,tracking_efficiency_pct,,,9.976421284164633e-06,,paired_ttest,p_and_o,fuzzy_logic,50.0,-4.9257101842704
+partial_shading_simple,tracking_efficiency_pct,,,1.3037071219797164e-41,,paired_ttest,p_and_o,q_learning,50.0,45.20049620511454
+partial_shading_simple,tracking_efficiency_pct,,,1.545998502696965e-05,,paired_ttest,p_and_o,sliding_mode,50.0,-4.79703377491065
+partial_shading_simple,tracking_efficiency_pct,,,3.205937002255418e-06,,paired_ttest,inc_cond,fuzzy_logic,50.0,-5.255231620974294
+partial_shading_simple,tracking_efficiency_pct,,,2.495000261290748e-07,,paired_ttest,inc_cond,q_learning,50.0,5.981966520778493
+partial_shading_simple,tracking_efficiency_pct,,,3.4030081192841116e-06,,paired_ttest,inc_cond,sliding_mode,50.0,-5.238039552166321
+partial_shading_simple,tracking_efficiency_pct,,,1.105056538409038e-44,,paired_ttest,fuzzy_logic,q_learning,50.0,52.373184253283995
+partial_shading_simple,tracking_efficiency_pct,,,0.00010391188749507433,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-4.223922864038837
+partial_shading_simple,tracking_efficiency_pct,,,1.101647584412262e-45,,paired_ttest,q_learning,sliding_mode,50.0,-54.93962945506959
+partial_shading_simple,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,inc_cond,0.0,
+partial_shading_simple,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,fuzzy_logic,0.0,
+partial_shading_simple,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,q_learning,0.0,
+partial_shading_simple,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,sliding_mode,0.0,
+partial_shading_simple,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,fuzzy_logic,0.0,
+partial_shading_simple,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,q_learning,0.0,
+partial_shading_simple,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,sliding_mode,0.0,
+partial_shading_simple,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,q_learning,0.0,
+partial_shading_simple,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,sliding_mode,0.0,
+partial_shading_simple,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,q_learning,sliding_mode,0.0,
+partial_shading_simple,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,inc_cond,0.0,
+partial_shading_simple,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,fuzzy_logic,0.0,
+partial_shading_simple,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,q_learning,0.0,
+partial_shading_simple,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,sliding_mode,0.0,
+partial_shading_simple,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,fuzzy_logic,0.0,
+partial_shading_simple,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,q_learning,0.0,
+partial_shading_simple,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,sliding_mode,0.0,
+partial_shading_simple,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,q_learning,0.0,
+partial_shading_simple,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,sliding_mode,0.0,
+partial_shading_simple,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,q_learning,sliding_mode,0.0,
+partial_shading_simple,oscillation_p2p_w,,,,,paired_ttest,p_and_o,inc_cond,50.0,
+partial_shading_simple,oscillation_p2p_w,,,,,paired_ttest,p_and_o,fuzzy_logic,50.0,
+partial_shading_simple,oscillation_p2p_w,,,,,paired_ttest,p_and_o,q_learning,50.0,
+partial_shading_simple,oscillation_p2p_w,,,,,paired_ttest,p_and_o,sliding_mode,50.0,
+partial_shading_simple,oscillation_p2p_w,,,,,paired_ttest,inc_cond,fuzzy_logic,50.0,
+partial_shading_simple,oscillation_p2p_w,,,,,paired_ttest,inc_cond,q_learning,50.0,
+partial_shading_simple,oscillation_p2p_w,,,,,paired_ttest,inc_cond,sliding_mode,50.0,
+partial_shading_simple,oscillation_p2p_w,,,,,paired_ttest,fuzzy_logic,q_learning,50.0,
+partial_shading_simple,oscillation_p2p_w,,,,,paired_ttest,fuzzy_logic,sliding_mode,50.0,
+partial_shading_simple,oscillation_p2p_w,,,,,paired_ttest,q_learning,sliding_mode,50.0,
+partial_shading_simple,oscillation_std_w,,,,,paired_ttest,p_and_o,inc_cond,50.0,
+partial_shading_simple,oscillation_std_w,,,,,paired_ttest,p_and_o,fuzzy_logic,50.0,
+partial_shading_simple,oscillation_std_w,,,,,paired_ttest,p_and_o,q_learning,50.0,
+partial_shading_simple,oscillation_std_w,,,,,paired_ttest,p_and_o,sliding_mode,50.0,
+partial_shading_simple,oscillation_std_w,,,,,paired_ttest,inc_cond,fuzzy_logic,50.0,
+partial_shading_simple,oscillation_std_w,,,,,paired_ttest,inc_cond,q_learning,50.0,
+partial_shading_simple,oscillation_std_w,,,,,paired_ttest,inc_cond,sliding_mode,50.0,
+partial_shading_simple,oscillation_std_w,,,,,paired_ttest,fuzzy_logic,q_learning,50.0,
+partial_shading_simple,oscillation_std_w,,,,,paired_ttest,fuzzy_logic,sliding_mode,50.0,
+partial_shading_simple,oscillation_std_w,,,,,paired_ttest,q_learning,sliding_mode,50.0,
+partial_shading_simple,energy_yield_j,,,2.948973449340173e-06,,paired_ttest,p_and_o,inc_cond,50.0,5.279288454252931
+partial_shading_simple,energy_yield_j,,,9.976421284164872e-06,,paired_ttest,p_and_o,fuzzy_logic,50.0,-4.925710184270392
+partial_shading_simple,energy_yield_j,,,1.3037071219796792e-41,,paired_ttest,p_and_o,q_learning,50.0,45.200496205114554
+partial_shading_simple,energy_yield_j,,,1.545998502696965e-05,,paired_ttest,p_and_o,sliding_mode,50.0,-4.797033774910651
+partial_shading_simple,energy_yield_j,,,3.205937002255436e-06,,paired_ttest,inc_cond,fuzzy_logic,50.0,-5.2552316209742935
+partial_shading_simple,energy_yield_j,,,2.495000261290748e-07,,paired_ttest,inc_cond,q_learning,50.0,5.981966520778493
+partial_shading_simple,energy_yield_j,,,3.4030081192841116e-06,,paired_ttest,inc_cond,sliding_mode,50.0,-5.238039552166321
+partial_shading_simple,energy_yield_j,,,1.1050565384089909e-44,,paired_ttest,fuzzy_logic,q_learning,50.0,52.37318425328404
+partial_shading_simple,energy_yield_j,,,0.00010391188749506278,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-4.223922864038871
+partial_shading_simple,energy_yield_j,,,1.101647584412215e-45,,paired_ttest,q_learning,sliding_mode,50.0,-54.93962945506964
+partial_shading_simple,energy_yield_ratio,,,2.948973449340173e-06,,paired_ttest,p_and_o,inc_cond,50.0,5.27928845425293
+partial_shading_simple,energy_yield_ratio,,,9.976421284164835e-06,,paired_ttest,p_and_o,fuzzy_logic,50.0,-4.925710184270394
+partial_shading_simple,energy_yield_ratio,,,1.3037071219796792e-41,,paired_ttest,p_and_o,q_learning,50.0,45.20049620511456
+partial_shading_simple,energy_yield_ratio,,,1.5459985026969848e-05,,paired_ttest,p_and_o,sliding_mode,50.0,-4.797033774910647
+partial_shading_simple,energy_yield_ratio,,,3.205937002255418e-06,,paired_ttest,inc_cond,fuzzy_logic,50.0,-5.255231620974295
+partial_shading_simple,energy_yield_ratio,,,2.4950002612907617e-07,,paired_ttest,inc_cond,q_learning,50.0,5.981966520778492
+partial_shading_simple,energy_yield_ratio,,,3.4030081192841116e-06,,paired_ttest,inc_cond,sliding_mode,50.0,-5.238039552166321
+partial_shading_simple,energy_yield_ratio,,,1.1050565384090221e-44,,paired_ttest,fuzzy_logic,q_learning,50.0,52.373184253284016
+partial_shading_simple,energy_yield_ratio,,,0.00010391188749507168,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-4.223922864038844
+partial_shading_simple,energy_yield_ratio,,,1.1016475844122306e-45,,paired_ttest,q_learning,sliding_mode,50.0,-54.939629455069635
+partial_shading_complex_pattern_a,tracking_efficiency_pct,,,9.638793040214332e-07,,paired_ttest,p_and_o,inc_cond,50.0,5.599223384348772
+partial_shading_complex_pattern_a,tracking_efficiency_pct,,,0.7044179257800296,,paired_ttest,p_and_o,fuzzy_logic,50.0,-0.3815864122874539
+partial_shading_complex_pattern_a,tracking_efficiency_pct,,,8.572594088097566e-10,,paired_ttest,p_and_o,q_learning,50.0,-7.5751515100209454
+partial_shading_complex_pattern_a,tracking_efficiency_pct,,,0.596108688841937,,paired_ttest,p_and_o,sliding_mode,50.0,-0.5334864152432711
+partial_shading_complex_pattern_a,tracking_efficiency_pct,,,5.547730183816924e-07,,paired_ttest,inc_cond,fuzzy_logic,50.0,-5.756088547638065
+partial_shading_complex_pattern_a,tracking_efficiency_pct,,,4.0649030443589106e-16,,paired_ttest,inc_cond,q_learning,50.0,-11.939987200840088
+partial_shading_complex_pattern_a,tracking_efficiency_pct,,,5.291466154577014e-07,,paired_ttest,inc_cond,sliding_mode,50.0,-5.769488474321882
+partial_shading_complex_pattern_a,tracking_efficiency_pct,,,2.5602122824537254e-09,,paired_ttest,fuzzy_logic,q_learning,50.0,-7.267205620274642
+partial_shading_complex_pattern_a,tracking_efficiency_pct,,,8.115819115758604e-08,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-6.297932379053612
+partial_shading_complex_pattern_a,tracking_efficiency_pct,,,4.112591000308777e-09,,paired_ttest,q_learning,sliding_mode,50.0,7.13411827406846
+partial_shading_complex_pattern_a,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,inc_cond,0.0,
+partial_shading_complex_pattern_a,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,fuzzy_logic,0.0,
+partial_shading_complex_pattern_a,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,q_learning,0.0,
+partial_shading_complex_pattern_a,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,sliding_mode,0.0,
+partial_shading_complex_pattern_a,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,fuzzy_logic,0.0,
+partial_shading_complex_pattern_a,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,q_learning,0.0,
+partial_shading_complex_pattern_a,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,sliding_mode,0.0,
+partial_shading_complex_pattern_a,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,q_learning,0.0,
+partial_shading_complex_pattern_a,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,sliding_mode,0.0,
+partial_shading_complex_pattern_a,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,q_learning,sliding_mode,0.0,
+partial_shading_complex_pattern_a,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,inc_cond,0.0,
+partial_shading_complex_pattern_a,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,fuzzy_logic,0.0,
+partial_shading_complex_pattern_a,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,q_learning,0.0,
+partial_shading_complex_pattern_a,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,sliding_mode,0.0,
+partial_shading_complex_pattern_a,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,fuzzy_logic,0.0,
+partial_shading_complex_pattern_a,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,q_learning,0.0,
+partial_shading_complex_pattern_a,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,sliding_mode,0.0,
+partial_shading_complex_pattern_a,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,q_learning,0.0,
+partial_shading_complex_pattern_a,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,sliding_mode,0.0,
+partial_shading_complex_pattern_a,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,q_learning,sliding_mode,0.0,
+partial_shading_complex_pattern_a,oscillation_p2p_w,,,,,paired_ttest,p_and_o,inc_cond,50.0,
+partial_shading_complex_pattern_a,oscillation_p2p_w,,,,,paired_ttest,p_and_o,fuzzy_logic,50.0,
+partial_shading_complex_pattern_a,oscillation_p2p_w,,,,,paired_ttest,p_and_o,q_learning,50.0,
+partial_shading_complex_pattern_a,oscillation_p2p_w,,,,,paired_ttest,p_and_o,sliding_mode,50.0,
+partial_shading_complex_pattern_a,oscillation_p2p_w,,,,,paired_ttest,inc_cond,fuzzy_logic,50.0,
+partial_shading_complex_pattern_a,oscillation_p2p_w,,,,,paired_ttest,inc_cond,q_learning,50.0,
+partial_shading_complex_pattern_a,oscillation_p2p_w,,,,,paired_ttest,inc_cond,sliding_mode,50.0,
+partial_shading_complex_pattern_a,oscillation_p2p_w,,,,,paired_ttest,fuzzy_logic,q_learning,50.0,
+partial_shading_complex_pattern_a,oscillation_p2p_w,,,,,paired_ttest,fuzzy_logic,sliding_mode,50.0,
+partial_shading_complex_pattern_a,oscillation_p2p_w,,,,,paired_ttest,q_learning,sliding_mode,50.0,
+partial_shading_complex_pattern_a,oscillation_std_w,,,,,paired_ttest,p_and_o,inc_cond,50.0,
+partial_shading_complex_pattern_a,oscillation_std_w,,,,,paired_ttest,p_and_o,fuzzy_logic,50.0,
+partial_shading_complex_pattern_a,oscillation_std_w,,,,,paired_ttest,p_and_o,q_learning,50.0,
+partial_shading_complex_pattern_a,oscillation_std_w,,,,,paired_ttest,p_and_o,sliding_mode,50.0,
+partial_shading_complex_pattern_a,oscillation_std_w,,,,,paired_ttest,inc_cond,fuzzy_logic,50.0,
+partial_shading_complex_pattern_a,oscillation_std_w,,,,,paired_ttest,inc_cond,q_learning,50.0,
+partial_shading_complex_pattern_a,oscillation_std_w,,,,,paired_ttest,inc_cond,sliding_mode,50.0,
+partial_shading_complex_pattern_a,oscillation_std_w,,,,,paired_ttest,fuzzy_logic,q_learning,50.0,
+partial_shading_complex_pattern_a,oscillation_std_w,,,,,paired_ttest,fuzzy_logic,sliding_mode,50.0,
+partial_shading_complex_pattern_a,oscillation_std_w,,,,,paired_ttest,q_learning,sliding_mode,50.0,
+partial_shading_complex_pattern_a,energy_yield_j,,,9.638793040214243e-07,,paired_ttest,p_and_o,inc_cond,50.0,5.5992233843487735
+partial_shading_complex_pattern_a,energy_yield_j,,,0.7044179257800305,,paired_ttest,p_and_o,fuzzy_logic,50.0,-0.3815864122874527
+partial_shading_complex_pattern_a,energy_yield_j,,,8.572594088097626e-10,,paired_ttest,p_and_o,q_learning,50.0,-7.575151510020944
+partial_shading_complex_pattern_a,energy_yield_j,,,0.5961086888419376,,paired_ttest,p_and_o,sliding_mode,50.0,-0.5334864152432703
+partial_shading_complex_pattern_a,energy_yield_j,,,5.547730183816974e-07,,paired_ttest,inc_cond,fuzzy_logic,50.0,-5.756088547638062
+partial_shading_complex_pattern_a,energy_yield_j,,,4.0649030443589106e-16,,paired_ttest,inc_cond,q_learning,50.0,-11.93998720084009
+partial_shading_complex_pattern_a,energy_yield_j,,,5.291466154576984e-07,,paired_ttest,inc_cond,sliding_mode,50.0,-5.769488474321883
+partial_shading_complex_pattern_a,energy_yield_j,,,2.5602122824537254e-09,,paired_ttest,fuzzy_logic,q_learning,50.0,-7.267205620274641
+partial_shading_complex_pattern_a,energy_yield_j,,,8.115819115756937e-08,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-6.29793237905367
+partial_shading_complex_pattern_a,energy_yield_j,,,4.1125910003087324e-09,,paired_ttest,q_learning,sliding_mode,50.0,7.134118274068462
+partial_shading_complex_pattern_a,energy_yield_ratio,,,9.638793040214156e-07,,paired_ttest,p_and_o,inc_cond,50.0,5.599223384348776
+partial_shading_complex_pattern_a,energy_yield_ratio,,,0.7044179257800309,,paired_ttest,p_and_o,fuzzy_logic,50.0,-0.3815864122874522
+partial_shading_complex_pattern_a,energy_yield_ratio,,,8.572594088097626e-10,,paired_ttest,p_and_o,q_learning,50.0,-7.575151510020944
+partial_shading_complex_pattern_a,energy_yield_ratio,,,0.5961086888419379,,paired_ttest,p_and_o,sliding_mode,50.0,-0.53348641524327
+partial_shading_complex_pattern_a,energy_yield_ratio,,,5.547730183816924e-07,,paired_ttest,inc_cond,fuzzy_logic,50.0,-5.756088547638065
+partial_shading_complex_pattern_a,energy_yield_ratio,,,4.0649030443589397e-16,,paired_ttest,inc_cond,q_learning,50.0,-11.939987200840086
+partial_shading_complex_pattern_a,energy_yield_ratio,,,5.291466154577014e-07,,paired_ttest,inc_cond,sliding_mode,50.0,-5.769488474321881
+partial_shading_complex_pattern_a,energy_yield_ratio,,,2.5602122824537254e-09,,paired_ttest,fuzzy_logic,q_learning,50.0,-7.267205620274642
+partial_shading_complex_pattern_a,energy_yield_ratio,,,8.115819115757748e-08,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-6.297932379053642
+partial_shading_complex_pattern_a,energy_yield_ratio,,,4.112591000308777e-09,,paired_ttest,q_learning,sliding_mode,50.0,7.13411827406846
+partial_shading_complex_pattern_b,tracking_efficiency_pct,,,1.676595793653043e-05,,paired_ttest,p_and_o,inc_cond,50.0,4.773103536350863
+partial_shading_complex_pattern_b,tracking_efficiency_pct,,,0.004127701925992726,,paired_ttest,p_and_o,fuzzy_logic,50.0,-3.0093436868238777
+partial_shading_complex_pattern_b,tracking_efficiency_pct,,,5.1018657752250393e-39,,paired_ttest,p_and_o,q_learning,50.0,39.88609010382544
+partial_shading_complex_pattern_b,tracking_efficiency_pct,,,0.0011466465425175362,,paired_ttest,p_and_o,sliding_mode,50.0,-3.454610080995973
+partial_shading_complex_pattern_b,tracking_efficiency_pct,,,1.0915229977336421e-05,,paired_ttest,inc_cond,fuzzy_logic,50.0,-4.899367948371532
+partial_shading_complex_pattern_b,tracking_efficiency_pct,,,0.00020424697449450258,,paired_ttest,inc_cond,q_learning,50.0,4.013894090409537
+partial_shading_complex_pattern_b,tracking_efficiency_pct,,,1.033664859149545e-05,,paired_ttest,inc_cond,sliding_mode,50.0,-4.9153250927772465
+partial_shading_complex_pattern_b,tracking_efficiency_pct,,,6.664107867502236e-49,,paired_ttest,fuzzy_logic,q_learning,50.0,64.04205693378407
+partial_shading_complex_pattern_b,tracking_efficiency_pct,,,7.366811094147276e-06,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-5.014255124471105
+partial_shading_complex_pattern_b,tracking_efficiency_pct,,,1.6922295279019584e-49,,paired_ttest,q_learning,sliding_mode,50.0,-65.87979122344733
+partial_shading_complex_pattern_b,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,inc_cond,0.0,
+partial_shading_complex_pattern_b,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,fuzzy_logic,0.0,
+partial_shading_complex_pattern_b,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,q_learning,0.0,
+partial_shading_complex_pattern_b,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,sliding_mode,0.0,
+partial_shading_complex_pattern_b,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,fuzzy_logic,0.0,
+partial_shading_complex_pattern_b,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,q_learning,0.0,
+partial_shading_complex_pattern_b,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,sliding_mode,0.0,
+partial_shading_complex_pattern_b,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,q_learning,0.0,
+partial_shading_complex_pattern_b,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,sliding_mode,0.0,
+partial_shading_complex_pattern_b,convergence_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,q_learning,sliding_mode,0.0,
+partial_shading_complex_pattern_b,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,inc_cond,0.0,
+partial_shading_complex_pattern_b,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,fuzzy_logic,0.0,
+partial_shading_complex_pattern_b,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,q_learning,0.0,
+partial_shading_complex_pattern_b,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,p_and_o,sliding_mode,0.0,
+partial_shading_complex_pattern_b,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,fuzzy_logic,0.0,
+partial_shading_complex_pattern_b,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,q_learning,0.0,
+partial_shading_complex_pattern_b,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,inc_cond,sliding_mode,0.0,
+partial_shading_complex_pattern_b,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,q_learning,0.0,
+partial_shading_complex_pattern_b,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,fuzzy_logic,sliding_mode,0.0,
+partial_shading_complex_pattern_b,settling_time_s,,,,one or both algorithms missing from this scenario/metric,paired_ttest,q_learning,sliding_mode,0.0,
+partial_shading_complex_pattern_b,oscillation_p2p_w,,,,,paired_ttest,p_and_o,inc_cond,50.0,
+partial_shading_complex_pattern_b,oscillation_p2p_w,,,,,paired_ttest,p_and_o,fuzzy_logic,50.0,
+partial_shading_complex_pattern_b,oscillation_p2p_w,,,,,paired_ttest,p_and_o,q_learning,50.0,
+partial_shading_complex_pattern_b,oscillation_p2p_w,,,,,paired_ttest,p_and_o,sliding_mode,50.0,
+partial_shading_complex_pattern_b,oscillation_p2p_w,,,,,paired_ttest,inc_cond,fuzzy_logic,50.0,
+partial_shading_complex_pattern_b,oscillation_p2p_w,,,,,paired_ttest,inc_cond,q_learning,50.0,
+partial_shading_complex_pattern_b,oscillation_p2p_w,,,,,paired_ttest,inc_cond,sliding_mode,50.0,
+partial_shading_complex_pattern_b,oscillation_p2p_w,,,,,paired_ttest,fuzzy_logic,q_learning,50.0,
+partial_shading_complex_pattern_b,oscillation_p2p_w,,,,,paired_ttest,fuzzy_logic,sliding_mode,50.0,
+partial_shading_complex_pattern_b,oscillation_p2p_w,,,,,paired_ttest,q_learning,sliding_mode,50.0,
+partial_shading_complex_pattern_b,oscillation_std_w,,,,,paired_ttest,p_and_o,inc_cond,50.0,
+partial_shading_complex_pattern_b,oscillation_std_w,,,,,paired_ttest,p_and_o,fuzzy_logic,50.0,
+partial_shading_complex_pattern_b,oscillation_std_w,,,,,paired_ttest,p_and_o,q_learning,50.0,
+partial_shading_complex_pattern_b,oscillation_std_w,,,,,paired_ttest,p_and_o,sliding_mode,50.0,
+partial_shading_complex_pattern_b,oscillation_std_w,,,,,paired_ttest,inc_cond,fuzzy_logic,50.0,
+partial_shading_complex_pattern_b,oscillation_std_w,,,,,paired_ttest,inc_cond,q_learning,50.0,
+partial_shading_complex_pattern_b,oscillation_std_w,,,,,paired_ttest,inc_cond,sliding_mode,50.0,
+partial_shading_complex_pattern_b,oscillation_std_w,,,,,paired_ttest,fuzzy_logic,q_learning,50.0,
+partial_shading_complex_pattern_b,oscillation_std_w,,,,,paired_ttest,fuzzy_logic,sliding_mode,50.0,
+partial_shading_complex_pattern_b,oscillation_std_w,,,,,paired_ttest,q_learning,sliding_mode,50.0,
+partial_shading_complex_pattern_b,energy_yield_j,,,1.676595793653043e-05,,paired_ttest,p_and_o,inc_cond,50.0,4.773103536350863
+partial_shading_complex_pattern_b,energy_yield_j,,,0.004127701925992782,,paired_ttest,p_and_o,fuzzy_logic,50.0,-3.009343686823873
+partial_shading_complex_pattern_b,energy_yield_j,,,5.1018657752250393e-39,,paired_ttest,p_and_o,q_learning,50.0,39.88609010382543
+partial_shading_complex_pattern_b,energy_yield_j,,,0.0011466465425175188,,paired_ttest,p_and_o,sliding_mode,50.0,-3.4546100809959785
+partial_shading_complex_pattern_b,energy_yield_j,,,1.0915229977336499e-05,,paired_ttest,inc_cond,fuzzy_logic,50.0,-4.89936794837153
+partial_shading_complex_pattern_b,energy_yield_j,,,0.00020424697449450294,,paired_ttest,inc_cond,q_learning,50.0,4.013894090409536
+partial_shading_complex_pattern_b,energy_yield_j,,,1.033664859149545e-05,,paired_ttest,inc_cond,sliding_mode,50.0,-4.9153250927772465
+partial_shading_complex_pattern_b,energy_yield_j,,,6.664107867501952e-49,,paired_ttest,fuzzy_logic,q_learning,50.0,64.04205693378412
+partial_shading_complex_pattern_b,energy_yield_j,,,7.366811094145527e-06,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-5.014255124471175
+partial_shading_complex_pattern_b,energy_yield_j,,,1.6922295279019584e-49,,paired_ttest,q_learning,sliding_mode,50.0,-65.87979122344733
+partial_shading_complex_pattern_b,energy_yield_ratio,,,1.6765957936530365e-05,,paired_ttest,p_and_o,inc_cond,50.0,4.773103536350864
+partial_shading_complex_pattern_b,energy_yield_ratio,,,0.004127701925992766,,paired_ttest,p_and_o,fuzzy_logic,50.0,-3.0093436868238745
+partial_shading_complex_pattern_b,energy_yield_ratio,,,5.101865775224893e-39,,paired_ttest,p_and_o,q_learning,50.0,39.88609010382545
+partial_shading_complex_pattern_b,energy_yield_ratio,,,0.001146646542517511,,paired_ttest,p_and_o,sliding_mode,50.0,-3.45461008099598
+partial_shading_complex_pattern_b,energy_yield_ratio,,,1.0915229977336499e-05,,paired_ttest,inc_cond,fuzzy_logic,50.0,-4.899367948371529
+partial_shading_complex_pattern_b,energy_yield_ratio,,,0.00020424697449450353,,paired_ttest,inc_cond,q_learning,50.0,4.0138940904095355
+partial_shading_complex_pattern_b,energy_yield_ratio,,,1.033664859149545e-05,,paired_ttest,inc_cond,sliding_mode,50.0,-4.9153250927772465
+partial_shading_complex_pattern_b,energy_yield_ratio,,,6.664107867502047e-49,,paired_ttest,fuzzy_logic,q_learning,50.0,64.04205693378408
+partial_shading_complex_pattern_b,energy_yield_ratio,,,7.366811094145434e-06,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-5.014255124471179
+partial_shading_complex_pattern_b,energy_yield_ratio,,,1.6922295279020065e-49,,paired_ttest,q_learning,sliding_mode,50.0,-65.87979122344731
+partial_shading_complex_pattern_c,tracking_efficiency_pct,,,5.287868175994978e-10,,paired_ttest,p_and_o,inc_cond,50.0,7.711552920700909
+partial_shading_complex_pattern_c,tracking_efficiency_pct,,,1.065129552075976e-07,,paired_ttest,p_and_o,fuzzy_logic,50.0,-6.221564373666302
+partial_shading_complex_pattern_c,tracking_efficiency_pct,,,3.7134136049236503e-23,,paired_ttest,p_and_o,q_learning,50.0,17.919639325439153
+partial_shading_complex_pattern_c,tracking_efficiency_pct,,,8.361375777739992e-08,,paired_ttest,p_and_o,sliding_mode,50.0,-6.289562260526898
+partial_shading_complex_pattern_c,tracking_efficiency_pct,,,8.238764486533378e-10,,paired_ttest,inc_cond,fuzzy_logic,50.0,-7.5863543485730185
+partial_shading_complex_pattern_c,tracking_efficiency_pct,,,5.062660227321423e-07,,paired_ttest,inc_cond,q_learning,50.0,-5.782008893940766
+partial_shading_complex_pattern_c,tracking_efficiency_pct,,,9.003300922752415e-10,,paired_ttest,inc_cond,sliding_mode,50.0,-7.561327900273817
+partial_shading_complex_pattern_c,tracking_efficiency_pct,,,1.9418661489508947e-17,,paired_ttest,fuzzy_logic,q_learning,50.0,12.950588180562113
+partial_shading_complex_pattern_c,tracking_efficiency_pct,,,3.6626346522934945e-08,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-6.521139039587205
+partial_shading_complex_pattern_c,tracking_efficiency_pct,,,1.619441069422283e-16,,paired_ttest,q_learning,sliding_mode,50.0,-12.24123199299656
+partial_shading_complex_pattern_c,convergence_time_s,,,0.00025282221313026163,,paired_ttest,p_and_o,inc_cond,22.0,-4.394746233706722
+partial_shading_complex_pattern_c,convergence_time_s,,,1.845352699913297e-11,,paired_ttest,p_and_o,fuzzy_logic,50.0,8.669091435841008
+partial_shading_complex_pattern_c,convergence_time_s,,,1.0523690729462725e-11,,paired_ttest,p_and_o,q_learning,49.0,-8.88368736214995
+partial_shading_complex_pattern_c,convergence_time_s,,,5.810985274379809e-12,,paired_ttest,p_and_o,sliding_mode,50.0,9.00421718266033
+partial_shading_complex_pattern_c,convergence_time_s,,,0.00025604302714757,,paired_ttest,inc_cond,fuzzy_logic,22.0,4.389449469051807
+partial_shading_complex_pattern_c,convergence_time_s,,,0.00030154029248090515,,paired_ttest,inc_cond,q_learning,21.0,4.362420189127927
+partial_shading_complex_pattern_c,convergence_time_s,,,0.00024474797256819814,,paired_ttest,inc_cond,sliding_mode,22.0,4.408328192520007
+partial_shading_complex_pattern_c,convergence_time_s,,,1.141948739071427e-11,,paired_ttest,fuzzy_logic,q_learning,49.0,-8.859666816870467
+partial_shading_complex_pattern_c,convergence_time_s,,,2.696113467518146e-13,,paired_ttest,fuzzy_logic,sliding_mode,50.0,9.912146053513803
+partial_shading_complex_pattern_c,convergence_time_s,,,7.174232863612864e-12,,paired_ttest,q_learning,sliding_mode,49.0,8.99657601541447
+partial_shading_complex_pattern_c,settling_time_s,,,0.00026214794137311944,,paired_ttest,p_and_o,inc_cond,22.0,-4.37959064431367
+partial_shading_complex_pattern_c,settling_time_s,,,1.845352699913297e-11,,paired_ttest,p_and_o,fuzzy_logic,50.0,8.669091435841008
+partial_shading_complex_pattern_c,settling_time_s,,,4.129649905021166e-12,,paired_ttest,p_and_o,q_learning,46.0,-9.346903126748272
+partial_shading_complex_pattern_c,settling_time_s,,,5.810985274379809e-12,,paired_ttest,p_and_o,sliding_mode,50.0,9.00421718266033
+partial_shading_complex_pattern_c,settling_time_s,,,0.0002649442636630476,,paired_ttest,inc_cond,fuzzy_logic,22.0,4.375151536162332
+partial_shading_complex_pattern_c,settling_time_s,,,0.000191076476464156,,paired_ttest,inc_cond,q_learning,18.0,4.735941442168534
+partial_shading_complex_pattern_c,settling_time_s,,,0.00025309054672850815,,paired_ttest,inc_cond,sliding_mode,22.0,4.394302369375612
+partial_shading_complex_pattern_c,settling_time_s,,,4.285198696841197e-12,,paired_ttest,fuzzy_logic,q_learning,46.0,-9.335393558132964
+partial_shading_complex_pattern_c,settling_time_s,,,2.696113467518146e-13,,paired_ttest,fuzzy_logic,sliding_mode,50.0,9.912146053513803
+partial_shading_complex_pattern_c,settling_time_s,,,2.5261624161394154e-12,,paired_ttest,q_learning,sliding_mode,46.0,9.500361615339246
+partial_shading_complex_pattern_c,oscillation_p2p_w,,,1.481651454175801e-06,,paired_ttest,p_and_o,inc_cond,50.0,5.476632632700934
+partial_shading_complex_pattern_c,oscillation_p2p_w,,,0.2009486030067259,,paired_ttest,p_and_o,fuzzy_logic,50.0,-1.296287641686527
+partial_shading_complex_pattern_c,oscillation_p2p_w,,,2.6703797264134607e-24,,paired_ttest,p_and_o,q_learning,50.0,-19.051777003565054
+partial_shading_complex_pattern_c,oscillation_p2p_w,,,2.2671434973563014e-07,,paired_ttest,p_and_o,sliding_mode,50.0,6.008968690478905
+partial_shading_complex_pattern_c,oscillation_p2p_w,,,9.337687853815744e-08,,paired_ttest,inc_cond,fuzzy_logic,50.0,-6.258545418937895
+partial_shading_complex_pattern_c,oscillation_p2p_w,,,1.3190035540554239e-23,,paired_ttest,inc_cond,q_learning,50.0,-18.35858867418413
+partial_shading_complex_pattern_c,oscillation_p2p_w,,,0.004092577861629336,,paired_ttest,inc_cond,sliding_mode,50.0,-3.0124262937593618
+partial_shading_complex_pattern_c,oscillation_p2p_w,,,1.923496606911741e-24,,paired_ttest,fuzzy_logic,q_learning,50.0,-19.196597753599537
+partial_shading_complex_pattern_c,oscillation_p2p_w,,,5.567765553653392e-08,,paired_ttest,fuzzy_logic,sliding_mode,50.0,6.403690381027848
+partial_shading_complex_pattern_c,oscillation_p2p_w,,,6.598484565230076e-25,,paired_ttest,q_learning,sliding_mode,50.0,19.67479145886123
+partial_shading_complex_pattern_c,oscillation_std_w,,,0.2365950665349767,,paired_ttest,p_and_o,inc_cond,50.0,-1.19821960186822
+partial_shading_complex_pattern_c,oscillation_std_w,,,0.15687947761046175,,paired_ttest,p_and_o,fuzzy_logic,50.0,-1.4376847228234289
+partial_shading_complex_pattern_c,oscillation_std_w,,,1.7094320080145434e-26,,paired_ttest,p_and_o,q_learning,50.0,-21.378778746725434
+partial_shading_complex_pattern_c,oscillation_std_w,,,8.317651319291096e-12,,paired_ttest,p_and_o,sliding_mode,50.0,8.899860124748656
+partial_shading_complex_pattern_c,oscillation_std_w,,,0.29084113911538995,,paired_ttest,inc_cond,fuzzy_logic,50.0,1.067805010987827
+partial_shading_complex_pattern_c,oscillation_std_w,,,2.067762602956796e-23,,paired_ttest,inc_cond,q_learning,50.0,-18.166953910957925
+partial_shading_complex_pattern_c,oscillation_std_w,,,0.006321460651207864,,paired_ttest,inc_cond,sliding_mode,50.0,2.8533259835692055
+partial_shading_complex_pattern_c,oscillation_std_w,,,1.6623692617492967e-26,,paired_ttest,fuzzy_logic,q_learning,50.0,-21.392240208438107
+partial_shading_complex_pattern_c,oscillation_std_w,,,9.987749553812958e-13,,paired_ttest,fuzzy_logic,sliding_mode,50.0,9.521578099400056
+partial_shading_complex_pattern_c,oscillation_std_w,,,1.378179560256181e-26,,paired_ttest,q_learning,sliding_mode,50.0,21.48281971421387
+partial_shading_complex_pattern_c,energy_yield_j,,,5.28786817599494e-10,,paired_ttest,p_and_o,inc_cond,50.0,7.71155292070091
+partial_shading_complex_pattern_c,energy_yield_j,,,1.065129552075918e-07,,paired_ttest,p_and_o,fuzzy_logic,50.0,-6.221564373666317
+partial_shading_complex_pattern_c,energy_yield_j,,,3.713413604923756e-23,,paired_ttest,p_and_o,q_learning,50.0,17.919639325439142
+partial_shading_complex_pattern_c,energy_yield_j,,,8.361375777739808e-08,,paired_ttest,p_and_o,sliding_mode,50.0,-6.289562260526904
+partial_shading_complex_pattern_c,energy_yield_j,,,8.238764486533317e-10,,paired_ttest,inc_cond,fuzzy_logic,50.0,-7.58635434857302
+partial_shading_complex_pattern_c,energy_yield_j,,,5.062660227321423e-07,,paired_ttest,inc_cond,q_learning,50.0,-5.782008893940767
+partial_shading_complex_pattern_c,energy_yield_j,,,9.003300922752383e-10,,paired_ttest,inc_cond,sliding_mode,50.0,-7.561327900273818
+partial_shading_complex_pattern_c,energy_yield_j,,,1.941866148950867e-17,,paired_ttest,fuzzy_logic,q_learning,50.0,12.950588180562118
+partial_shading_complex_pattern_c,energy_yield_j,,,3.6626346522937155e-08,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-6.5211390395871875
+partial_shading_complex_pattern_c,energy_yield_j,,,1.619441069422271e-16,,paired_ttest,q_learning,sliding_mode,50.0,-12.241231992996564
+partial_shading_complex_pattern_c,energy_yield_ratio,,,5.287868175994921e-10,,paired_ttest,p_and_o,inc_cond,50.0,7.711552920700912
+partial_shading_complex_pattern_c,energy_yield_ratio,,,1.0651295520759587e-07,,paired_ttest,p_and_o,fuzzy_logic,50.0,-6.221564373666306
+partial_shading_complex_pattern_c,energy_yield_ratio,,,3.7134136049236774e-23,,paired_ttest,p_and_o,q_learning,50.0,17.91963932543915
+partial_shading_complex_pattern_c,energy_yield_ratio,,,8.361375777739899e-08,,paired_ttest,p_and_o,sliding_mode,50.0,-6.2895622605269015
+partial_shading_complex_pattern_c,energy_yield_ratio,,,8.238764486533378e-10,,paired_ttest,inc_cond,fuzzy_logic,50.0,-7.586354348573018
+partial_shading_complex_pattern_c,energy_yield_ratio,,,5.062660227321423e-07,,paired_ttest,inc_cond,q_learning,50.0,-5.782008893940767
+partial_shading_complex_pattern_c,energy_yield_ratio,,,9.003300922752383e-10,,paired_ttest,inc_cond,sliding_mode,50.0,-7.561327900273818
+partial_shading_complex_pattern_c,energy_yield_ratio,,,1.941866148950867e-17,,paired_ttest,fuzzy_logic,q_learning,50.0,12.950588180562116
+partial_shading_complex_pattern_c,energy_yield_ratio,,,3.662634652293422e-08,,paired_ttest,fuzzy_logic,sliding_mode,50.0,-6.5211390395872115
+partial_shading_complex_pattern_c,energy_yield_ratio,,,1.6194410694222594e-16,,paired_ttest,q_learning,sliding_mode,50.0,-12.241231992996566

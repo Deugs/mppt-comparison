@@ -255,3 +255,21 @@ def test_run_full_sweep_produces_expected_columns_and_algorithms(pv_model_stc):
 
     expected_scenarios |= set(PARTIAL_SHADING_SCENARIOS)
     assert set(df["scenario"]) == expected_scenarios
+
+
+def test_run_full_sweep_skips_computational_burden_when_baseline_absent(pv_model_stc):
+    """A fuzzy-variants-only sweep has no "p_and_o" entry to normalize
+    against -- must skip the computational-burden step rather than KeyError
+    (regression test: this crashed the real fuzzy_5x5/fuzzy_3x3 sweep after
+    ~35 minutes of otherwise-successful Monte Carlo runs)."""
+    from src.algorithms.fuzzy_logic import FIVE_LABELS, FuzzyLogicController
+    from src.pv_model import extract_two_diode_parameters
+
+    params = extract_two_diode_parameters(
+        voc=config.PANEL_VOC_STC, isc=config.PANEL_ISC_STC, vmp=config.PANEL_VMP_STC, imp=config.PANEL_IMP_STC
+    )
+    algorithms = {"fuzzy_5x5": FuzzyLogicController(labels=FIVE_LABELS)}
+    df = scenarios.run_full_sweep(algorithms, pv_model_stc, params, num_runs=1, log=lambda msg: None)
+
+    assert "_computational_burden" not in set(df["scenario"])
+    assert set(df["algorithm"]) == {"fuzzy_5x5"}
