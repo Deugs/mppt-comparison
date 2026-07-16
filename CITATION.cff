@@ -1,0 +1,18 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata below. A companion paper is in preparation; this file will be updated with its citation once published."
+type: software
+title: "MPPT Algorithm Comparison: A Reproducible Open-Source Framework"
+authors:
+  - family-names: "Mensah-Ananoo"
+    given-names: "Eugene"
+repository-code: "https://github.com/Deugs/mppt-comparison"
+license: MIT
+version: 0.1.0
+date-released: "2026-07-16"
+keywords:
+  - maximum-power-point-tracking
+  - photovoltaic
+  - sliding-mode-control
+  - fuzzy-logic
+  - reinforcement-learning
+  - reproducible-research

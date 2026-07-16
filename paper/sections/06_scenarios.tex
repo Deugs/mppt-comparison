@@ -1,0 +1,76 @@
+\section{Test Scenarios, Monte Carlo Methodology, and Metrics}
+\label{sec:scenarios}
+
+\subsection{Test Scenarios}
+Eleven test scenarios are used, seven single-module conditions plus four
+partial-shading configurations (three complex patterns count as separate
+scenarios since each represents a distinct shading pattern, not a
+parameter sweep of one scenario):
+\emph{steady-state} (1000\,W/m$^2$, 25\textdegree C, 2\,s), \emph{multi-level
+irradiance} (200$\to$400$\to$600$\to$800$\to$1000\,W/m$^2$ step sequence),
+\emph{step-change irradiance} (1000$\to$600$\to$1000\,W/m$^2$),
+\emph{rapid double step} (1000$\to$200$\to$1000\,W/m$^2$, a stress test of
+extreme irradiance drop), \emph{temperature step}
+(25$\to$50$\to$25\textdegree C at constant irradiance), \emph{rapid
+fluctuation / cloud passage} (a continuous, piecewise-linear irradiance
+ramp), \emph{sensor noise robustness} ($\pm1\%$ Gaussian noise on the $V,I$
+measurements passed to \texttt{step()}, while the physical power recorded
+for metrics remains noise-free -- noise models a flawed sensor, not a
+different physical plant), \emph{partial shading (simple)} (two modules in
+series at 1000/400\,W/m$^2$, producing two local maxima), and three
+\emph{complex partial shading} patterns using three modules in series:
+Pattern A ($1000,800,600$\,W/m$^2$), Pattern B ($1000,500,300$\,W/m$^2$,
+widely spaced), and Pattern C ($1000,1000,400$\,W/m$^2$, the mildest of the
+four shading configurations, with only two effective local maxima).
+
+\subsection{Monte Carlo Methodology}
+Each algorithm-scenario pair is run for 50 independent Monte Carlo trials.
+Run $k$ always uses random seed $k$ regardless of which algorithm is being
+evaluated, so every algorithm sees an identical sequence of randomized
+initial duty cycles (and, where applicable, identical sensor-noise draws)
+at each run index -- a paired design that both matches the intuitive
+requirement of a fair comparison and licenses the paired $t$-tests used in
+Section~\ref{sec:results}, rather than treating each algorithm's 50 runs as
+independent unpaired samples.
+
+\subsection{Q-Learning Train/Held-Out Tagging}
+\label{sec:ql-tagging}
+Because Q-learning (Section~\ref{sec:q-learning-algorithm}) is trained only
+on a single flat-irradiance module at three irradiance levels and STC
+temperature, every scenario is tagged \emph{train} or \emph{held-out}
+relative to that regime: a scenario counts as \emph{train} only if every
+condition it exercises -- irradiance level, temperature, absence of sensor
+noise, and single-module topology -- matches what training actually used.
+By this criterion, only \emph{steady-state} and \emph{step-change
+irradiance} (both endpoints individually within the training irradiance
+set) qualify as train-distribution; the other nine scenarios are
+held-out, including all four partial-shading configurations, since
+Q-learning was never trained on a multi-module string at all regardless of
+whether the per-module irradiance values happen to lie within the training
+set. This is a deliberately coarse, condition-level classification: e.g.
+\emph{step-change irradiance} is tagged \emph{train} even though the
+mid-run irradiance \emph{step itself} was never trained on, since training
+only ever sees static irradiance within an episode. Results for
+Q-learning are reported separately by this tag throughout
+Section~\ref{sec:results} and never pooled, directly addressing whether
+its policy generalizes or merely memorized training conditions.
+
+\subsection{Metrics}
+For every run, we compute: \emph{tracking efficiency}
+$\eta=\int P_{actual}\,dt \,/\, \int P_{theoretical\,max}\,dt \times 100\%$;
+\emph{convergence time}, the first time tracked power comes within 2\% of
+the theoretical maximum (undefined, i.e.\ missing, if a run never
+converges within that tolerance); \emph{settling time}, the first time
+tracked power \emph{remains} within 2\% continuously for at least 100\,ms;
+\emph{steady-state oscillation} (peak-to-peak and standard deviation of
+power after settling); \emph{energy yield} and \emph{energy yield ratio}
+(actual versus theoretical-maximum energy extracted); and
+\emph{computational burden} (mean wall-clock time per \texttt{step()} call,
+normalized to P\&O). The 2\% convergence threshold is a common convention
+in the MPPT literature. Non-convergence is common enough in this paper's
+partial-shading results (Section~\ref{sec:results}) that it is reported as
+an explicit \emph{convergence rate} (fraction of runs converging) rather
+than silently averaged away -- a run that never converges contributes no
+value to a convergence-time mean, and a naive mean over only the converged
+runs would misrepresent an algorithm that converges in, say, 2 of 50 runs
+as if it reliably converges quickly.

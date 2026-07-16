@@ -1,0 +1,133 @@
+\section{MPPT Algorithms}
+\label{sec:algorithms}
+
+Every algorithm implements the same interface,
+$D_{k+1} = f(V_k, I_k, D_k)$, so the scenario runner
+(Section~\ref{sec:scenarios}) drives all five without any
+algorithm-specific special-casing. Duty cycle is clamped to
+$D\in[0.05,0.90]$ throughout, keeping the operating point away from the
+$D\to0$/$D\to1$ singularities of the boost converter's
+$R_{in}=R(1-D)^2$ relation.
+
+\subsection{Perturb and Observe (Adaptive Step)}
+P\&O \cite{femia2005optimization} perturbs duty cycle and observes the
+resulting power change. Direction is inferred self-referentially -- by
+comparing this step's power change against the sign of the \emph{previous}
+duty-cycle perturbation -- so the algorithm never needs to assume which way
+voltage moves for a given duty-cycle direction. Step size adapts between a
+large step ($0.01$) when $|dP/dV|$ exceeds a threshold ($2.0\,$W/V) and a
+small step ($0.001$) near the MPP, trading convergence speed against
+steady-state oscillation amplitude, per \cite{femia2005optimization}'s
+adaptive-step design.
+
+\subsection{Incremental Conductance}
+IncCond \cite{hussein1995maximum} compares incremental conductance
+$dI/dV$ against $-I/V$; at the true MPP these are equal since
+$dP/dV = I + V\,dI/dV = 0$. When $|dV|$ is too small to trust that ratio
+(the boundary case), the sign of $dI$ alone determines direction instead.
+A fixed duty-cycle step ($0.001$) is applied once direction is determined.
+
+\subsection{Fuzzy Logic Control}
+The FLC uses inputs $E=dP/dV$ (normalized to $[-1,1]$ by an empirically
+grid-searched gain, since this panel's $dP/dV$ is steeply asymmetric --
+approximately $+8.9\,$W/V near $V=0$ versus a steep negative rolloff toward
+$-76\,$W/V approaching $V_{oc}$) and its step-to-step change $\Delta E$,
+producing a duty-cycle step $\Delta D$. Membership functions are triangular
+with saturating shoulder sets at both ends of each universe, and the
+$7\times7=49$-rule base uses seven linguistic labels
+(NB, NM, NS, Z, PS, PM, PB) per input.
+
+Rather than hand-transcribing 49 rules, the rule base is \emph{generated}
+from
+\begin{equation}
+D_{\text{level}} = \mathrm{clip}\!\left(\mathrm{round}\!\left(
+  -\frac{E_{\text{level}} + \Delta E_{\text{level}}}{2}\right)\right),
+\label{eq:fuzzy-rule-formula}
+\end{equation}
+where levels are signed integers counted from the center label
+($\mathrm{Z}=0$) to the extremes ($\mathrm{NB}/\mathrm{PB}=\mp3$).
+Equation~\eqref{eq:fuzzy-rule-formula} states the physical intent common to
+every rule: the further the operating point is from the MPP and the faster
+it is moving away, the larger and more oppositely-signed the corrective
+duty-cycle step should be. Applying the same formula to 5- and 3-label sets
+produces internally-consistent reduced rule bases used for the sensitivity
+analysis in Section~\ref{sec:results}. Defuzzification uses the centroid
+method over a 201-point discretization of the output universe.
+
+\subsection{Q-Learning}
+\label{sec:q-learning-algorithm}
+Following \cite{kofinas2017reinforcement}, the state space is the
+discretized pair $(V, dP/dV)$: voltage into 30 bins over
+$[0, V_{oc,STC}]$, and $dP/dV$ into 7 bins after normalization by the same
+empirically-grounded scale used for the fuzzy controller's $E$ input. The
+action space is $\{-\delta, 0, +\delta\}$ on duty cycle
+($\delta=0.005$), mirroring P\&O's action set for a fair cross-paradigm
+comparison. The reward is $r_k = P_k - P_{k-1}$ (change in power, not raw
+power): using raw power produced a policy that got permanently stuck
+several volts past the true MPP for some training irradiances, because
+coarse voltage-bin discretization can keep the operating point in the same
+state bin for several consecutive steps while it drifts away from the MPP,
+and a reward tied only to that bin's power level does not register the
+drift; reward-on-$\Delta P$ penalizes power-losing actions immediately
+regardless of which bin they land in. Training uses standard
+$Q$-learning with $\epsilon$-greedy exploration (decaying from
+$\epsilon=1.0$ to $\epsilon=0.05$), learning rate $\alpha=0.15$, and
+discount $\gamma=0.9$, cycling round-robin over training irradiances
+$\{600, 800, 1000\}\,$W/m$^2$ at fixed STC temperature and a single,
+uniformly-illuminated module -- i.e., training never exercises multi-module
+partial shading or non-STC temperature at all. \emph{The methodological
+consequence of this is central to Section~\ref{sec:results}}: every
+scenario is explicitly tagged as train-distribution or held-out relative
+to this training regime (Section~\ref{sec:scenarios}), and results for the
+two are never pooled.
+
+\subsection{Sliding Mode Control}
+SMC uses the sliding surface $s=dP/dV$ (zero exactly at the MPP, needing no
+explicit reference voltage) and the exponential reaching law
+\cite{gao1993variable}
+\begin{equation}
+\dot{s} = -k\,\mathrm{sign}(s) - q\,s, \qquad k, q > 0,
+\label{eq:reaching-law}
+\end{equation}
+combining a constant-rate term (drives $s\to0$ in finite time, dominant far
+from the surface) with a proportional term that vanishes at $s=0$,
+avoiding the overshoot a pure constant-rate law alone would cause. The
+discontinuous $\mathrm{sign}(s)$ term is the classic source of chattering;
+it is replaced by a boundary-layer saturation
+$\mathrm{sat}(s/\Phi, \beta)$ \cite{slotine1991applied} -- linear (and
+therefore continuous) for $|s/\Phi|\le\beta$ and clipped to $\pm1$ outside
+it. Mapping \eqref{eq:reaching-law} onto a discrete duty-cycle correction,
+and accounting for the boost converter's $R_{in}=R(1-D)^2$ (increasing
+duty cycle decreases operating voltage, so $s>0$ -- operating point left
+of the MPP, needing higher $V$ -- requires \emph{lower} $D$), gives
+\begin{equation}
+\Delta D = -\bigl(K\,\mathrm{sat}(e,\beta) + Q\,e\bigr), \qquad
+e = \mathrm{clip}(s/\Phi, -1, 1).
+\label{eq:smc-control-law}
+\end{equation}
+
+\paragraph{Lyapunov stability.} Taking $\mathcal{V}(s)=\tfrac{1}{2}s^2$ as
+the Lyapunov candidate (positive definite, zero only at $s=0$), along the
+continuous-time reaching law \eqref{eq:reaching-law},
+\begin{equation}
+\dot{\mathcal{V}} = s\,\dot{s} = s\bigl(-k\,\mathrm{sign}(s) - qs\bigr)
+  = -k|s| - qs^2 \le 0,
+\label{eq:lyapunov}
+\end{equation}
+with equality only at $s=0$. Since $k,q>0$, $\mathcal{V}$ strictly
+decreases whenever $s\neq0$, so $s\to0$ asymptotically: the sliding
+surface -- and therefore the MPP condition $dP/dV=0$ -- is reached and
+maintained. Within the boundary layer, replacing $\mathrm{sign}(s)$ with
+the saturation function trades this strict guarantee for practical,
+chattering-free convergence to a small residual band around $s=0$, the
+standard boundary-layer tradeoff \cite{slotine1991applied}. This paper's
+implementation empirically confirms the mitigation is load-bearing, not
+merely present: shrinking the boundary layer toward pure
+$\mathrm{sign}(s)$ reproduces the classic chattering problem (0\% steady-state
+power ripple at the design boundary width versus sustained
+$\sim$2.5\% ripple at a boundary width two orders of magnitude narrower).
+
+% Per CLAUDE.md's own caution and Section II's TODO, the specific PV-SMC
+% paper matching this exact surface/reaching-law/boundary-layer combination
+% is still an open citation flag -- see references.bib's candidate entries
+% (zhang2022novel, mostafa2020tracking) and resolve before submission.

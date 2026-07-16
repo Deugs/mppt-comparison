@@ -1,0 +1,116 @@
+\section{Photovoltaic System Modeling}
+\label{sec:pv-model}
+
+\subsection{Two-Diode Model}
+The reference module is a Canadian Solar CS6P-250P, a 60-cell polycrystalline
+module rated at $P_{max}=250\,$W ($V_{oc}=37.2\,$V, $I_{sc}=8.87\,$A,
+$V_{mp}=30.1\,$V, $I_{mp}=8.30\,$A at standard test conditions, STC:
+1000\,W/m$^2$, 25\textdegree C), chosen as a real, commercially available
+panel rather than an idealized one so simulated results can be validated
+quantitatively against the manufacturer's own datasheet.
+
+Each series-connected cell string is modeled by the two-diode equivalent
+circuit
+\begin{equation}
+I = I_{ph} - I_{s1}\!\left[e^{\frac{V+IR_s}{a_1 V_t}} - 1\right]
+          - I_{s2}\!\left[e^{\frac{V+IR_s}{a_2 V_t}} - 1\right]
+          - \frac{V+IR_s}{R_{sh}},
+\label{eq:two-diode}
+\end{equation}
+where $V_t = a\,N_s\,kT/q$ is the string-level thermal voltage, $N_s$ the
+number of series cells in the string, $k$ Boltzmann's constant, $T$ the
+cell temperature in Kelvin, and $q$ the electron charge. Unlike the
+single-diode model, the second diode term (with ideality $a_2$ and
+saturation current $I_{s2}$) explicitly represents recombination current in
+the depletion region, which becomes significant at low forward bias -- the
+regime relevant to correctly resolving secondary local maxima under partial
+shading. We follow \cite{ishaque2011simple} for the two-diode formulation;
+\cite{villalva2009comprehensive}'s widely-cited three-point extraction
+method is a single-diode technique and is cited here only for general
+parameter-extraction background, not as the source of
+\eqref{eq:two-diode}.
+
+\subsection{Bypass Diodes and Partial Shading}
+Following standard industry practice, one bypass diode protects every 20
+cells, giving $N_s/20=3$ bypass groups for the 60-cell reference module.
+Each group is modeled as an independent two-diode string of
+\eqref{eq:two-diode}; when a forced string current would exceed a group's
+own short-circuit current at its (possibly shaded) irradiance, that group's
+bypass diode is modeled as an ideal diode with $V_f=0.7\,$V, clamping the
+group's contributed voltage to $-V_f$ rather than driving it into deep
+reverse bias. This bypass mechanism is what allows multiple local maxima to
+appear in a shaded string's $P$-$V$ curve at all -- without it, a
+series-connected string's power curve remains unimodal regardless of
+shading, which would make the partial-shading scenarios in
+Section~\ref{sec:scenarios} unable to test any algorithm's global-search
+capability.
+
+\subsection{Parameter Extraction}
+\label{sec:parameter-extraction}
+The four free parameters $(I_{ph}, R_s, R_{sh}, a_2)$ are fit to the
+datasheet's four STC key points ($V_{oc}$, $I_{sc}$, $V_{mp}$, $I_{mp}$) via
+bounded nonlinear least squares (Trust Region Reflective), minimizing the
+residual of three conditions: the short-circuit current match, the
+current-at-$V_{mp}$ match, and $dP/dV=0$ at the reported MPP. The first
+diode's ideality factor $a_1$ is fixed at $1.0$ (the midpoint of its
+physically expected range) rather than fit, and $I_{s1}=I_{s2}$ is solved
+analytically from the open-circuit-voltage boundary condition at every
+optimizer iteration rather than treated as a free parameter. This leaves
+the extraction under-determined by one degree of freedom relative to the
+full iterative procedure in \cite{ishaque2011simple}; we flag this
+explicitly as a simplification rather than presenting it as the complete
+published procedure.
+
+For the CS6P-250P, this extraction yields $I_{ph}=8.880\,$A,
+$I_{s1}=I_{s2}=2.891\times10^{-10}\,$A, $R_s=0.308\,\Omega$,
+$R_{sh}=269.8\,\Omega$, $a_1=1.000$, $a_2=1.406$.
+
+\subsection{Model Validation}
+\label{sec:model-validation}
+Table~\ref{tab:validation} compares the simulated I-V curve at the four STC
+key points against the datasheet. The maximum relative error across all
+four points is $0.068\%$ (at $P_{max}$), well within the $2\%$ acceptance
+criterion.
+
+\begin{table}[htbp]
+\centering
+\caption{Simulated vs.\ Datasheet STC Key Points (CS6P-250P)}
+\label{tab:validation}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Quantity & Simulated & Datasheet & Rel.\ Error \\
+\midrule
+$I_{sc}$ (A)  & 8.870  & 8.870  & 0.000\% \\
+$V_{oc}$ (V)  & 37.200 & 37.200 & 0.000\% \\
+$V_{mp}$ (V)  & 30.100 & 30.100 & 0.000\% \\
+$I_{mp}$ (A)  & 8.300  & 8.300  & 0.000\% \\
+$P_{max}$ (W) & 249.83 & 250.00 & 0.068\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% STATUS: NOCT (800 W/m^2, 20 C ambient / 45+-2 C cell) and low-irradiance
+% (200 W/m^2) curve validation are specified in CLAUDE.md's acceptance
+% criteria but not yet implemented as an automated test -- data/README.md
+% now has the manufacturer's NOCT electrical table (Pmax=181W, Vmp=27.5V,
+% Imp=6.60A, Voc=34.2V, Isc=7.19A at 800 W/m^2/20C ambient for the 250P
+% variant) after the full datasheet PDF was sourced, so this validation is
+% no longer blocked on missing data -- only on writing the test. This
+% table/paragraph should be expanded once that test exists; do not report
+% an RMSE across NOCT/low-irradiance points here until it has actually been
+% computed by a real test run (RESEARCH_PROGRAM.md's standing rule against
+% unproduced numeric results applies with full force to this section).
+\emph{The NOCT and low-irradiance validation points required by our
+acceptance criteria are pending an automated test using the manufacturer's
+NOCT electrical table (now available; see \texttt{data/README.md}) and are
+not yet reported here.}
+
+Two more design choices deserve explicit justification. First, the
+temperature dependence of \eqref{eq:two-diode} in this implementation comes
+entirely through the thermal-voltage term $V_t(T)$, not through direct
+scaling of $I_{ph}$, $V_{oc}$, or $P_{max}$ by the datasheet's temperature
+coefficients ($+0.065\%/^\circ\text{C}$ for $I_{sc}$,
+$-0.34\%/^\circ\text{C}$ for $V_{oc}$, $-0.43\%/^\circ\text{C}$ for
+$P_{max}$). Whether this implicit temperature response quantitatively
+matches the datasheet's explicit coefficients has not yet been checked and
+is exactly what the pending NOCT validation above would test.

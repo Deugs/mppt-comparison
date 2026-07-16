@@ -1,0 +1,68 @@
+\section{Boost Converter Modeling}
+\label{sec:converter-model}
+
+\subsection{Specifications and Component Sizing}
+The MPPT controllers command the duty cycle of a boost converter interposed
+between the PV module/string and a resistive load representing a downstream
+DC bus, switching at $f_s=20\,$kHz with an input range
+$V_{in}\in[20,40]\,$V (covering the module's expected $V_{mp}$ range under
+varying conditions) and output $V_{out}=48\,$V. Sizing follows the standard
+CCM boost relations
+\begin{align}
+D &= 1 - \frac{V_{in}}{V_{out}}, \\
+L &= \frac{V_{in} D}{f_s \, \Delta I_L}, \qquad \Delta I_L = 0.30\, I_{L,avg}, \\
+C &= \frac{I_{out} D}{f_s \, \Delta V_o}, \qquad \Delta V_o = 0.01\, V_{out},
+\end{align}
+with the 30\% inductor-current-ripple and 1\% output-voltage-ripple design
+targets following \cite{erickson2001fundamentals}. At the worst-case
+operating point ($V_{in}=20\,$V, full load $P_{max}=250\,$W), this gives
+$D=0.583$, $L=155.6\,\mu$H, $C=316.5\,\mu$F, and load resistance
+$R=V_{out}^2/P_{max}=9.22\,\Omega$.
+
+\subsection{Small-Signal Model}
+The state-space averaged control-to-output transfer function for a CCM
+boost converter is
+\begin{equation}
+G_{vd}(s) = \frac{V_{out}}{(1-D)^2} \cdot
+\frac{1 - s/\omega_z}{1 + \dfrac{s}{Q\omega_0} + \left(\dfrac{s}{\omega_0}\right)^2},
+\label{eq:small-signal}
+\end{equation}
+with
+\begin{equation}
+\omega_0 = \frac{1-D}{\sqrt{LC}}, \quad
+Q = (1-D)R\sqrt{\frac{C}{L}}, \quad
+\omega_z = \frac{(1-D)^2 R}{L}.
+\end{equation}
+At the design operating point, $\omega_0 = 1878\,$rad/s (299\,Hz),
+$Q=5.48$, and the right-half-plane (RHP) zero $\omega_z=10{,}286\,$rad/s
+(1637\,Hz). The RHP zero is included explicitly in \eqref{eq:small-signal}
+because a boost converter's control-to-output response has non-minimum-phase
+behavior (an initial dip in output before the commanded rise) that a
+simplified transfer function omitting the zero would misrepresent -- of
+direct relevance to any MPPT algorithm that assumes a monotonic response to
+a duty-cycle perturbation.
+
+\subsection{Discontinuous Conduction Mode (DCM)}
+The critical inductance for continuous conduction at a given operating point
+is $L_{crit} = (1-D)^2 D R / (2 f_s)$. At full load this design's
+$L=155.6\,\mu$H exceeds $L_{crit}=23.3\,\mu$H, confirming CCM operation; at
+light load (5\% of $P_{max}$, representative of low-irradiance conditions),
+the same inductor value no longer satisfies the CCM condition and the
+converter enters DCM.
+
+This has a concrete implication for MPPT behavior that is not simply a
+converter-design footnote: in DCM, the $V_{out}/V_{in}$ relationship depends
+on $L$, $f_s$, and load in addition to duty cycle, so \eqref{eq:small-signal}
+no longer holds and the same duty-cycle perturbation produces a different,
+load-dependent voltage/power response than in CCM. Every algorithm in
+Section~\ref{sec:algorithms} infers tracking direction from a duty-cycle
+perturbation's effect on $dP/dV$ (P\&O, IncCond, fuzzy logic, and SMC's
+sliding surface directly; Q-learning's reward indirectly) without
+re-deriving or re-tuning against a DCM model. A spurious sensitivity change
+at light load is therefore a plausible confound for any algorithm whose
+convergence or oscillation metrics degrade specifically in this paper's
+low-irradiance scenarios (200\,W/m$^2$ in the multi-level-irradiance and
+rapid-double-step scenarios, or the low-irradiance modules in the
+partial-shading scenarios) -- a possibility we return to in
+Section~\ref{sec:conclusion}'s discussion of limitations, not something
+addressable by changing the MPPT algorithm itself.

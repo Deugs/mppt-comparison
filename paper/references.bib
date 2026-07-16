@@ -1,0 +1,177 @@
+% ============================================================
+% SETTLED CITATIONS -- verified against Crossref (title, authors,
+% journal, volume/issue/pages, year, DOI all cross-checked against
+% the DOI's own Crossref metadata record). Safe to cite as-is.
+% ============================================================
+
+@article{femia2005optimization,
+  author  = {Femia, N. and Petrone, G. and Spagnuolo, G. and Vitelli, M.},
+  title   = {Optimization of Perturb and Observe Maximum Power Point Tracking Method},
+  journal = {IEEE Transactions on Power Electronics},
+  volume  = {20},
+  number  = {4},
+  pages   = {963--973},
+  year    = {2005},
+  doi     = {10.1109/TPEL.2005.850975}
+}
+
+@article{hussein1995maximum,
+  author  = {Hussein, K. H.},
+  title   = {Maximum Photovoltaic Power Tracking: An Algorithm for Rapidly Changing Atmospheric Conditions},
+  journal = {IEE Proceedings - Generation, Transmission and Distribution},
+  volume  = {142},
+  number  = {1},
+  pages   = {59--64},
+  year    = {1995},
+  doi     = {10.1049/ip-gtd:19951577}
+}
+
+@article{ishaque2011simple,
+  author  = {Ishaque, Kashif and Salam, Zainal and Taheri, Hamed},
+  title   = {Simple, Fast and Accurate Two-Diode Model for Photovoltaic Modules},
+  journal = {Solar Energy Materials and Solar Cells},
+  volume  = {95},
+  number  = {2},
+  pages   = {586--594},
+  year    = {2011},
+  doi     = {10.1016/j.solmat.2010.09.023}
+}
+
+% Cited ONLY for the general single-diode 3-point extraction methodology
+% background -- NOT as the source of the two-diode model (see CLAUDE.md's
+% explicit warning: do not attribute the two-diode contribution to this paper).
+@article{villalva2009comprehensive,
+  author  = {Villalva, M. G. and Gazoli, J. R. and Ruppert Filho, E.},
+  title   = {Comprehensive Approach to Modeling and Simulation of Photovoltaic Arrays},
+  journal = {IEEE Transactions on Power Electronics},
+  volume  = {24},
+  number  = {5},
+  pages   = {1198--1208},
+  year    = {2009},
+  doi     = {10.1109/TPEL.2009.2013862}
+}
+
+@article{kofinas2017reinforcement,
+  author  = {Kofinas, P. and Doltsinis, S. and Dounis, A. I. and Vouros, G. A.},
+  title   = {A Reinforcement Learning Approach for MPPT Control Method of Photovoltaic Sources},
+  journal = {Renewable Energy},
+  volume  = {108},
+  pages   = {461--473},
+  year    = {2017},
+  doi     = {10.1016/j.renene.2017.03.008}
+}
+
+% Note: correct title is "Variable Structure Systems with Sliding Modes"
+% (CLAUDE.md's working notes had it as "...with Sliding Mode Control" --
+% corrected here after independent verification against multiple citing
+% sources agreeing on the exact title/DOI).
+@article{utkin1977variable,
+  author  = {Utkin, V. I.},
+  title   = {Variable Structure Systems with Sliding Modes},
+  journal = {IEEE Transactions on Automatic Control},
+  volume  = {22},
+  number  = {2},
+  pages   = {212--222},
+  year    = {1977},
+  doi     = {10.1109/TAC.1977.1101446}
+}
+
+@article{gao1993variable,
+  author  = {Gao, Weibing and Hung, J. C.},
+  title   = {Variable Structure Control of Nonlinear Systems: A New Approach},
+  journal = {IEEE Transactions on Industrial Electronics},
+  volume  = {40},
+  number  = {1},
+  pages   = {45--55},
+  year    = {1993},
+  doi     = {10.1109/41.184820}
+}
+
+@book{slotine1991applied,
+  author    = {Slotine, Jean-Jacques E. and Li, Weiping},
+  title     = {Applied Nonlinear Control},
+  publisher = {Prentice Hall},
+  address   = {Englewood Cliffs, NJ},
+  year      = {1991},
+  isbn      = {978-0-13-040890-7}
+}
+
+@book{erickson2001fundamentals,
+  author    = {Erickson, Robert W. and Maksimovic, Dragan},
+  title     = {Fundamentals of Power Electronics},
+  edition   = {2nd},
+  publisher = {Springer},
+  year      = {2001},
+  isbn      = {978-0-7923-7270-7}
+}
+
+% ============================================================
+% CANDIDATE CITATIONS -- real, Crossref-verified papers found while
+% researching the two still-open Citation Flags (SMC design match,
+% 7x7 fuzzy partition precedent) and the broader literature review.
+% NONE of these are confirmed to technically match our design as
+% closely as a citation should before going in the paper -- READ THEM
+% YOURSELF before citing. Where I could check content (via WebFetch),
+% that's noted; where I couldn't (paywalled/blocked), it's flagged.
+% ============================================================
+
+% SMC candidate 1 -- verified real via Crossref. Content checked: uses a
+% "multi-power reaching law" + sigmoid function, NOT the same reaching-law
+% family as this project's exponential reaching law + boundary-layer
+% saturation -- close in spirit (SMC + explicit chattering mitigation for
+% PV MPPT) but not an exact technique match. Read before citing.
+@article{zhang2022novel,
+  author  = {Zhang, Yan and Wang, Ya-Jun and Yu, Jia-Qi},
+  title   = {A Novel MPPT Algorithm for Photovoltaic Systems Based on Improved Sliding Mode Control},
+  journal = {Electronics},
+  volume  = {11},
+  number  = {15},
+  pages   = {2421},
+  year    = {2022},
+  doi     = {10.3390/electronics11152421}
+}
+
+% SMC candidate 2 -- verified real via Crossref (title/authors/journal/DOI).
+% Content NOT independently confirmed (ScienceDirect blocked automated
+% fetch) -- title suggests a directly relevant dP/dV-surface SMC-MPPT
+% design; read the full text before citing to confirm reaching-law choice.
+@article{mostafa2020tracking,
+  author  = {Mostafa, Mostafa R. and Saad, Naggar H. and El-sattar, Ahmed A.},
+  title   = {Tracking the Maximum Power Point of PV Array by Sliding Mode Control Method},
+  journal = {Ain Shams Engineering Journal},
+  volume  = {11},
+  number  = {1},
+  pages   = {119--131},
+  year    = {2020},
+  doi     = {10.1016/j.asej.2019.09.003}
+}
+
+% Fuzzy rule-base survey -- verified real via Crossref AND content-checked
+% (WebFetch confirmed it covers 4 FLC-MPPT variants at 5x5, not 7x7). Does
+% NOT establish a 7x7 precedent directly, but is a strong general-purpose
+% fuzzy-MPPT survey citation for the literature review regardless.
+@article{zhu2021comprehensive,
+  author  = {Zhu, Tongsen and Dong, Jiayi and Li, Xingshuo and Ding, Shuye},
+  title   = {A Comprehensive Study on Maximum Power Point Tracking Techniques Based on Fuzzy Logic Control for Solar Photovoltaic Systems},
+  journal = {Frontiers in Energy Research},
+  volume  = {9},
+  pages   = {727949},
+  year    = {2021},
+  doi     = {10.3389/fenrg.2021.727949}
+}
+
+% Q-learning / partial-shading survey seed -- verified real via Crossref.
+% Directly relevant to this project's own partial-shading generalization
+% finding (Q-learning was never trained on multi-module shading and fails
+% qualitatively worse than the perturbative algorithms there). Content not
+% independently re-verified beyond title/metadata -- read before citing.
+@article{phan2020deep,
+  author  = {Phan, Bao Chau and Lai, Ying-Chih and Lin, Chin E.},
+  title   = {A Deep Reinforcement Learning-Based MPPT Control for PV Systems under Partial Shading Condition},
+  journal = {Sensors},
+  volume  = {20},
+  number  = {11},
+  pages   = {3039},
+  year    = {2020},
+  doi     = {10.3390/s20113039}
+}

@@ -17,10 +17,10 @@ NOCT_CELL_TEMPERATURE_C = 45.0  # deg C, approximate per datasheet NOCT rating
 LOW_IRRADIANCE = 200.0  # W/m^2
 
 # --- Reference panel: Canadian Solar CS6P-250P (60-cell, poly) ---
-# Values below are transcribed from the manufacturer's summary datasheet table.
-# See data/README.md: the full datasheet PDF has not yet been obtained, so the
-# temperature coefficients (KI_ISC, KV_VOC, KP_PMAX) are left unset rather than
-# guessed. Do not fill these in from memory/estimate -- pull them from the PDF.
+# Values below are transcribed from the manufacturer's full datasheet,
+# "CS6P-230/235/240/245/250P ClearPower" (EN-Rev 3.50, Canadian Solar Inc.,
+# 2012), archived at data/panel_datasheet.pdf. STC values cross-checked
+# against the datasheet's CS6P-250P column and match exactly.
 PANEL_VOC_STC = 37.2  # V
 PANEL_ISC_STC = 8.87  # A
 PANEL_VMP_STC = 30.1  # V
@@ -28,9 +28,11 @@ PANEL_IMP_STC = 8.30  # A
 PANEL_PMAX_STC = 250.0  # W
 PANEL_NS = 60  # cells in series
 
-KI_ISC_PCT_PER_C = None  # TODO(data/README.md): temp coeff of Isc, %/degC
-KV_VOC_PCT_PER_C = None  # TODO(data/README.md): temp coeff of Voc, %/degC
-KP_PMAX_PCT_PER_C = None  # TODO(data/README.md): temp coeff of Pmax, %/degC
+# Temperature coefficients, from the datasheet's "Temperature Characteristics"
+# table (same for all wattage variants in the CS6P-P series, incl. 250P).
+KI_ISC_PCT_PER_C = 0.065  # temp coeff of Isc, %/degC
+KV_VOC_PCT_PER_C = -0.34  # temp coeff of Voc, %/degC
+KP_PMAX_PCT_PER_C = -0.43  # temp coeff of Pmax, %/degC
 
 # --- Bypass diode configuration ---
 # One bypass diode per 20 cells is standard industry practice; see CLAUDE.md
