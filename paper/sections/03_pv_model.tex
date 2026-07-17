@@ -89,28 +89,70 @@ $P_{max}$ (W) & 249.83 & 250.00 & 0.068\% \\
 \end{tabular}
 \end{table}
 
-% STATUS: NOCT (800 W/m^2, 20 C ambient / 45+-2 C cell) and low-irradiance
-% (200 W/m^2) curve validation are specified in CLAUDE.md's acceptance
-% criteria but not yet implemented as an automated test -- data/README.md
-% now has the manufacturer's NOCT electrical table (Pmax=181W, Vmp=27.5V,
-% Imp=6.60A, Voc=34.2V, Isc=7.19A at 800 W/m^2/20C ambient for the 250P
-% variant) after the full datasheet PDF was sourced, so this validation is
-% no longer blocked on missing data -- only on writing the test. This
-% table/paragraph should be expanded once that test exists; do not report
-% an RMSE across NOCT/low-irradiance points here until it has actually been
-% computed by a real test run (RESEARCH_PROGRAM.md's standing rule against
-% unproduced numeric results applies with full force to this section).
-\emph{The NOCT and low-irradiance validation points required by our
-acceptance criteria are pending an automated test using the manufacturer's
-NOCT electrical table (now available; see \texttt{data/README.md}) and are
-not yet reported here.}
+\subsection{Temperature Dependence}
+\label{sec:temperature-dependence}
+Photocurrent and both diodes' saturation currents are temperature-dependent,
+following \cite{desoto2006improvement}:
+\begin{align}
+I_{ph}(G,T) &= I_{ph,ref}\,\frac{G}{G_{ref}}\bigl(1 + K_i(T-T_{ref})\bigr), \label{eq:iph-temp}\\
+I_{s}(T) &= I_{s,ref}\left(\frac{T}{T_{ref}}\right)^{3/a}
+  \exp\!\left[\frac{E_g q}{ak}\left(\frac{1}{T_{ref}}-\frac{1}{T}\right)\right], \label{eq:is-temp}
+\end{align}
+applied independently to $I_{s1}$ (using $a_1$) and $I_{s2}$ (using $a_2$),
+with $E_g=1.121\,$eV the silicon bandgap energy and $K_i=+0.065\%/^\circ$C
+the datasheet's short-circuit-current temperature coefficient. Both
+correction factors in \eqref{eq:iph-temp}-\eqref{eq:is-temp} are identically
+1 at $T=T_{ref}$, so STC behavior is unaffected by this extension --
+Table~\ref{tab:validation} above is unchanged whether or not temperature
+dependence is included.
 
-Two more design choices deserve explicit justification. First, the
-temperature dependence of \eqref{eq:two-diode} in this implementation comes
-entirely through the thermal-voltage term $V_t(T)$, not through direct
-scaling of $I_{ph}$, $V_{oc}$, or $P_{max}$ by the datasheet's temperature
-coefficients ($+0.065\%/^\circ\text{C}$ for $I_{sc}$,
-$-0.34\%/^\circ\text{C}$ for $V_{oc}$, $-0.43\%/^\circ\text{C}$ for
-$P_{max}$). Whether this implicit temperature response quantitatively
-matches the datasheet's explicit coefficients has not yet been checked and
-is exactly what the pending NOCT validation above would test.
+This addresses a real error found during development: an earlier version of
+this model let temperature affect only the thermal-voltage term $V_t(T)$,
+leaving $I_{ph}$ and $I_s$ temperature-independent. Holding $I_s$ fixed while
+$V_t$ rises with temperature makes $V_{oc}\approx V_t\ln(I_{ph}/I_s)$
+\emph{increase} with temperature -- backwards from every real PV panel,
+where $I_s$'s much stronger (exponential) growth with temperature is the
+physically dominant effect and pulls $V_{oc}$ \emph{down}. Concretely, the
+uncorrected model predicted $V_{oc}(50^\circ\text{C})=40.32\,$V against this
+panel's datasheet-implied $34.04\,$V (using its linear
+$K_v=-0.34\%/^\circ$C coefficient) -- the wrong sign, not merely an
+uncalibrated magnitude. \eqref{eq:iph-temp}-\eqref{eq:is-temp} fix this:
+the corrected model gives $V_{oc}(50^\circ\text{C})=34.31\,$V, within
+$0.8\%$ of the datasheet-implied value, and $I_{sc}(50^\circ\text{C})$
+matches to within $0.01\%$ (the \emph{temperature step} scenario in
+Section~\ref{sec:results} is the only one of this paper's eleven scenarios
+that varies temperature -- every other scenario runs at a constant
+25\textdegree C and is completely unaffected by this fix).
+
+Table~\ref{tab:noct-validation} validates the corrected model against the
+manufacturer's NOCT electrical table ($G=800\,$W/m$^2$, $T_c=45\pm2^\circ$C)
+-- data not available until the full datasheet PDF was sourced during this
+project. RMSE across the five NOCT key points is $1.35\%$, within the $2\%$
+acceptance criterion (the individual $P_{max}$ point alone is $2.44\%$,
+narrowly over 2\% on its own, though the aggregate RMSE the criterion
+specifies is not). Low-irradiance validation is necessarily coarser: the
+datasheet gives only a single retention claim ("+95.5\% module efficiency
+from 1000 to 200\,W/m$^2$"), not a full I-V table at 200\,W/m$^2$, so this
+is a single ratio check rather than a point-by-point match like NOCT. The
+model measures $93.5\%$ retention -- close to, but about 2 percentage
+points below, the datasheet's claim, plausibly because this simplified
+model holds $R_s$ and $R_{sh}$ irradiance-independent rather than scaling
+$R_{sh}$ with irradiance as a full five-parameter model would.
+
+\begin{table}[htbp]
+\centering
+\caption{NOCT Validation ($G=800$\,W/m$^2$, $T_c=45^\circ$C)}
+\label{tab:noct-validation}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Quantity & Simulated & Datasheet & Rel.\ Error \\
+\midrule
+$I_{sc}$ (A)  & 7.188  & 7.190  & 0.024\% \\
+$V_{oc}$ (V)  & 34.514 & 34.200 & 0.917\% \\
+$V_{mp}$ (V)  & 27.814 & 27.500 & 1.143\% \\
+$I_{mp}$ (A)  & 6.666  & 6.600  & 0.999\% \\
+$P_{max}$ (W) & 185.41 & 181.00 & 2.435\% \\
+\bottomrule
+\multicolumn{4}{l}{\footnotesize RMSE across all five points: 1.35\%.}
+\end{tabular}
+\end{table}

@@ -21,6 +21,7 @@ rather than the PV-source/converter interaction.
 from scipy.optimize import brentq
 
 from . import config
+from .pv_model import photocurrent
 
 
 def effective_input_resistance(load_resistance: float, duty_cycle: float) -> float:
@@ -53,7 +54,7 @@ def pv_operating_point(
         (voltage, current) tuple, in V and A.
     """
     r_in = effective_input_resistance(load_resistance, duty_cycle)
-    iph = pv_model.params.iph * irradiance / config.STC_IRRADIANCE
+    iph = photocurrent(pv_model.params.iph, irradiance, temperature_c)
 
     def residual(i: float) -> float:
         return pv_model.equation_residual(i, i * r_in, irradiance, temperature_c)
@@ -89,7 +90,7 @@ def pv_string_operating_point(
     """
     r_in = effective_input_resistance(load_resistance, duty_cycle)
     max_current = max(
-        module.groups[0].model.params.iph * irradiance / config.STC_IRRADIANCE
+        photocurrent(module.groups[0].model.params.iph, irradiance, temperature_c)
         for module, irradiance in zip(pv_string.modules, irradiances)
     )
 

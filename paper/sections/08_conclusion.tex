@@ -28,12 +28,13 @@ implicitly relies on no longer holds; whether this contributes to any
 algorithm's degraded performance specifically in the low-irradiance and
 partial-shading scenarios has not been isolated from the algorithms'
 intrinsic global-search limitations, and would require a dedicated
-ablation to disentangle. Second, the two-diode model's temperature
-dependence is implicit (through the thermal-voltage term) rather than
-calibrated against the datasheet's explicit temperature coefficients
-(Section~\ref{sec:pv-model}); the NOCT and low-irradiance curve validation
-CLAUDE.md's acceptance criteria specify is not yet complete, though the
-underlying datasheet data needed for it is now available. Third,
+ablation to disentangle. Second, low-irradiance validation
+(Section~\ref{sec:model-validation}) is necessarily coarser than the NOCT
+point, since the datasheet gives only a single efficiency-retention claim
+at 200\,W/m$^2$ rather than a full I-V table; the model's measured $93.5\%$
+retention is close to, but not an exact match for, the datasheet's claimed
+$95.5\%$, plausibly because this simplified model does not scale shunt
+resistance with irradiance as a full five-parameter model would. Third,
 Q-learning's tabular state discretization and training protocol
 (Section~\ref{sec:q-learning-algorithm}) are one specific design point in a
 much larger learning-based MPPT design space; whether a different state

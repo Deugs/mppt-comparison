@@ -8,6 +8,14 @@ a physical constant or panel/converter parameter — import it from here instead
 BOLTZMANN_CONSTANT = 1.380649e-23  # J/K
 ELECTRON_CHARGE = 1.602176634e-19  # C
 
+# Silicon bandgap energy at STC, eV. Standard value used throughout the PV
+# modeling literature for the diode saturation current's temperature
+# dependence (Is ~ T^3 * exp(-Eg/(a*k*T))); see pv_model.py's temperature-
+# scaling docstring and De Soto, W., Klein, S.A., and Beckman, W.A. (2006).
+# "Improvement and validation of a model for photovoltaic array
+# performance." Solar Energy, 80(1), 78-88.
+PV_BANDGAP_EV = 1.121
+
 # --- Standard Test Conditions / NOCT reference points ---
 STC_IRRADIANCE = 1000.0  # W/m^2
 STC_TEMPERATURE_C = 25.0  # deg C

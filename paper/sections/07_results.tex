@@ -157,6 +157,28 @@ split -- unlike flat-irradiance-only held-out evaluation -- is
 specifically designed to expose a generalization failure that a
 same-topology-only evaluation would miss entirely.
 
+Notably, \emph{temperature\_step} -- a single-dimension change (temperature
+only, same single-module topology, same irradiance) rather than a
+topology change -- produces a held-out tracking efficiency of only
+$64.3\%$, comparable in severity to two of the four partial-shading
+patterns and well below every other held-out scenario except
+\emph{sensor\_noise\_robustness} and \emph{partial\_shading\_simple}. This
+is not merely an unseen-condition penalty: convergence rate for this
+scenario is unchanged from before the temperature-step-away portion of the
+run (80\%, identical to the other held-out scenarios' pre-step behavior),
+but tracking efficiency collapses because the agent enters sustained,
+large-amplitude oscillation after the 25$\to$50\textdegree C step
+(steady-state oscillation p2p rises from a few watts to $\sim$100\,W) --
+consistent with its fixed voltage-bin discretization
+(Section~\ref{sec:q-learning-algorithm}), calibrated only against
+STC-temperature operating ranges, placing the post-step operating point in
+a state region the training distribution never adequately explored. This
+strengthens, rather than merely restates, this paper's central
+generalization finding: even a single-dimension shift outside the training
+distribution -- not only a full topology change -- is enough to produce a
+severe, qualitatively distinct failure mode for the tabular Q-learning
+design used here.
+
 \begin{figure}[htbp]
 \centering
 \includegraphics[width=\linewidth]{../results/figures/ql_train_vs_held_out_tracking_efficiency_pct.png}
@@ -251,5 +273,8 @@ absolute computational cost remains two orders of magnitude above the
 perturbative baselines even after reduction. Q-learning's generalization
 failure under partial shading is qualitatively worse than the other
 paradigms' local-maximum failures, a direct consequence of its training
-distribution never including multi-module shading -- see
-Section~\ref{sec:conclusion} for the limitations this implies.
+distribution never including multi-module shading -- and the same fixed
+discretization is fragile even to a single-dimension held-out condition
+(temperature), not only a topology change, as Section~\ref{sec:results}'s
+train-vs-held-out comparison shows. See Section~\ref{sec:conclusion} for
+the limitations this implies.

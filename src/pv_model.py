@@ -12,6 +12,30 @@ Citation (mandatory, per CLAUDE.md): Ishaque, K., Salam, Z., and Taheri, H.
 Solar Energy Materials and Solar Cells, 95, 586-594. Do NOT cite Villalva et
 al. (2009) for the two-diode model itself -- that paper's contribution is a
 single-diode 3-point extraction method.
+
+Temperature dependence of Iph and Is (fixed here after an audit found the
+prior version had no such dependence at all, and got Voc's temperature
+direction backwards as a result -- see data/README.md and
+tests/test_pv_model.py's test_voc_decreases_and_isc_increases_with_temperature):
+letting temperature affect only Vt (as the prior version did) makes Voc
+*increase* with temperature, since a rising Vt alone, with Is held fixed,
+pushes Voc = Vt*ln(Iph/Is + 1) up -- backwards from every real PV panel,
+where Is growing with temperature is the physically dominant effect and
+pulls Voc down. Fixed via the standard De Soto et al. (2006) extension:
+
+    Iph(G,T) = Iph_ref * (G/G_ref) * (1 + Ki*(T - T_ref))
+    Is(T)    = Is_ref * (T/T_ref)^(3/a) * exp((Eg*q)/(a*k) * (1/T_ref - 1/T))
+
+applied independently to Is1 (using a1) and Is2 (using a2), the standard
+reverse-saturation-current law Is ~ T^3 * exp(-Eg/(a*k*T)) anchored at the
+reference temperature so both correction factors are identically 1 at
+T=T_ref -- STC behavior is therefore provably unchanged by this fix, which
+is why every pre-existing STC-only test still passes with no modification.
+
+Citation: De Soto, W., Klein, S.A., and Beckman, W.A. (2006). "Improvement
+and validation of a model for photovoltaic array performance." Solar
+Energy, 80(1), 78-88. PV_BANDGAP_EV (config.py) is the standard silicon
+bandgap energy value used throughout this literature, not panel-specific.
 """
 
 from dataclasses import dataclass
@@ -26,6 +50,25 @@ def thermal_voltage(temperature_c: float, ideality: float, num_cells: int) -> fl
     """Module-/group-level thermal voltage a * num_cells * k * T / q, in volts."""
     temperature_k = temperature_c + 273.15
     return ideality * num_cells * config.BOLTZMANN_CONSTANT * temperature_k / config.ELECTRON_CHARGE
+
+
+def photocurrent(iph_ref: float, irradiance: float, temperature_c: float) -> float:
+    """Iph(G,T) = Iph_ref * (G/G_ref) * (1 + Ki*(T-T_ref)) -- see module docstring."""
+    ki_frac = config.KI_ISC_PCT_PER_C / 100.0
+    return iph_ref * (irradiance / config.STC_IRRADIANCE) * (1.0 + ki_frac * (temperature_c - config.STC_TEMPERATURE_C))
+
+
+def _saturation_current(is_ref: float, ideality: float, temperature_c: float) -> float:
+    """Is(T) = Is_ref * (T/T_ref)^(3/a) * exp((Eg*q)/(a*k) * (1/T_ref - 1/T)).
+
+    Identically Is_ref at T=T_ref (both correction factors are 1), so this
+    only perturbs behavior away from STC -- see module docstring.
+    """
+    temperature_k = temperature_c + 273.15
+    ref_k = config.STC_TEMPERATURE_C + 273.15
+    eg_joules = config.PV_BANDGAP_EV * config.ELECTRON_CHARGE
+    exponent = (eg_joules / (ideality * config.BOLTZMANN_CONSTANT)) * (1.0 / ref_k - 1.0 / temperature_k)
+    return is_ref * (temperature_k / ref_k) ** (3.0 / ideality) * np.exp(exponent)
 
 
 @dataclass
@@ -60,12 +103,14 @@ class TwoDiodeModel:
         voltage search.
         """
         p = self.params
-        iph = p.iph * irradiance / config.STC_IRRADIANCE
+        iph = photocurrent(p.iph, irradiance, temperature_c)
+        is1 = _saturation_current(p.is1, p.a1, temperature_c)
+        is2 = _saturation_current(p.is2, p.a2, temperature_c)
         vt1 = thermal_voltage(temperature_c, p.a1, self.num_cells)
         vt2 = thermal_voltage(temperature_c, p.a2, self.num_cells)
         vd = v + i * p.rs
-        i_d1 = p.is1 * np.expm1(vd / vt1)
-        i_d2 = p.is2 * np.expm1(vd / vt2)
+        i_d1 = is1 * np.expm1(vd / vt1)
+        i_d2 = is2 * np.expm1(vd / vt2)
         i_sh = vd / p.rsh
         return iph - i_d1 - i_d2 - i_sh - i
 
@@ -255,7 +300,7 @@ class PVString:
         scenarios are steady-state, so the cost is acceptable.
         """
         max_current = max(
-            module.groups[0].model.params.iph * irradiance / config.STC_IRRADIANCE
+            photocurrent(module.groups[0].model.params.iph, irradiance, temperature_c)
             for module, irradiance in zip(self.modules, irradiances)
         )
         currents = np.linspace(1e-6, max_current * 0.999, num_points)
