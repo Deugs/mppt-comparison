@@ -14,3 +14,15 @@ results/figures/*.png
 results/figures/*.svg
 !results/monte_carlo/.gitkeep
 !results/figures/.gitkeep
+
+# LaTeX build artifacts (paper/main.pdf is a build product of paper/*.tex +
+# references.bib; regenerate with pdflatex/bibtex, don't commit it)
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.synctex.gz
+paper/main.pdf
