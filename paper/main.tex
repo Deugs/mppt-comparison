@@ -40,8 +40,8 @@ control, SMC, with a Lyapunov stability guarantee) -- under a common,
 open-source, pure-Python simulation framework. The framework uses a
 two-diode photovoltaic model with bypass-diode-induced partial shading,
 validated against a commercial Canadian Solar CS6P-250P datasheet, driving
-a boost converter under 11 test conditions (9 single-module scenarios plus
-3 complex partial-shading patterns), each evaluated over 50 Monte Carlo
+a boost converter under 11 test conditions (7 single-module scenarios plus
+4 partial-shading configurations), each evaluated over 50 Monte Carlo
 runs with identical random seeds across algorithms. Results show that
 sliding mode control achieves the highest steady-state tracking efficiency
 (99.90\%) and lowest oscillation, but all five algorithms -- including
@@ -52,7 +52,7 @@ local maximum and Q-learning (never trained on multi-module shading)
 failing in a qualitatively different, worse way. A reduced 5$\times$5 fuzzy
 rule base is shown to statistically match the full 7$\times$7 base's
 tracking efficiency, a rule-reduction result with direct computational
-relevance given fuzzy logic's measured $\sim$100$\times$ per-step
+relevance given fuzzy logic's measured $\sim$101$\times$ per-step
 computational cost relative to P\&O. All code, data, and figures are
 released under an open-source license for full reproducibility.
 \end{abstract}

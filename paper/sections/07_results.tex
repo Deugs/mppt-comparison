@@ -114,6 +114,41 @@ of color blindness.}
 \label{fig:convergence-heatmap}
 \end{figure}
 
+\emph{Multi-level irradiance} is a second, unrelated 0\%-convergence case
+worth explaining on its own: IncCond and SMC both fail there while P\&O,
+fuzzy logic, and Q-learning all succeed, and the mechanism is not a
+paradigm-level limitation but a converter-sizing constraint interacting
+with a specific implementation choice. At the scenario's lowest level
+(200\,W/m$^2$), the true MPP ($V=29.4\,$V, $P=46.7\,$W) requires an
+effective source resistance $R_{in}=V/I=18.6\,\Omega$ -- but a boost
+converter can only present $R_{in}=R_{load}(1-D)^2 \le R_{load}=9.2\,\Omega$
+(Section~\ref{sec:converter-model}), so this MPP is unreachable at
+\emph{any} valid duty cycle, not merely one outside this paper's
+$D\in[0.05,0.90]$ clamp range. Every algorithm's duty cycle is driven
+toward the clamp floor while attempting to reach it. P\&O recovers once
+irradiance later rises enough to make the MPP reachable again, because its
+implementation has an explicit fallback for "no perturbation occurred"
+(if the previous duty-cycle change was zero, it defaults to trying a new
+direction rather than concluding convergence). IncCond and SMC, by
+contrast, both use "no voltage change between consecutive samples" as a
+proxy signal for being at or near the MPP (IncCond's $dV\approx0$ boundary
+case; SMC's sliding surface $s=dP/dV$, which reads exactly zero when
+$dV=0$) -- and being clamped at the duty floor \emph{also} produces
+$dV\approx0$, for an entirely different reason (the duty cycle simply
+cannot move, not because the MPP condition is satisfied). Both algorithms
+misread this as convergence, lock in a zero correction, and never
+attempt to move again even after irradiance later rises enough that the
+true MPP becomes reachable -- confirmed by direct trajectory inspection:
+both algorithms' duty cycle is identical and frozen at exactly
+$D=0.05$ from within the first 200\,W/m$^2$ second of simulated time
+through the end of the 5-second run, regardless of the later irradiance
+steps. This is a real robustness difference between these
+implementations' boundary-handling logic, not a fundamental limitation of
+either paradigm -- distinguishing "clamped at a hard limit" from
+"converged" in the boundary case would fix it, but doing so changes
+algorithm behavior broadly enough that we did not retroactively patch it
+for this comparison; see Section~\ref{sec:conclusion}.
+
 Crucially, the \emph{mechanism} of failure differs by paradigm, and this
 is the more informative result than the raw 0\% figure alone.
 Fig.~\ref{fig:trajectory-shading} illustrates this for the
@@ -129,11 +164,10 @@ trained on any multi-module configuration at all
 operating point to a low-power region ($\approx114\,$W, roughly 45\% below
 even the local maximum the other four algorithms reach) and oscillates
 there indefinitely. This is a materially different -- and more severe --
-failure mode than "stuck at a local maximum," and is exactly the kind of
-result CLAUDE.md's Known Risks anticipated: reporting Q-learning's
+failure mode than "stuck at a local maximum." Reporting Q-learning's
 held-out performance honestly, rather than only its training-distribution
-numbers, surfaces a real, qualitatively distinct weakness rather than a
-merely quantitative one.
+numbers, is precisely what surfaces this: a real, qualitatively distinct
+weakness rather than a merely quantitative one.
 
 \begin{figure}[htbp]
 \centering
@@ -236,7 +270,14 @@ magnitude more expensive than P\&O; Q-learning's table lookup is
 substantially cheaper than fuzzy logic but still an order of magnitude
 above P\&O, reflecting per-step NumPy discretization overhead rather than
 the lookup itself. IncCond and SMC are close to P\&O's baseline cost, as
-Fig.~\ref{fig:computational-burden} shows directly.
+Fig.~\ref{fig:computational-burden} shows directly. Wall-clock time is a
+practical, deployment-relevant metric, but it conflates algorithmic
+complexity with implementation detail (NumPy vectorization overhead,
+Python interpreter cost) that an operation-count or FLOP-based metric
+would isolate; we report wall-clock time here because it is what a
+real embedded MPPT controller's sample-period budget actually constrains,
+but treat the relative orders-of-magnitude (not the exact multipliers) as
+the robust takeaway.
 
 \begin{table}[htbp]
 \centering

@@ -6,8 +6,13 @@ available power from a photovoltaic (PV) module or array, whose I-V
 characteristic has a single global maximum under uniform illumination but
 can develop multiple local maxima under partial shading once bypass diodes
 begin conducting. Decades of MPPT research have produced a wide design
-space of tracking strategies, but the comparative literature built around
-that design space has converged on two recurring, increasingly saturated
+space of tracking strategies; the seminal comparison in this same journal,
+\cite{esram2007comparison}, surveyed 19 such techniques, but as a narrative
+survey rather than a paradigm-structured, statistically-validated
+comparison, and predates both learning-based and model-based nonlinear
+control as MPPT approaches entirely. In the two decades since, the
+comparative literature built around that design space has instead
+converged on two recurring, increasingly saturated
 patterns: (i) re-comparing perturb-and-observe (P\&O), incremental
 conductance (IncCond), and fuzzy logic control against one another, and
 (ii) proposing yet another bio-inspired metaheuristic optimizer (grey wolf,

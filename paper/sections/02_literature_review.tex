@@ -2,9 +2,9 @@
 \label{sec:literature-review}
 
 % STATUS: substantially expanded, still not final. references.bib now has
-% 14 settled/foundational + 13 recent (2023-2025) citations = 27 total,
+% 15 settled/foundational + 14 recent (2023-2025) citations = 29 total,
 % comfortably clearing publication_supplement.md's >=20-reference checklist
-% item; 13 of 27 are 2023-2025, just short of its >=15-recent target. Every
+% item; 14 of 29 are 2023-2025, just short of its >=15-recent target. Every
 % citation below (recent and foundational alike) has been verified against
 % Crossref metadata (see references.bib comments) -- do not add a citation
 % here without the same verification. Two citation flags remain genuinely
@@ -142,6 +142,18 @@ the same multiple-local-maxima phenomenon this paper's Monte Carlo results
 depend on.
 
 \subsection{Cross-Paradigm Positioning}
+The most direct historical point of comparison is
+\cite{esram2007comparison}, whose 19-technique survey remains, two decades
+later, the most widely-cited broad MPPT comparison in this journal. Three
+things distinguish this paper from it, beyond the two decades of algorithm
+development in between: \cite{esram2007comparison} is a narrative survey of
+results reported by different authors under different conditions, not a
+common statistically-validated experimental comparison; it predates
+learning-based and model-based nonlinear control as MPPT paradigms
+entirely, so a four-paradigm framing was not yet possible; and it does not
+release runnable code, so its comparisons cannot be independently
+re-executed the way every result in this paper can be.
+
 \cite{endiz2025review} and \cite{yaqoob2025advanced} are both recent,
 broad reviews spanning classical, metaheuristic, and AI-based MPPT
 methods -- the same cross-paradigm scope this paper argues is missing from
@@ -157,11 +169,16 @@ introduction explicitly declines to add to (a zebra optimization algorithm
 and a GWO-PSO hybrid, respectively) -- included here not as directly
 comparable baselines but as evidence the pattern remains active and
 crowded, reinforcing rather than undermining this paper's choice to compete
-on reproducibility and paradigm coverage instead.
+on reproducibility and paradigm coverage instead. \cite{ashraf2025python}
+is a recent, directly relevant example of the open-source reproducibility
+movement this paper is also part of, releasing a Python framework for
+metaheuristic MPPT techniques evaluated under partial shading -- but,
+consistent with the pattern above, it is scoped to a single paradigm
+(metaheuristic optimization) rather than the four-paradigm comparison this
+paper provides.
 
-% Remaining work for this section: a further, smaller pass of additional
-% 2023-2025 papers to comfortably clear publication_supplement.md's
-% >=15-recent-references target (currently 13 of 27 total references are
-% 2023-2025), and resolving both TODOs above (7x7 fuzzy partition
-% precedent; specific PV-SMC design-match citation) before this section is
-% submission-ready.
+% Remaining work for this section: one more recent citation to comfortably
+% clear publication_supplement.md's >=15-recent-references target
+% (currently 14 of 29 total references are 2023-2025), and resolving both
+% TODOs above (7x7 fuzzy partition precedent; specific PV-SMC design-match
+% citation) before this section is submission-ready.

@@ -38,7 +38,10 @@ $7\times7=49$-rule base uses seven linguistic labels
 (NB, NM, NS, Z, PS, PM, PB) per input.
 
 Rather than hand-transcribing 49 rules, the rule base is \emph{generated}
-from
+from a formula of our own design (not adapted from a specific prior
+publication), chosen to reproduce a conventional error/change-of-error
+$\to$ duty-step rule table entry-for-entry while remaining parameterizable
+to the 5- and 3-label reduced bases used later in this section:
 \begin{equation}
 D_{\text{level}} = \mathrm{clip}\!\left(\mathrm{round}\!\left(
   -\frac{E_{\text{level}} + \Delta E_{\text{level}}}{2}\right)\right),
@@ -59,7 +62,13 @@ method over a 201-point discretization of the output universe.
 Following \cite{kofinas2017reinforcement}, the state space is the
 discretized pair $(V, dP/dV)$: voltage into 30 bins over
 $[0, V_{oc,STC}]$, and $dP/dV$ into 7 bins after normalization by the same
-empirically-grounded scale used for the fuzzy controller's $E$ input. The
+empirically-grounded scale used for the fuzzy controller's $E$ input. This
+discretization is coarse by deliberate choice, not oversight: it keeps
+tabular $Q$-learning tractable to train (Section~\ref{sec:conclusion}
+returns to whether finer discretization or function approximation would
+narrow the held-out generalization gap reported in
+Section~\ref{sec:results}, a question this paper's fair-comparison design
+does not attempt to answer with the same tabular architecture). The
 action space is $\{-\delta, 0, +\delta\}$ on duty cycle
 ($\delta=0.005$), mirroring P\&O's action set for a fair cross-paradigm
 comparison. The reward is $r_k = P_k - P_{k-1}$ (change in power, not raw

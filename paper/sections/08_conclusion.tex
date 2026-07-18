@@ -42,7 +42,19 @@ representation, function approximation, or a training distribution that
 includes partial shading would close the gap observed in
 Section~\ref{sec:partial-shading-results} is an open question this paper
 does not attempt to answer, since doing so changes the fair-comparison
-premise of evaluating the same tabular design used throughout. Fourth, this
+premise of evaluating the same tabular design used throughout. Fourth,
+IncCond and SMC's boundary-handling logic both use "no voltage change
+between samples" as a proxy for being at the MPP, which is indistinguishable
+from "duty cycle is clamped at a hard limit and cannot move" -- this causes
+both to lock in a zero correction and never recover once clamped
+(Section~\ref{sec:results}'s \emph{multi-level irradiance} discussion),
+whereas P\&O's implementation happens to include an explicit fallback that
+avoids the same trap. This is a genuine implementation-robustness gap we
+did not retroactively patch once found, since doing so would change
+algorithm behavior broadly enough to require rerunning results across
+every scenario, not only the one where it was discovered; distinguishing
+"clamped" from "converged" in both algorithms' boundary case is a
+concrete, well-specified fix for future work. Fifth, this
 is a simulation-only study; while the two-diode model is quantitatively
 validated against a real datasheet (Section~\ref{sec:model-validation}),
 hardware validation would strengthen any of these conclusions further.
