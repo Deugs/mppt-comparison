@@ -88,7 +88,7 @@ across every scenario, not only the partial-shading ones.
 Scenario & P\&O & IncCond & Fuzzy & Q-learn.\ & SMC \\
 \midrule
 Steady state             & 100 & 70  & 100 & 80\textsuperscript{a} & 100 \\
-Multi-level irradiance   & 100 & 0   & 100 & 100 & 0 \\
+Multi-level irradiance   & 100 & 100 & 100 & 100 & 100 \\
 Step-change irradiance   & 100 & 100 & 100 & 100\textsuperscript{a} & 100 \\
 Rapid double step        & 100 & 100 & 100 & 80  & 100 \\
 Temperature step         & 100 & 100 & 100 & 80  & 100 \\
@@ -114,40 +114,42 @@ of color blindness.}
 \label{fig:convergence-heatmap}
 \end{figure}
 
-\emph{Multi-level irradiance} is a second, unrelated 0\%-convergence case
-worth explaining on its own: IncCond and SMC both fail there while P\&O,
-fuzzy logic, and Q-learning all succeed, and the mechanism is not a
-paradigm-level limitation but a converter-sizing constraint interacting
-with a specific implementation choice. At the scenario's lowest level
-(200\,W/m$^2$), the true MPP ($V=29.4\,$V, $P=46.7\,$W) requires an
-effective source resistance $R_{in}=V/I=18.6\,\Omega$ -- but a boost
-converter can only present $R_{in}=R_{load}(1-D)^2 \le R_{load}=9.2\,\Omega$
+\emph{Multi-level irradiance} originally showed a second, unrelated
+0\%-convergence result for IncCond and SMC specifically, discovered during
+this paper's own peer-review process and fixed prior to the results
+reported here -- worth documenting because the mechanism is instructive.
+At the scenario's lowest level (200\,W/m$^2$), the true MPP ($V=29.4\,$V,
+$P=46.7\,$W) requires an effective source resistance
+$R_{in}=V/I=18.6\,\Omega$ -- but a boost converter can only present
+$R_{in}=R_{load}(1-D)^2 \le R_{load}=9.2\,\Omega$
 (Section~\ref{sec:converter-model}), so this MPP is unreachable at
 \emph{any} valid duty cycle, not merely one outside this paper's
 $D\in[0.05,0.90]$ clamp range. Every algorithm's duty cycle is driven
-toward the clamp floor while attempting to reach it. P\&O recovers once
-irradiance later rises enough to make the MPP reachable again, because its
-implementation has an explicit fallback for "no perturbation occurred"
-(if the previous duty-cycle change was zero, it defaults to trying a new
-direction rather than concluding convergence). IncCond and SMC, by
-contrast, both use "no voltage change between consecutive samples" as a
-proxy signal for being at or near the MPP (IncCond's $dV\approx0$ boundary
-case; SMC's sliding surface $s=dP/dV$, which reads exactly zero when
-$dV=0$) -- and being clamped at the duty floor \emph{also} produces
-$dV\approx0$, for an entirely different reason (the duty cycle simply
-cannot move, not because the MPP condition is satisfied). Both algorithms
-misread this as convergence, lock in a zero correction, and never
-attempt to move again even after irradiance later rises enough that the
-true MPP becomes reachable -- confirmed by direct trajectory inspection:
-both algorithms' duty cycle is identical and frozen at exactly
-$D=0.05$ from within the first 200\,W/m$^2$ second of simulated time
-through the end of the 5-second run, regardless of the later irradiance
-steps. This is a real robustness difference between these
-implementations' boundary-handling logic, not a fundamental limitation of
-either paradigm -- distinguishing "clamped at a hard limit" from
-"converged" in the boundary case would fix it, but doing so changes
-algorithm behavior broadly enough that we did not retroactively patch it
-for this comparison; see Section~\ref{sec:conclusion}.
+toward the clamp floor while attempting to reach it. P\&O tolerates this
+because it has no "hold" state at all -- every step perturbs, so it keeps
+dithering right at the boundary until a perturbation away from it happens
+to increase power. IncCond and SMC, by contrast, both use "no voltage
+change between consecutive samples" as a proxy signal for being at or near
+the MPP (IncCond's $dV\approx0$ boundary case; SMC's sliding surface
+$s=dP/dV$, which reads exactly zero when $dV=0$) -- and being clamped at
+the duty floor \emph{also} produces $dV\approx0$, for an entirely
+different reason (the duty cycle simply cannot move, not because the MPP
+condition is satisfied). Both algorithms' original implementations
+misread this as convergence, locked in a zero correction, and never
+attempted to move again even after irradiance later rose enough that the
+true MPP became reachable. Since the only way to tell "clamped" apart from
+"converged" is to actually try moving, both implementations now override a
+hold (or a correction that would push further into a limit already
+reached) with a small probe step away from that limit whenever duty is
+already sitting at a bound -- using each algorithm's own existing
+step/correction scale, so behavior away from a boundary, where "hold"
+genuinely does mean converged, is unaffected. Table~\ref{tab:convergence}
+reports the result after this fix: both algorithms now reach 100\%
+convergence on this scenario, matching P\&O, fuzzy logic, and Q-learning,
+confirmed by direct trajectory re-inspection showing duty cycle actually
+escaping the clamp at each irradiance transition rather than staying
+frozen. See Section~\ref{sec:conclusion} for what this implies about the
+other results in this paper.
 
 Crucially, the \emph{mechanism} of failure differs by paradigm, and this
 is the more informative result than the raw 0\% figure alone.
@@ -269,15 +271,19 @@ defuzzification over a 201-point grid make it roughly two orders of
 magnitude more expensive than P\&O; Q-learning's table lookup is
 substantially cheaper than fuzzy logic but still an order of magnitude
 above P\&O, reflecting per-step NumPy discretization overhead rather than
-the lookup itself. IncCond and SMC are close to P\&O's baseline cost, as
-Fig.~\ref{fig:computational-burden} shows directly. Wall-clock time is a
+the lookup itself. IncCond remains close to P\&O's baseline cost; SMC is
+somewhat above it, the extra cost of the boundary-clamp check added in
+Section~\ref{sec:partial-shading-results}, as Fig.~\ref{fig:computational-burden}
+shows directly. Wall-clock time is a
 practical, deployment-relevant metric, but it conflates algorithmic
 complexity with implementation detail (NumPy vectorization overhead,
-Python interpreter cost) that an operation-count or FLOP-based metric
-would isolate; we report wall-clock time here because it is what a
-real embedded MPPT controller's sample-period budget actually constrains,
-but treat the relative orders-of-magnitude (not the exact multipliers) as
-the robust takeaway.
+Python interpreter cost, and run-to-run timing variance -- SMC's
+measurement here is more sensitive to that variance than the others',
+since its per-step cost is small in absolute terms) that an
+operation-count or FLOP-based metric would isolate; we report wall-clock
+time here because it is what a real embedded MPPT controller's
+sample-period budget actually constrains, but treat the relative
+orders-of-magnitude (not the exact multipliers) as the robust takeaway.
 
 \begin{table}[htbp]
 \centering
@@ -288,8 +294,8 @@ the robust takeaway.
 Algorithm & Relative Burden \\
 \midrule
 P\&O         & 1.00 \\
-IncCond      & 0.65 \\
-SMC          & 0.70 \\
+IncCond      & 0.77 \\
+SMC          & 1.61 \\
 Q-learning   & 10.86 \\
 Fuzzy Logic  & 101.26 \\
 \bottomrule
@@ -305,8 +311,9 @@ Fuzzy Logic  & 101.26 \\
 
 \subsection{Summary}
 No single algorithm dominates across every scenario and metric: SMC gives
-the best steady-state tracking efficiency and lowest oscillation at
-essentially P\&O's computational cost, but it (and every other algorithm,
+the best steady-state tracking efficiency and lowest oscillation at a
+computational cost still well below the fuzzy and learning-based
+paradigms, but it (and every other algorithm,
 regardless of paradigm) fails to find the true global MPP under all but
 the mildest partial-shading pattern tested. Fuzzy logic's rule-reduction
 result is a genuine, statistically-supported contribution, but its

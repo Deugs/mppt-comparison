@@ -14,6 +14,23 @@ Citation (CLAUDE.md, mandatory): Hussein, K.H., Muta, I., Hoshino, T., and
 Osakada, M. (1995). "Maximum photovoltaic power tracking: an algorithm for
 rapidly changing atmospheric conditions." IEE Proceedings-Generation,
 Transmission and Distribution, 142(1), 59-64.
+
+Duty-cycle-clamp escape (found and fixed via the paper's peer-review audit
+-- see CLAUDE.md Phase 2 / paper Section VII-B): a converter can only
+present R_in = R_load*(1-D)^2 <= R_load, so at low irradiance the true MPP
+can require an R_in the converter can never reach at any valid duty cycle,
+no matter how close to MPPT_DUTY_MIN. Once clamped there, |dV|~=0 between
+samples -- indistinguishable from genuinely being at the MPP, since both
+produce the same "hold" reading -- so unlike P&O (which has no hold state
+and always perturbs, and so always eventually discovers when escaping a
+clamp would help), this algorithm would otherwise freeze at the clamp
+forever, even once a later irradiance rise makes the true MPP reachable
+again. Fixed by overriding a hold (or a push further into a limit already
+reached) with a probe step away from that limit whenever duty is already
+sitting at MPPT_DUTY_MIN/MPPT_DUTY_MAX -- the only way to tell "converged"
+apart from "stuck" is to actually try moving. This does not change behavior
+anywhere duty is not at a hard limit, where the hold logic above is
+unaffected.
 """
 
 from .. import config
@@ -62,6 +79,11 @@ class IncrementalConductance(MPPTAlgorithm):
                     direction = 1
                 else:
                     direction = -1
+
+        if duty_cycle <= self.duty_min and direction >= 0:
+            direction = -1
+        elif duty_cycle >= self.duty_max and direction <= 0:
+            direction = 1
 
         self._v_prev, self._i_prev = v, i
         new_duty = duty_cycle - direction * self.step_size

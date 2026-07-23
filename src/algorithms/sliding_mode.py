@@ -47,6 +47,21 @@ during the Phase 4 literature review (see config.py's citation flag) --
 CLAUDE.md is explicit that there is no single "classic" SMC-MPPT paper the
 way Femia (2005) is for P&O, so this should be picked to match the design
 already made here, not the other way around.
+
+Duty-cycle-clamp escape (found and fixed via the paper's peer-review audit
+-- see CLAUDE.md Phase 2 / paper Section VII-B): a converter can only
+present R_in = R_load*(1-D)^2 <= R_load, so at low irradiance the true MPP
+can require an R_in never reachable at any valid duty cycle, however close
+to MPPT_DUTY_MIN. Once clamped there, dV~=0 between samples, which reads as
+s=dP/dV~=0 -- indistinguishable from genuinely reaching the sliding
+surface. Left alone, this traps the controller at the clamp forever, since
+delta_d then computes to (approximately) zero and never perturbs again,
+even once a later irradiance rise makes the true MPP reachable. Fixed by
+overriding delta_d with a small probe step away from a limit already
+reached (reusing the bootstrap nudge's magnitude, since this is the same
+"no trustworthy signal yet, just perturb and see" situation as the very
+first step) whenever duty is already sitting at MPPT_DUTY_MIN/MPPT_DUTY_MAX
+and the computed correction would hold or push further into it.
 """
 
 from .. import config
@@ -98,6 +113,11 @@ class SlidingModeControl(MPPTAlgorithm):
 
         e = max(-1.0, min(1.0, s / self.phi_scale))
         delta_d = -(self.k_gain * _saturate(e, self.boundary) + self.q_gain * e)
+
+        if duty_cycle <= self.duty_min and delta_d <= 0:
+            delta_d = self.bootstrap_step
+        elif duty_cycle >= self.duty_max and delta_d >= 0:
+            delta_d = -self.bootstrap_step
 
         self._v_prev, self._p_prev = v, p
         return min(max(duty_cycle + delta_d, self.duty_min), self.duty_max)
