@@ -59,8 +59,10 @@ The clearest direction suggested by this paper's own results is a deeper,
 dedicated study of learning-based MPPT under partial shading -- explicitly
 training on shading patterns rather than only flat irradiance, and
 comparing tabular Q-learning against function-approximation and deep-RL
-alternatives -- since the generalization gap found here is a training-data
-problem, not necessarily a fundamental limitation of learning-based control.
+alternatives such as recent fuzzy-augmented actor-critic designs
+\cite{ortizmunoz2025hybrid} -- since the generalization gap found here is a
+training-data problem, not necessarily a fundamental limitation of
+learning-based control.
 A second, complementary direction is a fair, reproducible benchmark of
 metaheuristic global-search MPPT methods (which this paper deliberately
 excludes, to avoid the saturated "yet another bio-inspired optimizer"

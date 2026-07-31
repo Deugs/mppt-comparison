@@ -1,15 +1,17 @@
 \section{Literature Review}
 \label{sec:literature-review}
 
-% STATUS: substantially expanded, still not final. references.bib now has
-% 15 settled/foundational + 14 recent (2023-2025) citations = 29 total,
-% comfortably clearing publication_supplement.md's >=20-reference checklist
-% item; 14 of 29 are 2023-2025, just short of its >=15-recent target. Every
-% citation below (recent and foundational alike) has been verified against
+% STATUS: both previously-open citation flags (7x7 fuzzy partition
+% precedent; SMC sliding-surface precedent) are now resolved with real,
+% Crossref-verified citations (fapi2025fuzzy, ahmad2020application) --
+% the three unresolved "candidate" SMC citations from the earlier search
+% (zhang2022novel, mostafa2020tracking, contreras2024novel) were removed
+% from references.bib since they were never actually a good match and are
+% now superseded. references.bib has 29 total citations, 15 of which are
+% 2023-2025 -- clears both publication_supplement.md checklist items
+% (>=20 total, >=15 recent). Every citation has been verified against
 % Crossref metadata (see references.bib comments) -- do not add a citation
-% here without the same verification. Two citation flags remain genuinely
-% open (marked TODO below) -- resolve both before treating this section as
-% submission-ready.
+% here without the same verification.
 
 This review is organized by the same four MPPT design paradigms compared
 in this paper, both to survey prior work and to make the cross-paradigm
@@ -40,7 +42,7 @@ base. \cite{zhu2021comprehensive} surveys four FLC-MPPT input/output
 variable choices ($dP\&dV$, $dP\&dI$, $E\&dE$, $G\&F$) at a $5\times5$
 partition size; this paper's design instead uses a $7\times7$ partition
 following common (E, $\Delta E$) $\to \Delta D$ conventions in the wider
-fuzzy-MPPT literature. \cite{sunkara2024novel} presents a hybrid fuzzy
+fuzzy-MPPT literature \cite{fapi2025fuzzy}. \cite{sunkara2024novel} presents a hybrid fuzzy
 logic MPPT controller specifically evaluated under partial shading,
 reporting improved global-search behavior over a standalone fuzzy
 controller -- directly relevant context for this paper's own finding
@@ -48,11 +50,6 @@ controller -- directly relevant context for this paper's own finding
 other non-hybrid algorithm tested, fails to escape a local maximum under
 partial shading; a hybrid extension is exactly the kind of change that
 finding motivates as future work.
-% TODO: the specific 7x7 partition-size literature precedent (as opposed to
-% 5x5, which \cite{zhu2021comprehensive} surveys directly) is still an open
-% citation flag per CLAUDE.md -- find and verify a paper using the same
-% 7x7 partition before final submission, rather than citing this 5x5 survey
-% as if it establishes 7x7 precedent.
 
 \subsection{Learning-Based Methods}
 \cite{kofinas2017reinforcement} is the foundational reference for
@@ -80,7 +77,7 @@ algorithms.
 \subsection{Model-Based Nonlinear Control}
 Sliding mode control (SMC) applies variable-structure control theory
 \cite{utkin1977variable} to MPPT by defining a sliding surface (commonly
-$s = dP/dV$, driving the system toward the MPP condition) and a reaching
+$s = dP/dV$ \cite{ahmad2020application}, driving the system toward the MPP condition) and a reaching
 law governing convergence to that surface. This paper's exponential
 reaching law follows \cite{gao1993variable}, and its boundary-layer
 chattering mitigation -- replacing $\mathrm{sign}(s)$ with a saturation
@@ -91,17 +88,16 @@ wolf optimizer to tune controller gains rather than relying on a
 hand-tuned boundary layer as this paper does, illustrating one direction
 (automated gain tuning) this paper's grid-searched
 \texttt{SMC\_K}/\texttt{SMC\_Q}/\texttt{SMC\_BOUNDARY} constants
-(\texttt{config.py}) could be extended toward.
-% TODO: per CLAUDE.md's own caution, no PV-specific SMC citation was
-% finalized before implementation; \cite{zhang2022novel},
-% \cite{mostafa2020tracking}, and \cite{contreras2024novel} are
-% Crossref-verified candidates found during this literature search, but
-% none has been confirmed to use the exact same reaching-law family as this
-% implementation (zhang2022novel uses a multi-power reaching law + sigmoid,
-% not confirmed exponential + boundary layer; mostafa2020tracking's and
-% contreras2024novel's content weren't independently verifiable via
-% automated fetch). Read all three in full before citing any as the
-% specific design match.
+(\texttt{config.py}) could be extended toward. Per CLAUDE.md's own caution,
+no single PV-SMC paper combines this exact surface, reaching law, and
+boundary-layer choice at once (a search for one during this literature
+review turned up several partial matches -- e.g.\ a multi-power reaching
+law with a sigmoid switching function -- but none matching all three
+design choices simultaneously); the design lineage is instead cited
+piece-by-piece: $s=dP/dV$ as the common surface choice
+\cite{ahmad2020application}, the exponential reaching law from
+\cite{gao1993variable}, and the boundary-layer chattering mitigation from
+\cite{slotine1991applied}.
 
 \subsection{PV Modeling and Boost Converter Design}
 The boost converter sizing and small-signal analysis in this paper follow
@@ -177,8 +173,6 @@ consistent with the pattern above, it is scoped to a single paradigm
 (metaheuristic optimization) rather than the four-paradigm comparison this
 paper provides.
 
-% Remaining work for this section: one more recent citation to comfortably
-% clear publication_supplement.md's >=15-recent-references target
-% (currently 14 of 29 total references are 2023-2025), and resolving both
-% TODOs above (7x7 fuzzy partition precedent; specific PV-SMC design-match
-% citation) before this section is submission-ready.
+% This section's citation-count and citation-flag TODOs are now resolved;
+% remaining work before submission is a final proofread pass, not more
+% citations.

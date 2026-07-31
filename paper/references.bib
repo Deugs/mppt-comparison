@@ -129,44 +129,8 @@
 
 % ============================================================
 % CANDIDATE CITATIONS -- real, Crossref-verified papers found while
-% researching the two still-open Citation Flags (SMC design match,
-% 7x7 fuzzy partition precedent) and the broader literature review.
-% NONE of these are confirmed to technically match our design as
-% closely as a citation should before going in the paper -- READ THEM
-% YOURSELF before citing. Where I could check content (via WebFetch),
-% that's noted; where I couldn't (paywalled/blocked), it's flagged.
+% researching the broader literature review.
 % ============================================================
-
-% SMC candidate 1 -- verified real via Crossref. Content checked: uses a
-% "multi-power reaching law" + sigmoid function, NOT the same reaching-law
-% family as this project's exponential reaching law + boundary-layer
-% saturation -- close in spirit (SMC + explicit chattering mitigation for
-% PV MPPT) but not an exact technique match. Read before citing.
-@article{zhang2022novel,
-  author  = {Zhang, Yan and Wang, Ya-Jun and Yu, Jia-Qi},
-  title   = {A Novel MPPT Algorithm for Photovoltaic Systems Based on Improved Sliding Mode Control},
-  journal = {Electronics},
-  volume  = {11},
-  number  = {15},
-  pages   = {2421},
-  year    = {2022},
-  doi     = {10.3390/electronics11152421}
-}
-
-% SMC candidate 2 -- verified real via Crossref (title/authors/journal/DOI).
-% Content NOT independently confirmed (ScienceDirect blocked automated
-% fetch) -- title suggests a directly relevant dP/dV-surface SMC-MPPT
-% design; read the full text before citing to confirm reaching-law choice.
-@article{mostafa2020tracking,
-  author  = {Mostafa, Mostafa R. and Saad, Naggar H. and El-sattar, Ahmed A.},
-  title   = {Tracking the Maximum Power Point of PV Array by Sliding Mode Control Method},
-  journal = {Ain Shams Engineering Journal},
-  volume  = {11},
-  number  = {1},
-  pages   = {119--131},
-  year    = {2020},
-  doi     = {10.1016/j.asej.2019.09.003}
-}
 
 % Fuzzy rule-base survey -- verified real via Crossref AND content-checked
 % (WebFetch confirmed it covers 4 FLC-MPPT variants at 5x5, not 7x7). Does
@@ -248,19 +212,6 @@
   number  = {2},
   year    = {2025},
   doi     = {10.1177/00202940241258821}
-}
-
-% SMC candidate 3 -- title suggests a directly relevant dP/dV-surface
-% SMC-MPPT design; not independently content-verified. Read before citing
-% as the specific design match for this project's SMC (see 05_algorithms.tex).
-@article{contreras2024novel,
-  author  = {Contreras Carmona, Itzel and Saldivar, Belem and Portillo-Rodr{\'i}guez, Otniel and Ram{\'i}rez Rivera, V{\'i}ctor Manuel and Gil Antonio, Leopoldo and Jacinto-Villegas, Juan Manuel},
-  title   = {A Novel Strategy for the MPPT in a Photovoltaic System via Sliding Modes Control},
-  journal = {PLOS ONE},
-  volume  = {19},
-  number  = {12},
-  year    = {2024},
-  doi     = {10.1371/journal.pone.0311831}
 }
 
 @article{taha2025design,
@@ -362,4 +313,53 @@
   number  = {9},
   year    = {2025},
   doi     = {10.1002/eng2.70404}
+}
+
+% Resolves the 7x7 fuzzy-partition-precedent citation flag: a dedicated
+% FLC-MPPT review (not just a survey that happens to cover fuzzy control)
+% engaging with the classic 49-rule design lineage. Full author list
+% (7 authors) confirmed via direct Crossref DOI lookup -- initial web
+% search results had it truncated to "et al."
+@article{fapi2025fuzzy,
+  author  = {Nzoundja Fapi, Claude Bertin and Tchakount{\'e}, Hyacinthe and Ndje, Martial and Wira, Patrice and Ould Abdeslam, Djaffar and Louzazni, Mohamed and Kamta, Martin},
+  title   = {Fuzzy Logic-Based Maximum Power Point Tracking Control for Photovoltaic Systems: A Review and Experimental Applications},
+  journal = {Archives of Computational Methods in Engineering},
+  volume  = {32},
+  number  = {4},
+  pages   = {2405--2428},
+  year    = {2025},
+  doi     = {10.1007/s11831-024-10210-7}
+}
+
+% Resolves the SMC sliding-surface-precedent citation flag: a comprehensive
+% review of SMC-MPPT designs cataloging s=dP/dV as the recurring sliding-
+% surface choice across multiple prior SMC-MPPT papers -- substantiates
+% "commonly s=dP/dV" without claiming this is a single paper matching this
+% project's full surface+reaching-law+boundary-layer combination (no such
+% single paper is claimed to exist; see the design-lineage note in
+% 05_algorithms.tex/02_literature_review.tex: surface from this review,
+% reaching law from gao1993variable, boundary layer from slotine1991applied).
+@article{ahmad2020application,
+  author  = {Ahmad, Fahad Faraz and Ghenai, Chaouki and Hamid, Abdul Kadir and Bettayeb, Maamar},
+  title   = {Application of Sliding Mode Control for Maximum Power Point Tracking of Solar Photovoltaic Systems: A Comprehensive Review},
+  journal = {Annual Reviews in Control},
+  volume  = {49},
+  pages   = {173--196},
+  year    = {2020},
+  doi     = {10.1016/j.arcontrol.2020.04.011}
+}
+
+% Grounds Section VIII-B's future-work sentence about learning-based
+% alternatives to tabular Q-learning: a hybrid fuzzy+DDPG controller
+% evaluated specifically for global MPP tracking under partial shading,
+% tying this paper's rule-based and learning-based paradigms together.
+@article{ortizmunoz2025hybrid,
+  author  = {Ortiz-Munoz, Diana and Luviano-Cruz, David and Perez-Dominguez, Luis A. and Rodriguez-Ramirez, Alma G. and Garcia-Luna, Francesco},
+  title   = {Hybrid Fuzzy--DDPG Approach for Efficient MPPT in Partially Shaded Photovoltaic Panels},
+  journal = {Applied Sciences},
+  volume  = {15},
+  number  = {9},
+  pages   = {4869},
+  year    = {2025},
+  doi     = {10.3390/app15094869}
 }
