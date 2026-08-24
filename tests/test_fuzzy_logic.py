@@ -1,14 +1,10 @@
 import pytest
 
 from src import config
-from src.algorithms.fuzzy_logic import (
-    FIVE_LABELS,
-    SEVEN_LABELS,
-    THREE_LABELS,
-    FuzzyLogicController,
-    build_triangular_partition,
-    generate_rule_table,
-)
+from src.algorithms.fuzzy_logic import (FIVE_LABELS, SEVEN_LABELS,
+                                        THREE_LABELS, FuzzyLogicController,
+                                        build_triangular_partition,
+                                        generate_rule_table)
 from tests._helpers import run_tracking, true_mpp_power
 
 # Literal transcription of CLAUDE.md's 7x7 rule base (E rows, deltaE columns,

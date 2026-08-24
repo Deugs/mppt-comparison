@@ -1,13 +1,9 @@
 import pytest
 
 from src import config
-from src.converter import (
-    critical_inductance,
-    design_boost_converter,
-    duty_cycle,
-    is_discontinuous_conduction,
-    small_signal_model,
-)
+from src.converter import (critical_inductance, design_boost_converter,
+                           duty_cycle, is_discontinuous_conduction,
+                           small_signal_model)
 
 
 def test_duty_cycle_worst_case_matches_claude_md_worked_example():
@@ -31,7 +27,9 @@ def test_inductor_sizing_matches_claude_md_worked_example():
 
 
 def test_design_is_in_ccm_at_full_load():
-    design = design_boost_converter(vin=config.CONVERTER_VIN_MIN, power=config.CONVERTER_PMAX)
+    design = design_boost_converter(
+        vin=config.CONVERTER_VIN_MIN, power=config.CONVERTER_PMAX
+    )
     assert not is_discontinuous_conduction(
         design.inductance,
         vin=config.CONVERTER_VIN_MIN,
@@ -42,7 +40,9 @@ def test_design_is_in_ccm_at_full_load():
 
 def test_design_enters_dcm_at_light_load():
     """Document DCM behavior at low irradiance / light load per CLAUDE.md."""
-    design = design_boost_converter(vin=config.CONVERTER_VIN_MIN, power=config.CONVERTER_PMAX)
+    design = design_boost_converter(
+        vin=config.CONVERTER_VIN_MIN, power=config.CONVERTER_PMAX
+    )
     light_load_power = config.CONVERTER_PMAX * 0.05
     assert is_discontinuous_conduction(
         design.inductance,
@@ -53,7 +53,9 @@ def test_design_enters_dcm_at_light_load():
 
 
 def test_critical_inductance_below_designed_inductance_at_full_load():
-    design = design_boost_converter(vin=config.CONVERTER_VIN_MIN, power=config.CONVERTER_PMAX)
+    design = design_boost_converter(
+        vin=config.CONVERTER_VIN_MIN, power=config.CONVERTER_PMAX
+    )
     l_crit = critical_inductance(
         vin=config.CONVERTER_VIN_MIN,
         vout=config.CONVERTER_VOUT,
@@ -63,7 +65,9 @@ def test_critical_inductance_below_designed_inductance_at_full_load():
 
 
 def test_small_signal_model_is_stable_second_order_system():
-    design = design_boost_converter(vin=config.CONVERTER_VIN_MIN, power=config.CONVERTER_PMAX)
+    design = design_boost_converter(
+        vin=config.CONVERTER_VIN_MIN, power=config.CONVERTER_PMAX
+    )
     model = small_signal_model(design, vin=config.CONVERTER_VIN_MIN)
     assert model.omega0 > 0
     assert model.q_factor > 0

@@ -1,28 +1,52 @@
+```
+# Coverage reports
+.coverage
+
+# Log files
+*.log
+
+# Results data
+results/
+
+# Environment files
+.env
+.env.local
+*.env.*
+
+# Python specific
 __pycache__/
 *.pyc
-.pytest_cache/
+*.pyo
+*.pyd
+.Python
+*.so
+.Python
+env/
+venv/
+.venv/
+.venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Testing
 .coverage
+coverage/
 htmlcov/
-*.egg-info/
+.noserc
+.tox/
+.coverage*
+
+# IDE and editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Build artifacts
 build/
 dist/
-.venv/
-venv/
-.ipynb_checkpoints/
-results/monte_carlo/*.csv
-results/figures/*.png
-results/figures/*.svg
-!results/monte_carlo/.gitkeep
-!results/figures/.gitkeep
-
-# LaTeX build artifacts (paper/main.pdf is a build product of paper/*.tex +
-# references.bib; regenerate with pdflatex/bibtex, don't commit it)
-paper/*.aux
-paper/*.bbl
-paper/*.blg
-paper/*.log
-paper/*.out
-paper/*.fls
-paper/*.fdb_latexmk
-paper/*.synctex.gz
-paper/main.pdf
+*.egg-info/
+```

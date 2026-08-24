@@ -1,8 +1,7 @@
-import pytest
-
 from src import config
 from src.algorithms.sliding_mode import SlidingModeControl
-from tests._helpers import run_tracking, run_tracking_with_irradiance_step, true_mpp_power
+from tests._helpers import (run_tracking, run_tracking_with_irradiance_step,
+                            true_mpp_power)
 
 
 def test_finds_mpp_at_stc(pv_model_stc):
@@ -60,10 +59,14 @@ def test_duty_cycle_stays_within_bounds(pv_model_stc):
     algorithm = SlidingModeControl()
     history = run_tracking(algorithm, pv_model_stc, iterations=300)
     duty_cycles = [d for _, _, d in history]
-    assert all(config.MPPT_DUTY_MIN <= d <= config.MPPT_DUTY_MAX for d in duty_cycles)
+    assert all(
+        config.MPPT_DUTY_MIN <= d <= config.MPPT_DUTY_MAX for d in duty_cycles
+    )
 
 
-def test_recovers_from_duty_clamp_when_mpp_later_becomes_reachable(pv_model_stc):
+def test_recovers_from_duty_clamp_when_mpp_later_becomes_reachable(
+    pv_model_stc,
+):
     """Regression test for a real bug found via the paper's peer-review audit
     (CLAUDE.md Phase 2): at 200 W/m^2 the true MPP requires an effective
     source resistance R_in=18.6 Ohm, but a boost converter can only ever

@@ -32,12 +32,31 @@ def summary_df():
     rng = np.random.default_rng(0)
     for scenario in scenarios:
         for algorithm in non_ql_algorithms:
-            rows += _raw_rows(algorithm, scenario, "tracking_efficiency_pct", rng.uniform(90, 99, size=10).tolist())
-            rows += _raw_rows(algorithm, scenario, "oscillation_p2p_w", rng.uniform(0, 2, size=10).tolist())
-            rows += _raw_rows(algorithm, scenario, "energy_yield_ratio", rng.uniform(0.9, 0.99, size=10).tolist())
+            rows += _raw_rows(
+                algorithm,
+                scenario,
+                "tracking_efficiency_pct",
+                rng.uniform(90, 99, size=10).tolist(),
+            )
+            rows += _raw_rows(
+                algorithm,
+                scenario,
+                "oscillation_p2p_w",
+                rng.uniform(0, 2, size=10).tolist(),
+            )
+            rows += _raw_rows(
+                algorithm,
+                scenario,
+                "energy_yield_ratio",
+                rng.uniform(0.9, 0.99, size=10).tolist(),
+            )
             convergence_values = [0.05] * 7 + [np.nan] * 3
-            rows += _raw_rows(algorithm, scenario, "convergence_time_s", convergence_values)
-            rows += _raw_rows(algorithm, scenario, "settling_time_s", convergence_values)
+            rows += _raw_rows(
+                algorithm, scenario, "convergence_time_s", convergence_values
+            )
+            rows += _raw_rows(
+                algorithm, scenario, "settling_time_s", convergence_values
+            )
 
     # q_learning: exactly one ql_condition tag per scenario, matching the
     # real pipeline (scenarios.classify_ql_condition tags a whole scenario,
@@ -48,20 +67,51 @@ def summary_df():
         "partial_shading_simple": "held_out",
     }
     for scenario, condition in ql_condition_by_scenario.items():
-        rows += _raw_rows("q_learning", scenario, "tracking_efficiency_pct", rng.uniform(90, 99, size=10).tolist(), condition)
-        rows += _raw_rows("q_learning", scenario, "oscillation_p2p_w", rng.uniform(0, 2, size=10).tolist(), condition)
-        rows += _raw_rows("q_learning", scenario, "energy_yield_ratio", rng.uniform(0.9, 0.99, size=10).tolist(), condition)
+        rows += _raw_rows(
+            "q_learning",
+            scenario,
+            "tracking_efficiency_pct",
+            rng.uniform(90, 99, size=10).tolist(),
+            condition,
+        )
+        rows += _raw_rows(
+            "q_learning",
+            scenario,
+            "oscillation_p2p_w",
+            rng.uniform(0, 2, size=10).tolist(),
+            condition,
+        )
+        rows += _raw_rows(
+            "q_learning",
+            scenario,
+            "energy_yield_ratio",
+            rng.uniform(0.9, 0.99, size=10).tolist(),
+            condition,
+        )
         convergence_values = [0.05] * 7 + [np.nan] * 3
-        rows += _raw_rows("q_learning", scenario, "convergence_time_s", convergence_values, condition)
-        rows += _raw_rows("q_learning", scenario, "settling_time_s", convergence_values, condition)
+        rows += _raw_rows(
+            "q_learning", scenario, "convergence_time_s", convergence_values, condition
+        )
+        rows += _raw_rows(
+            "q_learning", scenario, "settling_time_s", convergence_values, condition
+        )
 
     # computational burden
     for i, algorithm in enumerate(all_algorithms):
-        rows += _raw_rows(algorithm, "_computational_burden", "mean_step_time_s", [0.001 * (i + 1)])
-        rows += _raw_rows(algorithm, "_computational_burden", "relative_burden", [float(i + 1)])
+        rows += _raw_rows(
+            algorithm, "_computational_burden", "mean_step_time_s", [0.001 * (i + 1)]
+        )
+        rows += _raw_rows(
+            algorithm, "_computational_burden", "relative_burden", [float(i + 1)]
+        )
     # fuzzy variants
     for fuzzy_algo in ["fuzzy_5x5", "fuzzy_3x3"]:
-        rows += _raw_rows(fuzzy_algo, "steady_state", "tracking_efficiency_pct", rng.uniform(90, 99, size=10).tolist())
+        rows += _raw_rows(
+            fuzzy_algo,
+            "steady_state",
+            "tracking_efficiency_pct",
+            rng.uniform(90, 99, size=10).tolist(),
+        )
 
     df = pd.DataFrame(rows)
     return analysis.summarize(df)
@@ -79,7 +129,9 @@ def _assert_saved(paths):
 
 
 def test_plot_metric_comparison_saves_png_and_svg(summary_df, tmp_path):
-    paths = plotting.plot_metric_comparison(summary_df, "tracking_efficiency_pct", str(tmp_path))
+    paths = plotting.plot_metric_comparison(
+        summary_df, "tracking_efficiency_pct", str(tmp_path)
+    )
     _assert_saved(paths)
 
 
@@ -123,11 +175,15 @@ def test_plot_tracking_trajectory_saves_png_and_svg(tmp_path):
             duty_cycles=np.full(50, 0.4),
         ),
     }
-    paths = plotting.plot_tracking_trajectory(results, 250.0, str(tmp_path), "trajectory_test", "Test trajectory")
+    paths = plotting.plot_tracking_trajectory(
+        results, 250.0, str(tmp_path), "trajectory_test", "Test trajectory"
+    )
     _assert_saved(paths)
 
 
-def test_generate_all_aggregate_figures_produces_expected_count(summary_df, fuzzy_df, tmp_path):
+def test_generate_all_aggregate_figures_produces_expected_count(
+    summary_df, fuzzy_df, tmp_path
+):
     paths = plotting.generate_all_aggregate_figures(summary_df, fuzzy_df, str(tmp_path))
     # 3 metric-comparison + 2 heatmaps + 1 burden + 1 ql-train-vs-held-out + 1 fuzzy-sensitivity
     assert len(paths) == 8
@@ -137,4 +193,6 @@ def test_generate_all_aggregate_figures_produces_expected_count(summary_df, fuzz
 
 
 def test_color_for_is_deterministic_for_unknown_names():
-    assert plotting._color_for("some_unknown_algorithm") == plotting._color_for("some_unknown_algorithm")
+    assert plotting._color_for("some_unknown_algorithm") == plotting._color_for(
+        "some_unknown_algorithm"
+    )

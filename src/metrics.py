@@ -13,7 +13,65 @@ import numpy as np
 from . import config
 
 
-def tracking_efficiency(times: np.ndarray, powers: np.ndarray, theoretical_max_powers: np.ndarray) -> float:
+class MetricsCalculator:
+    """Convenience class to compute all metrics in one call."""
+    
+    def __init__(self):
+        pass
+    
+    def compute_all_metrics(
+        self,
+        power: np.ndarray,
+        reference_power: np.ndarray,
+        duty_cycle: np.ndarray,
+        time: np.ndarray,
+        settling_threshold: float = 0.02,
+    ) -> dict:
+        """Compute all standard MPPT metrics.
+        
+        Args:
+            power: Actual power trajectory
+            reference_power: Theoretical maximum power trajectory
+            duty_cycle: Duty cycle trajectory
+            time: Time array
+            settling_threshold: Threshold for settling detection
+            
+        Returns:
+            Dictionary with all computed metrics
+        """
+        # Tracking efficiency
+        tracking_eff = tracking_efficiency(time, power, reference_power)
+        
+        # Convergence time
+        conv_time = convergence_time(time, power, reference_power, threshold=settling_threshold)
+        
+        # Settling time
+        settle_time_val = settling_time(time, power, reference_power, threshold=settling_threshold)
+        
+        # Steady-state oscillation
+        if settle_time_val is not None:
+            osc_peak_to_peak, osc_std = steady_state_oscillation(time, power, settle_time_val)
+        else:
+            osc_peak_to_peak, osc_std = 0.0, 0.0
+        
+        # Energy yield
+        energy = energy_yield(time, power)
+        energy_ratio = energy_yield_ratio(time, power, reference_power)
+        
+        return {
+            "tracking_efficiency_pct": tracking_eff,
+            "convergence_time_s": conv_time if conv_time is not None else float('nan'),
+            "settling_time_s": settle_time_val if settle_time_val is not None else float('nan'),
+            "oscillation_peak_to_peak_w": osc_peak_to_peak,
+            "oscillation_std_w": osc_std,
+            "energy_yield_j": energy,
+            "energy_yield_ratio": energy_ratio,
+        }
+
+
+def tracking_efficiency(
+    times: np.ndarray, powers: np.ndarray, theoretical_max_powers: np.ndarray
+) -> float:
     """eta = integral(P_actual dt) / integral(P_theoretical_max dt) * 100, in percent."""
     actual_energy = np.trapz(powers, times)
     max_energy = np.trapz(theoretical_max_powers, times)
@@ -80,12 +138,16 @@ def energy_yield(times: np.ndarray, powers: np.ndarray) -> float:
     return float(np.trapz(powers, times))
 
 
-def energy_yield_ratio(times: np.ndarray, powers: np.ndarray, theoretical_max_powers: np.ndarray) -> float:
+def energy_yield_ratio(
+    times: np.ndarray, powers: np.ndarray, theoretical_max_powers: np.ndarray
+) -> float:
     """E_actual / E_theoretical_max, as a fraction (not percent)."""
     return energy_yield(times, powers) / energy_yield(times, theoretical_max_powers)
 
 
-def mean_step_execution_time(algorithm, v: float, i: float, duty_cycle: float, n_calls: int = 1000) -> float:
+def mean_step_execution_time(
+    algorithm, v: float, i: float, duty_cycle: float, n_calls: int = 1000
+) -> float:
     """Average wall-clock seconds per `algorithm.step()` call, for the
     "execution time per iteration" / computational-burden metrics."""
     start = time_module.perf_counter()

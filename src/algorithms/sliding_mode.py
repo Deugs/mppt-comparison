@@ -105,7 +105,9 @@ class SlidingModeControl(MPPTAlgorithm):
             self._v_prev, self._p_prev = v, p
             # No dV history yet -- bootstrap with a small nudge so the next
             # call has a nonzero dV to compute the sliding surface s=dP/dV from.
-            return min(max(duty_cycle + self.bootstrap_step, self.duty_min), self.duty_max)
+            return min(
+                max(duty_cycle + self.bootstrap_step, self.duty_min), self.duty_max
+            )
 
         dv = v - self._v_prev
         dp = p - self._p_prev

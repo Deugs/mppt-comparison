@@ -117,7 +117,9 @@ def summarize(df: pd.DataFrame) -> pd.DataFrame:
             row["median"] = float(np.median(valid))
             row["iqr"] = float(np.percentile(valid, 75) - np.percentile(valid, 25))
         else:
-            row["mean"] = row["std"] = row["ci95_low"] = row["ci95_high"] = row["median"] = row["iqr"] = float("nan")
+            row["mean"] = row["std"] = row["ci95_low"] = row["ci95_high"] = row[
+                "median"
+            ] = row["iqr"] = float("nan")
         rows.append(row)
 
         rate_name = CONVERGENCE_RATE_NAMES.get(key_dict["metric"])
@@ -138,7 +140,9 @@ def summarize(df: pd.DataFrame) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def run_anova(df: pd.DataFrame, scenario: str, metric: str, algorithms=CORE_ALGORITHMS) -> dict:
+def run_anova(
+    df: pd.DataFrame, scenario: str, metric: str, algorithms=CORE_ALGORITHMS
+) -> dict:
     """One-way ANOVA (scipy.stats.f_oneway) across `algorithms`' per-run
     values for one (scenario, metric), excluding NaN entries within each
     algorithm's group (a non-converged run contributes no convergence_time_s
@@ -151,7 +155,15 @@ def run_anova(df: pd.DataFrame, scenario: str, metric: str, algorithms=CORE_ALGO
     groups = []
     used_algorithms = []
     for algo in algorithms:
-        values = df[(df.algorithm == algo) & (df.scenario == scenario) & (df.metric == metric)]["value"].dropna().to_numpy()
+        values = (
+            df[
+                (df.algorithm == algo)
+                & (df.scenario == scenario)
+                & (df.metric == metric)
+            ]["value"]
+            .dropna()
+            .to_numpy()
+        )
         if len(values) >= 2:
             groups.append(values)
             used_algorithms.append(algo)
@@ -177,7 +189,9 @@ def run_anova(df: pd.DataFrame, scenario: str, metric: str, algorithms=CORE_ALGO
     }
 
 
-def run_pairwise_ttests(df: pd.DataFrame, scenario: str, metric: str, algorithms=CORE_ALGORITHMS) -> list:
+def run_pairwise_ttests(
+    df: pd.DataFrame, scenario: str, metric: str, algorithms=CORE_ALGORITHMS
+) -> list:
     """Paired t-test (scipy.stats.ttest_rel) between every pair of
     `algorithms` for one (scenario, metric), paired by run_id -- valid
     because CLAUDE.md's Monte Carlo design uses identical random seeds
@@ -187,7 +201,11 @@ def run_pairwise_ttests(df: pd.DataFrame, scenario: str, metric: str, algorithms
     paired observations survived (n_pairs), rather than erroring or
     silently treating missing values as zero.
     """
-    sub = df[(df.scenario == scenario) & (df.metric == metric) & (df.algorithm.isin(algorithms))]
+    sub = df[
+        (df.scenario == scenario)
+        & (df.metric == metric)
+        & (df.algorithm.isin(algorithms))
+    ]
     pivot = sub.pivot_table(index="run_id", columns="algorithm", values="value")
 
     results = []
@@ -240,19 +258,27 @@ def run_pairwise_ttests(df: pd.DataFrame, scenario: str, metric: str, algorithms
     return results
 
 
-def _scenario_metric_combos(df: pd.DataFrame, algorithms, excluded_scenarios=EXCLUDED_SCENARIOS):
+def _scenario_metric_combos(
+    df: pd.DataFrame, algorithms, excluded_scenarios=EXCLUDED_SCENARIOS
+):
     sub = df[~df.scenario.isin(excluded_scenarios) & df.algorithm.isin(algorithms)]
-    return list(sub[["scenario", "metric"]].drop_duplicates().itertuples(index=False, name=None))
+    return list(
+        sub[["scenario", "metric"]].drop_duplicates().itertuples(index=False, name=None)
+    )
 
 
-def build_full_anova_table(df: pd.DataFrame, algorithms=CORE_ALGORITHMS, excluded_scenarios=EXCLUDED_SCENARIOS) -> pd.DataFrame:
+def build_full_anova_table(
+    df: pd.DataFrame, algorithms=CORE_ALGORITHMS, excluded_scenarios=EXCLUDED_SCENARIOS
+) -> pd.DataFrame:
     """run_anova() for every (scenario, metric) combination present in `df`."""
     combos = _scenario_metric_combos(df, algorithms, excluded_scenarios)
     rows = [run_anova(df, scenario, metric, algorithms) for scenario, metric in combos]
     return pd.DataFrame(rows)
 
 
-def build_full_ttest_table(df: pd.DataFrame, algorithms=CORE_ALGORITHMS, excluded_scenarios=EXCLUDED_SCENARIOS) -> pd.DataFrame:
+def build_full_ttest_table(
+    df: pd.DataFrame, algorithms=CORE_ALGORITHMS, excluded_scenarios=EXCLUDED_SCENARIOS
+) -> pd.DataFrame:
     """run_pairwise_ttests() for every (scenario, metric) combination present in `df`."""
     combos = _scenario_metric_combos(df, algorithms, excluded_scenarios)
     rows = []
@@ -265,14 +291,18 @@ def fuzzy_sensitivity_table(summary_df: pd.DataFrame) -> pd.DataFrame:
     """The rows of an already-computed summarize() table restricted to the
     7x7/5x5/3x3 fuzzy rule-base variants (CLAUDE.md's fuzzy "Sensitivity
     Analysis (Contribution)" section)."""
-    return summary_df[summary_df["algorithm"].isin(FUZZY_VARIANT_ALGORITHMS)].reset_index(drop=True)
+    return summary_df[
+        summary_df["algorithm"].isin(FUZZY_VARIANT_ALGORITHMS)
+    ].reset_index(drop=True)
 
 
 def main():
     import argparse
     import os
 
-    parser = argparse.ArgumentParser(description="Compute statistical summaries over the MPPT comparison results table.")
+    parser = argparse.ArgumentParser(
+        description="Compute statistical summaries over the MPPT comparison results table."
+    )
     parser.add_argument("--input", type=str, default="results/comparison_table.csv")
     parser.add_argument("--output", type=str, default="results/")
     args = parser.parse_args()
@@ -290,7 +320,9 @@ def main():
         [anova_df.assign(test="anova"), ttest_df.assign(test="paired_ttest")],
         ignore_index=True,
     ).to_csv(os.path.join(args.output, "statistical_tests.csv"), index=False)
-    fuzzy_df.to_csv(os.path.join(args.output, "fuzzy_sensitivity_table.csv"), index=False)
+    fuzzy_df.to_csv(
+        os.path.join(args.output, "fuzzy_sensitivity_table.csv"), index=False
+    )
 
     print(
         f"Wrote {len(summary_df)} summary rows, {len(anova_df)} ANOVA rows, "

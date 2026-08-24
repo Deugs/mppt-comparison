@@ -116,7 +116,9 @@ FUZZY_CE_SCALE = 1.0  # normalized-E units per step
 FUZZY_OUTPUT_MIN = -0.1  # duty-cycle-step universe of discourse, per CLAUDE.md
 FUZZY_OUTPUT_MAX = 0.1
 FUZZY_DEFUZZ_POINTS = 201  # discretization resolution for centroid defuzzification
-FUZZY_INITIAL_PERTURBATION = 0.01  # bootstrap duty-cycle nudge on the first step (no dV history yet)
+FUZZY_INITIAL_PERTURBATION = (
+    0.01  # bootstrap duty-cycle nudge on the first step (no dV history yet)
+)
 
 # --- Q-learning ---
 # Citation (CLAUDE.md, mandatory): Kofinas, P., Doltsinis, S., Dounis, A.I.,
@@ -163,7 +165,9 @@ SMC_BOUNDARY = 0.1  # boundary-layer half-width, normalized units
 SMC_BOOTSTRAP = 0.01  # initial duty-cycle nudge on the first step (no dV history yet)
 
 # --- Scenario runner ---
-MPPT_SAMPLE_PERIOD_S = 0.001  # 1 ms; ~20 boost-converter switching cycles per MPPT decision at 20 kHz
+MPPT_SAMPLE_PERIOD_S = (
+    0.001  # 1 ms; ~20 boost-converter switching cycles per MPPT decision at 20 kHz
+)
 
 # Partial-shading operating-point solves cost ~10x a single-module solve (one
 # root-find per bypass-diode group, ~9 groups for a 3-module string) even

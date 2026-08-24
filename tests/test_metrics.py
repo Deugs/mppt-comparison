@@ -8,7 +8,9 @@ def test_tracking_efficiency_is_100_percent_at_perfect_tracking():
     times = np.linspace(0, 1, 100)
     max_powers = np.full(100, 250.0)
     powers = max_powers.copy()
-    assert metrics.tracking_efficiency(times, powers, max_powers) == pytest.approx(100.0)
+    assert metrics.tracking_efficiency(times, powers, max_powers) == pytest.approx(
+        100.0
+    )
 
 
 def test_tracking_efficiency_is_50_percent_at_half_power():
@@ -58,7 +60,9 @@ def test_settling_time_rejects_a_dip_that_resets_the_window():
 def test_settling_time_none_if_within_tolerance_run_too_short():
     times = np.arange(0, 0.05, 0.01)
     max_powers = np.full(len(times), 100.0)
-    powers = np.full(len(times), 100.0)  # settled immediately, but run is only 40ms long
+    powers = np.full(
+        len(times), 100.0
+    )  # settled immediately, but run is only 40ms long
     result = metrics.settling_time(times, powers, max_powers, min_duration_s=0.1)
     assert result is None
 
@@ -89,7 +93,9 @@ def test_energy_yield_matches_trapezoidal_integral_of_constant_power():
 def test_energy_yield_ratio_is_one_at_perfect_tracking():
     times = np.linspace(0, 1, 100)
     max_powers = np.full(100, 250.0)
-    assert metrics.energy_yield_ratio(times, max_powers, max_powers) == pytest.approx(1.0)
+    assert metrics.energy_yield_ratio(times, max_powers, max_powers) == pytest.approx(
+        1.0
+    )
 
 
 def test_mean_step_execution_time_is_positive():

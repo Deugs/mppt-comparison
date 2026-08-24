@@ -2,7 +2,8 @@ import pytest
 
 from src import config
 from src.algorithms.inc_cond import IncrementalConductance
-from tests._helpers import run_tracking, run_tracking_with_irradiance_step, true_mpp_power
+from tests._helpers import (run_tracking, run_tracking_with_irradiance_step,
+                            true_mpp_power)
 
 
 def test_finds_mpp_at_stc(pv_model_stc):

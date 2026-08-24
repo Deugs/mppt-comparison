@@ -142,9 +142,12 @@ class FuzzyLogicController(MPPTAlgorithm):
         _, output_membership = build_triangular_partition(labels, *output_domain)
 
         lo, hi = output_domain
-        self._defuzz_grid = [lo + k * (hi - lo) / (defuzz_points - 1) for k in range(defuzz_points)]
+        self._defuzz_grid = [
+            lo + k * (hi - lo) / (defuzz_points - 1) for k in range(defuzz_points)
+        ]
         self._output_mf_table = {
-            label: [output_membership(x)[label] for x in self._defuzz_grid] for label in labels
+            label: [output_membership(x)[label] for x in self._defuzz_grid]
+            for label in labels
         }
 
         self.reset()
@@ -162,7 +165,10 @@ class FuzzyLogicController(MPPTAlgorithm):
             # No dV history yet -- bootstrap with a small nudge so the next
             # call has a nonzero dV to compute dP/dV from (see
             # config.FUZZY_INITIAL_PERTURBATION).
-            return min(max(duty_cycle + config.FUZZY_INITIAL_PERTURBATION, self.duty_min), self.duty_max)
+            return min(
+                max(duty_cycle + config.FUZZY_INITIAL_PERTURBATION, self.duty_min),
+                self.duty_max,
+            )
 
         dv = v - self._v_prev
         dp = p - self._p_prev

@@ -15,6 +15,7 @@ from dataclasses import dataclass, field
 from typing import Callable, List, Optional
 
 import numpy as np
+import pandas as pd
 
 from . import config, metrics
 from .simulate import pv_operating_point
@@ -25,8 +26,22 @@ class Scenario:
     name: str
     duration_s: float
     irradiance_fn: Callable[[float], float]
-    temperature_fn: Callable[[float], float] = field(default=lambda t: config.STC_TEMPERATURE_C)
+    temperature_fn: Callable[[float], float] = field(
+        default=lambda t: config.STC_TEMPERATURE_C
+    )
     sensor_noise_std_frac: float = 0.0
+    
+    @property
+    def irradiance_profile(self):
+        """Generate irradiance profile for the scenario duration."""
+        # This should be generated during simulation, not stored
+        raise AttributeError("irradiance_profile is not directly accessible. Use irradiance_fn(t) instead.")
+    
+    @property
+    def temperature_profile(self):
+        """Generate temperature profile for the scenario duration."""
+        # This should be generated during simulation, not stored
+        raise AttributeError("temperature_profile is not directly accessible. Use temperature_fn(t) instead.")
 
 
 @dataclass
@@ -65,7 +80,9 @@ def piecewise_linear(points: List[tuple]):
     return fn
 
 
-def reference_mpp_curve(pv_model, times: np.ndarray, irradiance_fn, temperature_fn) -> np.ndarray:
+def reference_mpp_curve(
+    pv_model, times: np.ndarray, irradiance_fn, temperature_fn
+) -> np.ndarray:
     """True MPP power at each time sample.
 
     Caches by (irradiance, temperature) pair -- most scenarios are piecewise
@@ -118,7 +135,9 @@ def run_scenario(
     for idx, t in enumerate(times):
         irradiance = scenario.irradiance_fn(t)
         temperature_c = scenario.temperature_fn(t)
-        v, i = pv_operating_point(pv_model, duty, irradiance=irradiance, temperature_c=temperature_c)
+        v, i = pv_operating_point(
+            pv_model, duty, irradiance=irradiance, temperature_c=temperature_c
+        )
 
         v_measured, i_measured = v, i
         if scenario.sensor_noise_std_frac > 0 and rng is not None:
@@ -133,9 +152,13 @@ def run_scenario(
         duty = algorithm.step(v_measured, i_measured, duty)
 
     if theoretical_max_powers is None:
-        theoretical_max_powers = reference_mpp_curve(pv_model, times, scenario.irradiance_fn, scenario.temperature_fn)
+        theoretical_max_powers = reference_mpp_curve(
+            pv_model, times, scenario.irradiance_fn, scenario.temperature_fn
+        )
 
-    return RunResult(times, voltages, currents, powers, theoretical_max_powers, duty_cycles)
+    return RunResult(
+        times, voltages, currents, powers, theoretical_max_powers, duty_cycles
+    )
 
 
 def run_monte_carlo(
@@ -160,12 +183,16 @@ def run_monte_carlo(
     """
     n_samples = int(round(scenario.duration_s / sample_period_s)) + 1
     times = np.arange(n_samples) * sample_period_s
-    theoretical_max_powers = reference_mpp_curve(pv_model, times, scenario.irradiance_fn, scenario.temperature_fn)
+    theoretical_max_powers = reference_mpp_curve(
+        pv_model, times, scenario.irradiance_fn, scenario.temperature_fn
+    )
 
     results = []
     for run_id in range(num_runs):
         rng = random.Random(base_seed + run_id)
-        initial_duty = rng.uniform(config.MPPT_DUTY_MIN + 0.05, config.MPPT_DUTY_MAX - 0.05)
+        initial_duty = rng.uniform(
+            config.MPPT_DUTY_MIN + 0.05, config.MPPT_DUTY_MAX - 0.05
+        )
         result = run_scenario(
             scenario,
             algorithm,
@@ -181,17 +208,29 @@ def run_monte_carlo(
 
 def compute_run_metrics(result: RunResult) -> dict:
     """All CLAUDE.md "Core Metrics" + "Energy-Based Metrics" for one run."""
-    settle_time = metrics.settling_time(result.times, result.powers, result.theoretical_max_powers)
-    oscillation_window_start = settle_time if settle_time is not None else result.times[-1]
-    p2p, std = metrics.steady_state_oscillation(result.times, result.powers, oscillation_window_start)
+    settle_time = metrics.settling_time(
+        result.times, result.powers, result.theoretical_max_powers
+    )
+    oscillation_window_start = (
+        settle_time if settle_time is not None else result.times[-1]
+    )
+    p2p, std = metrics.steady_state_oscillation(
+        result.times, result.powers, oscillation_window_start
+    )
     return {
-        "tracking_efficiency_pct": metrics.tracking_efficiency(result.times, result.powers, result.theoretical_max_powers),
-        "convergence_time_s": metrics.convergence_time(result.times, result.powers, result.theoretical_max_powers),
+        "tracking_efficiency_pct": metrics.tracking_efficiency(
+            result.times, result.powers, result.theoretical_max_powers
+        ),
+        "convergence_time_s": metrics.convergence_time(
+            result.times, result.powers, result.theoretical_max_powers
+        ),
         "settling_time_s": settle_time,
         "oscillation_p2p_w": p2p,
         "oscillation_std_w": std,
         "energy_yield_j": metrics.energy_yield(result.times, result.powers),
-        "energy_yield_ratio": metrics.energy_yield_ratio(result.times, result.powers, result.theoretical_max_powers),
+        "energy_yield_ratio": metrics.energy_yield_ratio(
+            result.times, result.powers, result.theoretical_max_powers
+        ),
     }
 
 
@@ -215,7 +254,9 @@ def scenario_multi_level_irradiance() -> Scenario:
     return Scenario(
         name="multi_level_irradiance",
         duration_s=5.0,
-        irradiance_fn=piecewise_constant([(0.0, 200.0), (1.0, 400.0), (2.0, 600.0), (3.0, 800.0), (4.0, 1000.0)]),
+        irradiance_fn=piecewise_constant(
+            [(0.0, 200.0), (1.0, 400.0), (2.0, 600.0), (3.0, 800.0), (4.0, 1000.0)]
+        ),
         temperature_fn=piecewise_constant([(0.0, config.STC_TEMPERATURE_C)]),
     )
 
@@ -251,7 +292,9 @@ def scenario_rapid_fluctuation_cloud_passage() -> Scenario:
     return Scenario(
         name="rapid_fluctuation_cloud_passage",
         duration_s=5.0,
-        irradiance_fn=piecewise_linear([(0.0, 1000.0), (1.25, 600.0), (2.5, 800.0), (3.75, 400.0), (5.0, 1000.0)]),
+        irradiance_fn=piecewise_linear(
+            [(0.0, 1000.0), (1.25, 600.0), (2.5, 800.0), (3.75, 400.0), (5.0, 1000.0)]
+        ),
         temperature_fn=piecewise_constant([(0.0, config.STC_TEMPERATURE_C)]),
     )
 
@@ -315,7 +358,9 @@ def classify_ql_condition(
         return "held_out"
     if any(not _matches_any(t, (config.STC_TEMPERATURE_C,)) for t in temperatures_c):
         return "held_out"
-    if any(not _matches_any(irr, config.QL_TRAINING_IRRADIANCES) for irr in irradiances):
+    if any(
+        not _matches_any(irr, config.QL_TRAINING_IRRADIANCES) for irr in irradiances
+    ):
         return "held_out"
     return "train"
 
@@ -366,7 +411,9 @@ def results_to_rows(
     return rows
 
 
-def computational_burden_rows(step_times: dict, baseline_key: str, base_seed: int = 0) -> List[dict]:
+def computational_burden_rows(
+    step_times: dict, baseline_key: str, base_seed: int = 0
+) -> List[dict]:
     """One row per algorithm for mean step time and burden relative to `baseline_key`.
 
     Not scenario-conditioned (it's a single fixed-operating-point measurement
@@ -434,7 +481,8 @@ def build_fuzzy_rule_base_variants() -> dict:
     cross-paradigm ANOVA/t-tests in analysis.py (they're a rule-base
     ablation of one paradigm, not a 6th/7th distinct paradigm).
     """
-    from .algorithms.fuzzy_logic import FIVE_LABELS, THREE_LABELS, FuzzyLogicController
+    from .algorithms.fuzzy_logic import (FIVE_LABELS, THREE_LABELS,
+                                         FuzzyLogicController)
 
     return {
         "fuzzy_5x5": FuzzyLogicController(labels=FIVE_LABELS),
@@ -462,38 +510,60 @@ def run_full_sweep(
     """
     import pandas as pd
 
-    from .scenarios_partial_shading import PARTIAL_SHADING_SCENARIOS, build_pv_string, run_partial_shading_monte_carlo
+    from .scenarios_partial_shading import (PARTIAL_SHADING_SCENARIOS,
+                                            build_pv_string,
+                                            run_partial_shading_monte_carlo)
 
     rows = []
     for algorithm_name, algorithm in algorithms.items():
         for scenario_name, factory in SINGLE_MODULE_SCENARIOS.items():
             log(f"{algorithm_name} x {scenario_name} ({num_runs} runs)")
             scenario = factory()
-            results = run_monte_carlo(scenario, algorithm, pv_model, num_runs=num_runs, base_seed=base_seed)
+            results = run_monte_carlo(
+                scenario, algorithm, pv_model, num_runs=num_runs, base_seed=base_seed
+            )
             ql_condition = scenario_ql_condition(scenario)
-            rows.extend(results_to_rows(algorithm_name, scenario_name, results, base_seed, ql_condition))
+            rows.extend(
+                results_to_rows(
+                    algorithm_name, scenario_name, results, base_seed, ql_condition
+                )
+            )
 
         for scenario_name, factory in PARTIAL_SHADING_SCENARIOS.items():
             log(f"{algorithm_name} x {scenario_name} ({num_runs} runs)")
             scenario = factory()
-            pv_string = build_pv_string(panel_params, num_modules=len(scenario.irradiances))
+            pv_string = build_pv_string(
+                panel_params, num_modules=len(scenario.irradiances)
+            )
             results = run_partial_shading_monte_carlo(
                 scenario, algorithm, pv_string, num_runs=num_runs, base_seed=base_seed
             )
-            rows.extend(results_to_rows(algorithm_name, scenario_name, results, base_seed, "held_out"))
+            rows.extend(
+                results_to_rows(
+                    algorithm_name, scenario_name, results, base_seed, "held_out"
+                )
+            )
 
     if baseline_key in algorithms:
         log("Measuring computational burden (mean step() time per algorithm)")
         step_times = {
-            name: metrics.mean_step_execution_time(algorithm, config.PANEL_VMP_STC, config.PANEL_IMP_STC, 0.3)
+            name: metrics.mean_step_execution_time(
+                algorithm, config.PANEL_VMP_STC, config.PANEL_IMP_STC, 0.3
+            )
             for name, algorithm in algorithms.items()
         }
-        rows.extend(computational_burden_rows(step_times, baseline_key=baseline_key, base_seed=base_seed))
+        rows.extend(
+            computational_burden_rows(
+                step_times, baseline_key=baseline_key, base_seed=base_seed
+            )
+        )
     else:
         # e.g. a fuzzy-rule-base-variants-only sweep, which has no "p_and_o"
         # entry to normalize against -- skip rather than crash; the core
         # sweep already recorded computational burden for the baseline.
-        log(f"Skipping computational burden measurement (baseline '{baseline_key}' not in this sweep's algorithms)")
+        log(
+            f"Skipping computational burden measurement (baseline '{baseline_key}' not in this sweep's algorithms)"
+        )
 
     return pd.DataFrame(rows)
 
@@ -505,8 +575,12 @@ def main():
 
     from .pv_model import TwoDiodeModel, extract_two_diode_parameters
 
-    parser = argparse.ArgumentParser(description="Run the full MPPT algorithm comparison sweep.")
-    parser.add_argument("--monte-carlo", type=int, default=config.MONTE_CARLO_RUNS, dest="num_runs")
+    parser = argparse.ArgumentParser(
+        description="Run the full MPPT algorithm comparison sweep."
+    )
+    parser.add_argument(
+        "--monte-carlo", type=int, default=config.MONTE_CARLO_RUNS, dest="num_runs"
+    )
     parser.add_argument("--output", type=str, default="results/")
     parser.add_argument("--base-seed", type=int, default=0)
     parser.add_argument(
@@ -535,7 +609,13 @@ def main():
 
     if args.fuzzy_variants_only:
         algorithms = build_fuzzy_rule_base_variants()
-        df = run_full_sweep(algorithms, pv_model, panel_params, num_runs=args.num_runs, base_seed=args.base_seed)
+        df = run_full_sweep(
+            algorithms,
+            pv_model,
+            panel_params,
+            num_runs=args.num_runs,
+            base_seed=args.base_seed,
+        )
         if os.path.exists(output_path):
             existing = pd.read_csv(output_path)
             df = pd.concat([existing, df], ignore_index=True)
@@ -546,7 +626,13 @@ def main():
     print("Training Q-learning agent...")
     algorithms = build_default_algorithms(pv_model)
 
-    df = run_full_sweep(algorithms, pv_model, panel_params, num_runs=args.num_runs, base_seed=args.base_seed)
+    df = run_full_sweep(
+        algorithms,
+        pv_model,
+        panel_params,
+        num_runs=args.num_runs,
+        base_seed=args.base_seed,
+    )
 
     df.to_csv(output_path, index=False)
     print(f"Wrote {len(df)} rows to {output_path}")

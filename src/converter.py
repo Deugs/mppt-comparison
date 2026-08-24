@@ -10,7 +10,7 @@ leaving it out would misrepresent the converter's transient/control behavior.
 """
 
 import math
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 from . import config
 
@@ -21,6 +21,25 @@ class BoostConverterDesign:
     capacitance: float  # C, Farads
     duty_cycle: float  # D, at the design operating point
     load_resistance: float  # R, Ohm
+
+
+@dataclass
+class BoostConverter:
+    """Runtime boost converter model with mutable duty cycle.
+    
+    This is a simple wrapper that holds the current operating state
+    (duty_cycle) and references the design parameters.
+    """
+    duty_cycle: float = 0.5
+    design: BoostConverterDesign = None
+    
+    def __post_init__(self):
+        if self.design is None:
+            self.design = design_boost_converter()
+    
+    def update_duty(self, new_duty: float) -> None:
+        """Update duty cycle with clipping."""
+        self.duty_cycle = max(0.01, min(0.95, new_duty))
 
 
 def duty_cycle(vin: float, vout: float = config.CONVERTER_VOUT) -> float:
@@ -87,7 +106,9 @@ class SmallSignalModel:
     dc_gain: float  # Vout/(1-D)^2, low-frequency gain of Gvd(s)
 
 
-def small_signal_model(design: BoostConverterDesign, vin: float, vout: float = config.CONVERTER_VOUT) -> SmallSignalModel:
+def small_signal_model(
+    design: BoostConverterDesign, vin: float, vout: float = config.CONVERTER_VOUT
+) -> SmallSignalModel:
     """State-space averaged small-signal control-to-output transfer function.
 
         Gvd(s) = dc_gain * (1 - s/omega_z) / (1 + s/(Q*omega0) + (s/omega0)^2)
@@ -104,10 +125,17 @@ def small_signal_model(design: BoostConverterDesign, vin: float, vout: float = c
     q_factor = (1 - d) * r * math.sqrt(c / l)
     omega_z = (1 - d) ** 2 * r / l
     dc_gain = vout / (1 - d) ** 2
-    return SmallSignalModel(omega0=omega0, q_factor=q_factor, omega_z=omega_z, dc_gain=dc_gain)
+    return SmallSignalModel(
+        omega0=omega0, q_factor=q_factor, omega_z=omega_z, dc_gain=dc_gain
+    )
 
 
-def critical_inductance(vin: float, vout: float, power: float, fs: float = config.CONVERTER_SWITCHING_FREQ_HZ) -> float:
+def critical_inductance(
+    vin: float,
+    vout: float,
+    power: float,
+    fs: float = config.CONVERTER_SWITCHING_FREQ_HZ,
+) -> float:
     """Minimum L for CCM at this operating point: L_crit = (1-D)^2 * D * R / (2*fs)."""
     d = duty_cycle(vin, vout)
     r = vout**2 / power if power > 0 else float("inf")

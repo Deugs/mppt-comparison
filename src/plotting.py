@@ -88,7 +88,9 @@ def _save_fig(fig, output_dir: str, name: str) -> tuple:
     return png_path, svg_path
 
 
-def _yerr_from_ci(mean: np.ndarray, ci_low: np.ndarray, ci_high: np.ndarray) -> np.ndarray:
+def _yerr_from_ci(
+    mean: np.ndarray, ci_low: np.ndarray, ci_high: np.ndarray
+) -> np.ndarray:
     """(2, N) yerr array for matplotlib's asymmetric error bars.
 
     NaN half-widths (n_valid < 2, so no CI is defined) become 0 -- an
@@ -123,8 +125,20 @@ def _grouped_bar(
         sub = df[df[hue_col] == hue].set_index(x_col).reindex(x_values)
         offsets = x_positions + (i - (n_hue - 1) / 2) * bar_width
         color = (color_map or {}).get(hue, _color_for(hue))
-        yerr = _yerr_from_ci(sub["mean"].to_numpy(), sub["ci95_low"].to_numpy(), sub["ci95_high"].to_numpy())
-        ax.bar(offsets, sub["mean"], width=bar_width, label=str(hue), color=color, yerr=yerr, capsize=3)
+        yerr = _yerr_from_ci(
+            sub["mean"].to_numpy(),
+            sub["ci95_low"].to_numpy(),
+            sub["ci95_high"].to_numpy(),
+        )
+        ax.bar(
+            offsets,
+            sub["mean"],
+            width=bar_width,
+            label=str(hue),
+            color=color,
+            yerr=yerr,
+            capsize=3,
+        )
 
     ax.set_xticks(x_positions)
     ax.set_xticklabels(x_values, rotation=45, ha="right")
@@ -134,7 +148,9 @@ def _grouped_bar(
     # by trial data extent and reliably collides with a bar on these dense,
     # many-category charts -- e.g. it sat directly on top of the first bar
     # group in the fuzzy rule-base sensitivity figure until this fix.
-    ax.legend(title=hue_col, frameon=False, loc="center left", bbox_to_anchor=(1.01, 0.5))
+    ax.legend(
+        title=hue_col, frameon=False, loc="center left", bbox_to_anchor=(1.01, 0.5)
+    )
     ax.spines["top"].set_visible(False)
     ax.spines["right"].set_visible(False)
     fig.tight_layout()
@@ -169,7 +185,13 @@ def plot_metric_comparison(
         "(q_learning: held-out/untrained conditions except steady_state & step_change_irradiance -- "
         "see the train-vs-held-out figure)"
     )
-    fig = _grouped_bar(sub, x_col="scenario", hue_col="algorithm", title=title, ylabel=METRIC_LABELS.get(metric, metric))
+    fig = _grouped_bar(
+        sub,
+        x_col="scenario",
+        hue_col="algorithm",
+        title=title,
+        ylabel=METRIC_LABELS.get(metric, metric),
+    )
     return _save_fig(fig, output_dir, f"metric_comparison_{metric}")
 
 
@@ -182,11 +204,17 @@ def plot_convergence_heatmap(
     """Algorithm x scenario heatmap of convergence_rate/settling_rate --
     surfaces total non-convergence (e.g. perturbative algorithms under
     partial shading) as a visible 0%-colored cell, not a missing data point."""
-    sub = summary_df[(summary_df["metric"] == metric) & (summary_df["algorithm"].isin(algorithms))]
+    sub = summary_df[
+        (summary_df["metric"] == metric) & (summary_df["algorithm"].isin(algorithms))
+    ]
     scenarios = sorted(sub["scenario"].unique())
-    pivot = sub.pivot_table(index="algorithm", columns="scenario", values="mean").reindex(index=algorithms, columns=scenarios)
+    pivot = sub.pivot_table(
+        index="algorithm", columns="scenario", values="mean"
+    ).reindex(index=algorithms, columns=scenarios)
 
-    fig, ax = plt.subplots(figsize=(max(6, 1.1 * len(scenarios)), max(3, 0.6 * len(algorithms) + 1)))
+    fig, ax = plt.subplots(
+        figsize=(max(6, 1.1 * len(scenarios)), max(3, 0.6 * len(algorithms) + 1))
+    )
     # viridis, not a red-green diverging map like RdYlGn -- this heatmap's
     # natural default -- because red-green is exactly the confusion axis for
     # the most common form of color blindness; CLAUDE.md requires a
@@ -206,7 +234,15 @@ def plot_convergence_heatmap(
                 # perceptual midpoint (unlike the RdYlGn text color assumed
                 # black always worked against a lighter red/green range).
                 text_color = "white" if value < 0.5 else "black"
-                ax.text(col, row, f"{value * 100:.0f}%", ha="center", va="center", color=text_color, fontsize=8)
+                ax.text(
+                    col,
+                    row,
+                    f"{value * 100:.0f}%",
+                    ha="center",
+                    va="center",
+                    color=text_color,
+                    fontsize=8,
+                )
     cbar = fig.colorbar(im, ax=ax)
     cbar.set_label(METRIC_LABELS.get(metric, metric))
     ax.set_title(f"{METRIC_LABELS.get(metric, metric)}, by algorithm and scenario")
@@ -214,13 +250,19 @@ def plot_convergence_heatmap(
     return _save_fig(fig, output_dir, f"convergence_heatmap_{metric}")
 
 
-def plot_computational_burden(summary_df: pd.DataFrame, output_dir: str, algorithms=analysis.CORE_ALGORITHMS) -> tuple:
+def plot_computational_burden(
+    summary_df: pd.DataFrame, output_dir: str, algorithms=analysis.CORE_ALGORITHMS
+) -> tuple:
     """Single bar chart of relative_burden per algorithm (P&O = 1.0 baseline)."""
-    sub = summary_df[
-        (summary_df["metric"] == "relative_burden")
-        & (summary_df["scenario"] == "_computational_burden")
-        & (summary_df["algorithm"].isin(algorithms))
-    ].set_index("algorithm").reindex(algorithms)
+    sub = (
+        summary_df[
+            (summary_df["metric"] == "relative_burden")
+            & (summary_df["scenario"] == "_computational_burden")
+            & (summary_df["algorithm"].isin(algorithms))
+        ]
+        .set_index("algorithm")
+        .reindex(algorithms)
+    )
 
     fig, ax = plt.subplots(figsize=(max(5, 1.2 * len(algorithms)), 4))
     colors = [_color_for(a) for a in algorithms]
@@ -243,27 +285,48 @@ def plot_ql_train_vs_held_out(
         & (summary_df["metric"] == metric)
         & (summary_df["ql_condition"].isin(["train", "held_out"]))
     ]
-    title = f"Q-learning {METRIC_LABELS.get(metric, metric)}: train vs. held-out conditions"
+    title = (
+        f"Q-learning {METRIC_LABELS.get(metric, metric)}: train vs. held-out conditions"
+    )
     fig = _grouped_bar(
-        sub, x_col="scenario", hue_col="ql_condition", title=title, ylabel=METRIC_LABELS.get(metric, metric), color_map=QL_CONDITION_COLORS
+        sub,
+        x_col="scenario",
+        hue_col="ql_condition",
+        title=title,
+        ylabel=METRIC_LABELS.get(metric, metric),
+        color_map=QL_CONDITION_COLORS,
     )
     return _save_fig(fig, output_dir, f"ql_train_vs_held_out_{metric}")
 
 
-def plot_fuzzy_sensitivity(fuzzy_df: pd.DataFrame, output_dir: str, metric: str = "tracking_efficiency_pct") -> tuple:
+def plot_fuzzy_sensitivity(
+    fuzzy_df: pd.DataFrame, output_dir: str, metric: str = "tracking_efficiency_pct"
+) -> tuple:
     """Grouped bar: 7x7 (fuzzy_logic) vs. 5x5 vs. 3x3 rule-base size, per
     scenario -- CLAUDE.md's fuzzy "Sensitivity Analysis (Contribution)"."""
     sub = fuzzy_df[
         (fuzzy_df["metric"] == metric)
         & (fuzzy_df["scenario"] != "_computational_burden")
-        & (fuzzy_df["ql_condition"] != "held_out" if "ql_condition" in fuzzy_df.columns else True)
+        & (
+            fuzzy_df["ql_condition"] != "held_out"
+            if "ql_condition" in fuzzy_df.columns
+            else True
+        )
     ]
     title = f"Fuzzy rule-base size sensitivity: {METRIC_LABELS.get(metric, metric)}"
-    fig = _grouped_bar(sub, x_col="scenario", hue_col="algorithm", title=title, ylabel=METRIC_LABELS.get(metric, metric))
+    fig = _grouped_bar(
+        sub,
+        x_col="scenario",
+        hue_col="algorithm",
+        title=title,
+        ylabel=METRIC_LABELS.get(metric, metric),
+    )
     return _save_fig(fig, output_dir, f"fuzzy_sensitivity_{metric}")
 
 
-def plot_tracking_trajectory(results: dict, theoretical_max_power, output_dir: str, name: str, title: str) -> tuple:
+def plot_tracking_trajectory(
+    results: dict, theoretical_max_power, output_dir: str, name: str, title: str
+) -> tuple:
     """Time-series power-tracking figure: one line per algorithm plus the
     theoretical max power as a dashed reference.
 
@@ -277,13 +340,28 @@ def plot_tracking_trajectory(results: dict, theoretical_max_power, output_dir: s
     """
     fig, ax = plt.subplots(figsize=(8, 5))
     for algorithm_name, result in results.items():
-        ax.plot(result.times, result.powers, label=algorithm_name, color=_color_for(algorithm_name), linewidth=1.5)
+        ax.plot(
+            result.times,
+            result.powers,
+            label=algorithm_name,
+            color=_color_for(algorithm_name),
+            linewidth=1.5,
+        )
 
     any_result = next(iter(results.values()))
     max_power_curve = (
-        theoretical_max_power if np.ndim(theoretical_max_power) > 0 else np.full_like(any_result.times, theoretical_max_power)
+        theoretical_max_power
+        if np.ndim(theoretical_max_power) > 0
+        else np.full_like(any_result.times, theoretical_max_power)
     )
-    ax.plot(any_result.times, max_power_curve, label="Theoretical max", color="black", linestyle="--", linewidth=1.0)
+    ax.plot(
+        any_result.times,
+        max_power_curve,
+        label="Theoretical max",
+        color="black",
+        linestyle="--",
+        linewidth=1.0,
+    )
 
     ax.set_xlabel("Time (s)")
     ax.set_ylabel("Power (W)")
@@ -295,14 +373,24 @@ def plot_tracking_trajectory(results: dict, theoretical_max_power, output_dir: s
     return _save_fig(fig, output_dir, name)
 
 
-def generate_all_aggregate_figures(summary_df: pd.DataFrame, fuzzy_df: pd.DataFrame, output_dir: str) -> list:
+def generate_all_aggregate_figures(
+    summary_df: pd.DataFrame, fuzzy_df: pd.DataFrame, output_dir: str
+) -> list:
     """Every figure that can be built from summary tables alone (no live
     re-simulation needed). Returns the list of (png_path, svg_path) pairs."""
     paths = []
-    for metric in ("tracking_efficiency_pct", "oscillation_p2p_w", "energy_yield_ratio"):
+    for metric in (
+        "tracking_efficiency_pct",
+        "oscillation_p2p_w",
+        "energy_yield_ratio",
+    ):
         paths.append(plot_metric_comparison(summary_df, metric, output_dir))
-    paths.append(plot_convergence_heatmap(summary_df, output_dir, metric="convergence_rate"))
-    paths.append(plot_convergence_heatmap(summary_df, output_dir, metric="settling_rate"))
+    paths.append(
+        plot_convergence_heatmap(summary_df, output_dir, metric="convergence_rate")
+    )
+    paths.append(
+        plot_convergence_heatmap(summary_df, output_dir, metric="settling_rate")
+    )
     paths.append(plot_computational_burden(summary_df, output_dir))
     paths.append(plot_ql_train_vs_held_out(summary_df, output_dir))
     if not fuzzy_df.empty:
@@ -313,10 +401,16 @@ def generate_all_aggregate_figures(summary_df: pd.DataFrame, fuzzy_df: pd.DataFr
 def main():
     import argparse
 
-    parser = argparse.ArgumentParser(description="Generate all Phase 4 figures from the MPPT comparison results.")
+    parser = argparse.ArgumentParser(
+        description="Generate all Phase 4 figures from the MPPT comparison results."
+    )
     parser.add_argument("--input", type=str, default="results/comparison_table.csv")
     parser.add_argument("--output", type=str, default="results/figures/")
-    parser.add_argument("--skip-trajectories", action="store_true", help="Skip the live-resimulation trajectory figures.")
+    parser.add_argument(
+        "--skip-trajectories",
+        action="store_true",
+        help="Skip the live-resimulation trajectory figures.",
+    )
     args = parser.parse_args()
 
     df = pd.read_csv(args.input)
@@ -326,35 +420,51 @@ def main():
     paths = generate_all_aggregate_figures(summary_df, fuzzy_df, args.output)
 
     if not args.skip_trajectories:
-        from . import scenarios, scenarios_partial_shading
+        from . import config, scenarios, scenarios_partial_shading
         from .pv_model import TwoDiodeModel, extract_two_diode_parameters
-        from . import config
 
         panel_params = extract_two_diode_parameters(
-            voc=config.PANEL_VOC_STC, isc=config.PANEL_ISC_STC, vmp=config.PANEL_VMP_STC, imp=config.PANEL_IMP_STC
+            voc=config.PANEL_VOC_STC,
+            isc=config.PANEL_ISC_STC,
+            vmp=config.PANEL_VMP_STC,
+            imp=config.PANEL_IMP_STC,
         )
         pv_model = TwoDiodeModel(panel_params, num_cells=config.PANEL_NS)
         algorithms = scenarios.build_default_algorithms(pv_model)
 
         steady_scenario = scenarios.scenario_steady_state()
         steady_results = {
-            name: scenarios.run_scenario(steady_scenario, algo, pv_model, sample_period_s=0.01)
+            name: scenarios.run_scenario(
+                steady_scenario, algo, pv_model, sample_period_s=0.01
+            )
             for name, algo in algorithms.items()
         }
-        _, steady_mpp = pv_model.find_mpp(config.STC_IRRADIANCE, config.STC_TEMPERATURE_C)
+        _, steady_mpp = pv_model.find_mpp(
+            config.STC_IRRADIANCE, config.STC_TEMPERATURE_C
+        )
         paths.append(
             plot_tracking_trajectory(
-                steady_results, steady_mpp, args.output, "trajectory_steady_state", "Power tracking at STC (steady state)"
+                steady_results,
+                steady_mpp,
+                args.output,
+                "trajectory_steady_state",
+                "Power tracking at STC (steady state)",
             )
         )
 
         shading_scenario = scenarios_partial_shading.scenario_partial_shading_simple()
-        pv_string = scenarios_partial_shading.build_pv_string(panel_params, num_modules=len(shading_scenario.irradiances))
+        pv_string = scenarios_partial_shading.build_pv_string(
+            panel_params, num_modules=len(shading_scenario.irradiances)
+        )
         shading_results = {
-            name: scenarios_partial_shading.run_partial_shading_scenario(shading_scenario, algo, pv_string)
+            name: scenarios_partial_shading.run_partial_shading_scenario(
+                shading_scenario, algo, pv_string
+            )
             for name, algo in algorithms.items()
         }
-        _, shading_mpp = pv_string.find_global_mpp(shading_scenario.irradiances, shading_scenario.temperature_c)
+        _, shading_mpp = pv_string.find_global_mpp(
+            shading_scenario.irradiances, shading_scenario.temperature_c
+        )
         paths.append(
             plot_tracking_trajectory(
                 shading_results,

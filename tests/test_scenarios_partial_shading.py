@@ -78,7 +78,9 @@ def test_run_partial_shading_scenario_produces_correctly_shaped_result(stc_param
     scenario = scenario_partial_shading_simple()
     pv_string = build_pv_string(stc_params, num_modules=len(scenario.irradiances))
     algorithm = PerturbObserve()
-    result = run_partial_shading_scenario(scenario, algorithm, pv_string, sample_period_s=0.05)
+    result = run_partial_shading_scenario(
+        scenario, algorithm, pv_string, sample_period_s=0.05
+    )
 
     expected_samples = int(round(scenario.duration_s / 0.05)) + 1
     assert len(result.times) == expected_samples
@@ -91,7 +93,9 @@ def test_run_partial_shading_scenario_tracked_power_is_at_most_global_mpp(stc_pa
     scenario = scenario_partial_shading_simple()
     pv_string = build_pv_string(stc_params, num_modules=len(scenario.irradiances))
     algorithm = PerturbObserve()
-    result = run_partial_shading_scenario(scenario, algorithm, pv_string, sample_period_s=0.05)
+    result = run_partial_shading_scenario(
+        scenario, algorithm, pv_string, sample_period_s=0.05
+    )
 
     mpp_power = result.theoretical_max_powers[0]
     # Physical sanity check, not an assertion that this algorithm reaches the
@@ -105,7 +109,9 @@ def test_run_partial_shading_monte_carlo_produces_requested_number_of_runs(stc_p
     scenario = scenario_partial_shading_simple()
     pv_string = build_pv_string(stc_params, num_modules=len(scenario.irradiances))
     algorithm = PerturbObserve()
-    results = run_partial_shading_monte_carlo(scenario, algorithm, pv_string, num_runs=3, sample_period_s=0.05)
+    results = run_partial_shading_monte_carlo(
+        scenario, algorithm, pv_string, num_runs=3, sample_period_s=0.05
+    )
     assert len(results) == 3
 
 
@@ -113,7 +119,9 @@ def test_compute_run_metrics_works_on_partial_shading_results(stc_params):
     scenario = scenario_partial_shading_simple()
     pv_string = build_pv_string(stc_params, num_modules=len(scenario.irradiances))
     algorithm = PerturbObserve()
-    result = run_partial_shading_scenario(scenario, algorithm, pv_string, sample_period_s=0.05)
+    result = run_partial_shading_scenario(
+        scenario, algorithm, pv_string, sample_period_s=0.05
+    )
     computed = compute_run_metrics(result)
 
     assert 0.0 < computed["tracking_efficiency_pct"] <= 100.0

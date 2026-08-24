@@ -49,13 +49,23 @@ from . import config
 def thermal_voltage(temperature_c: float, ideality: float, num_cells: int) -> float:
     """Module-/group-level thermal voltage a * num_cells * k * T / q, in volts."""
     temperature_k = temperature_c + 273.15
-    return ideality * num_cells * config.BOLTZMANN_CONSTANT * temperature_k / config.ELECTRON_CHARGE
+    return (
+        ideality
+        * num_cells
+        * config.BOLTZMANN_CONSTANT
+        * temperature_k
+        / config.ELECTRON_CHARGE
+    )
 
 
 def photocurrent(iph_ref: float, irradiance: float, temperature_c: float) -> float:
     """Iph(G,T) = Iph_ref * (G/G_ref) * (1 + Ki*(T-T_ref)) -- see module docstring."""
     ki_frac = config.KI_ISC_PCT_PER_C / 100.0
-    return iph_ref * (irradiance / config.STC_IRRADIANCE) * (1.0 + ki_frac * (temperature_c - config.STC_TEMPERATURE_C))
+    return (
+        iph_ref
+        * (irradiance / config.STC_IRRADIANCE)
+        * (1.0 + ki_frac * (temperature_c - config.STC_TEMPERATURE_C))
+    )
 
 
 def _saturation_current(is_ref: float, ideality: float, temperature_c: float) -> float:
@@ -67,7 +77,9 @@ def _saturation_current(is_ref: float, ideality: float, temperature_c: float) ->
     temperature_k = temperature_c + 273.15
     ref_k = config.STC_TEMPERATURE_C + 273.15
     eg_joules = config.PV_BANDGAP_EV * config.ELECTRON_CHARGE
-    exponent = (eg_joules / (ideality * config.BOLTZMANN_CONSTANT)) * (1.0 / ref_k - 1.0 / temperature_k)
+    exponent = (eg_joules / (ideality * config.BOLTZMANN_CONSTANT)) * (
+        1.0 / ref_k - 1.0 / temperature_k
+    )
     return is_ref * (temperature_k / ref_k) ** (3.0 / ideality) * np.exp(exponent)
 
 
@@ -94,7 +106,9 @@ class TwoDiodeModel:
         self.params = params
         self.num_cells = num_cells
 
-    def equation_residual(self, i: float, v: float, irradiance: float, temperature_c: float) -> float:
+    def equation_residual(
+        self, i: float, v: float, irradiance: float, temperature_c: float
+    ) -> float:
         """Residual of the two-diode equation at (i, v); zero at a valid operating point.
 
         Public because it's also the building block for solving the combined
@@ -129,7 +143,14 @@ class TwoDiodeModel:
         iph = p.iph * irradiance / config.STC_IRRADIANCE
         lo, hi = -1e-3, iph + 1.0
         try:
-            return brentq(self.equation_residual, lo, hi, args=(v, irradiance, temperature_c), xtol=1e-10, maxiter=200)
+            return brentq(
+                self.equation_residual,
+                lo,
+                hi,
+                args=(v, irradiance, temperature_c),
+                xtol=1e-10,
+                maxiter=200,
+            )
         except ValueError:
             return 0.0
 
@@ -174,7 +195,9 @@ class TwoDiodeModel:
         irradiance: float = config.STC_IRRADIANCE,
         temperature_c: float = config.STC_TEMPERATURE_C,
     ) -> np.ndarray:
-        return np.array([self.current_at_voltage(v, irradiance, temperature_c) for v in voltages])
+        return np.array(
+            [self.current_at_voltage(v, irradiance, temperature_c) for v in voltages]
+        )
 
     def power_at_voltage(
         self,
@@ -212,7 +235,9 @@ class TwoDiodeModel:
 class PVModuleGroup:
     """One bypass-diode-protected group of `CELLS_PER_BYPASS_GROUP` cells."""
 
-    def __init__(self, params: TwoDiodeParameters, num_cells: int = config.CELLS_PER_BYPASS_GROUP):
+    def __init__(
+        self, params: TwoDiodeParameters, num_cells: int = config.CELLS_PER_BYPASS_GROUP
+    ):
         self.model = TwoDiodeModel(params, num_cells=num_cells)
         self._cache_key = None
         self._cached_isc = None
@@ -235,8 +260,12 @@ class PVModuleGroup:
         """
         key = (irradiance, temperature_c)
         if key != self._cache_key:
-            self._cached_isc = self.model.current_at_voltage(0.0, irradiance, temperature_c)
-            self._cached_voc = self.model.open_circuit_voltage(irradiance, temperature_c)
+            self._cached_isc = self.model.current_at_voltage(
+                0.0, irradiance, temperature_c
+            )
+            self._cached_voc = self.model.open_circuit_voltage(
+                irradiance, temperature_c
+            )
             self._cache_key = key
 
         if i > self._cached_isc:
@@ -261,7 +290,9 @@ class PVModule:
     pass a list of per-group irradiance values to model intra-module shading.
     """
 
-    def __init__(self, params: TwoDiodeParameters, num_groups: int = config.NUM_BYPASS_DIODES):
+    def __init__(
+        self, params: TwoDiodeParameters, num_groups: int = config.NUM_BYPASS_DIODES
+    ):
         self.groups = [PVModuleGroup(params) for _ in range(num_groups)]
 
     def voltage_at_current(
@@ -270,8 +301,15 @@ class PVModule:
         irradiance,
         temperature_c: float = config.STC_TEMPERATURE_C,
     ) -> float:
-        irradiances = irradiance if hasattr(irradiance, "__len__") else [irradiance] * len(self.groups)
-        return sum(g.voltage_at_current(i, g_irr, temperature_c) for g, g_irr in zip(self.groups, irradiances))
+        irradiances = (
+            irradiance
+            if hasattr(irradiance, "__len__")
+            else [irradiance] * len(self.groups)
+        )
+        return sum(
+            g.voltage_at_current(i, g_irr, temperature_c)
+            for g, g_irr in zip(self.groups, irradiances)
+        )
 
 
 class PVString:
@@ -280,15 +318,32 @@ class PVString:
     def __init__(self, modules: list[PVModule]):
         self.modules = modules
 
-    def voltage_at_current(self, i: float, irradiances, temperature_c: float = config.STC_TEMPERATURE_C) -> float:
-        return sum(m.voltage_at_current(i, irr, temperature_c) for m, irr in zip(self.modules, irradiances))
+    def voltage_at_current(
+        self, i: float, irradiances, temperature_c: float = config.STC_TEMPERATURE_C
+    ) -> float:
+        return sum(
+            m.voltage_at_current(i, irr, temperature_c)
+            for m, irr in zip(self.modules, irradiances)
+        )
 
-    def pv_curve(self, currents: np.ndarray, irradiances, temperature_c: float = config.STC_TEMPERATURE_C):
-        voltages = np.array([self.voltage_at_current(i, irradiances, temperature_c) for i in currents])
+    def pv_curve(
+        self,
+        currents: np.ndarray,
+        irradiances,
+        temperature_c: float = config.STC_TEMPERATURE_C,
+    ):
+        voltages = np.array(
+            [self.voltage_at_current(i, irradiances, temperature_c) for i in currents]
+        )
         powers = voltages * currents
         return voltages, powers
 
-    def find_global_mpp(self, irradiances, temperature_c: float = config.STC_TEMPERATURE_C, num_points: int = 300):
+    def find_global_mpp(
+        self,
+        irradiances,
+        temperature_c: float = config.STC_TEMPERATURE_C,
+        num_points: int = 300,
+    ):
         """Find (V, P) at the *global* MPP via a dense current sweep.
 
         Unlike TwoDiodeModel.find_mpp's bounded 1-D search, this can't assume
@@ -337,7 +392,9 @@ def extract_two_diode_parameters(
         vt2 = thermal_voltage(temperature_c, a2, num_cells)
         denom = np.expm1(voc / vt1) + np.expm1(voc / vt2)
         is0 = max((iph - voc / rsh) / denom, 1e-15)
-        params = TwoDiodeParameters(iph=iph, is1=is0, is2=is0, rs=rs, rsh=rsh, a1=a1, a2=a2)
+        params = TwoDiodeParameters(
+            iph=iph, is1=is0, is2=is0, rs=rs, rsh=rsh, a1=a1, a2=a2
+        )
         return TwoDiodeModel(params, num_cells=num_cells)
 
     def residuals(x: np.ndarray) -> np.ndarray:
@@ -346,8 +403,12 @@ def extract_two_diode_parameters(
         i_at_short = model.current_at_voltage(0.0, temperature_c=temperature_c)
         i_at_vmp = model.current_at_voltage(vmp, temperature_c=temperature_c)
         dv = 1e-4
-        p_minus = (vmp - dv) * model.current_at_voltage(vmp - dv, temperature_c=temperature_c)
-        p_plus = (vmp + dv) * model.current_at_voltage(vmp + dv, temperature_c=temperature_c)
+        p_minus = (vmp - dv) * model.current_at_voltage(
+            vmp - dv, temperature_c=temperature_c
+        )
+        p_plus = (vmp + dv) * model.current_at_voltage(
+            vmp + dv, temperature_c=temperature_c
+        )
         dpdv = (p_plus - p_minus) / (2 * dv)
         return np.array(
             [
@@ -363,9 +424,21 @@ def extract_two_diode_parameters(
         sum(config.SHUNT_RESISTANCE_BOUNDS) / 2,
         sum(config.DIODE2_IDEALITY_BOUNDS) / 2,
     ]
-    lower = [isc, config.SERIES_RESISTANCE_BOUNDS[0], config.SHUNT_RESISTANCE_BOUNDS[0], config.DIODE2_IDEALITY_BOUNDS[0]]
-    upper = [isc * 1.1, config.SERIES_RESISTANCE_BOUNDS[1], config.SHUNT_RESISTANCE_BOUNDS[1], config.DIODE2_IDEALITY_BOUNDS[1]]
+    lower = [
+        isc,
+        config.SERIES_RESISTANCE_BOUNDS[0],
+        config.SHUNT_RESISTANCE_BOUNDS[0],
+        config.DIODE2_IDEALITY_BOUNDS[0],
+    ]
+    upper = [
+        isc * 1.1,
+        config.SERIES_RESISTANCE_BOUNDS[1],
+        config.SHUNT_RESISTANCE_BOUNDS[1],
+        config.DIODE2_IDEALITY_BOUNDS[1],
+    ]
 
-    result = least_squares(residuals, x0, bounds=(lower, upper), xtol=1e-13, ftol=1e-13, gtol=1e-13)
+    result = least_squares(
+        residuals, x0, bounds=(lower, upper), xtol=1e-13, ftol=1e-13, gtol=1e-13
+    )
     iph, rs, rsh, a2 = result.x
     return build_model(iph, rs, rsh, a2).params

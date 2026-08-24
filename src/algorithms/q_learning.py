@@ -112,12 +112,16 @@ def train_q_learning(
         epsilon = max(epsilon_min, epsilon_start * (epsilon_decay**episode))
 
         duty = initial_duty
-        v_prev, i_prev = pv_operating_point(pv_model, duty, irradiance=irradiance, temperature_c=temperature_c)
+        v_prev, i_prev = pv_operating_point(
+            pv_model, duty, irradiance=irradiance, temperature_c=temperature_c
+        )
         p_prev = v_prev * i_prev
         # Bootstrap: one step with no learning update, so the main loop
         # always has a dV/dP history to compute dP/dV from.
         duty = min(max(duty + agent.actions[-1], agent.duty_min), agent.duty_max)
-        v, i = pv_operating_point(pv_model, duty, irradiance=irradiance, temperature_c=temperature_c)
+        v, i = pv_operating_point(
+            pv_model, duty, irradiance=irradiance, temperature_c=temperature_c
+        )
         p = v * i
 
         for _ in range(steps_per_episode):
@@ -131,8 +135,12 @@ def train_q_learning(
             else:
                 action_index = int(np.argmax(agent.q_table[state]))
 
-            new_duty = min(max(duty + agent.actions[action_index], agent.duty_min), agent.duty_max)
-            v_new, i_new = pv_operating_point(pv_model, new_duty, irradiance=irradiance, temperature_c=temperature_c)
+            new_duty = min(
+                max(duty + agent.actions[action_index], agent.duty_min), agent.duty_max
+            )
+            v_new, i_new = pv_operating_point(
+                pv_model, new_duty, irradiance=irradiance, temperature_c=temperature_c
+            )
             p_new = v_new * i_new
             reward = p_new - p
 

@@ -54,7 +54,9 @@ class PerturbObserve(MPPTAlgorithm):
                 direction = -1 if dd > 0 else 1
 
             dpdv = dp / dv if abs(dv) > 1e-9 else float("inf")
-            step_size = self.step_large if abs(dpdv) > self.dpdv_threshold else self.step_small
+            step_size = (
+                self.step_large if abs(dpdv) > self.dpdv_threshold else self.step_small
+            )
             new_duty = duty_cycle + direction * step_size
 
         self._v_prev, self._p_prev, self._d_prev = v, p, duty_cycle

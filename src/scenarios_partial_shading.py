@@ -76,10 +76,14 @@ def run_partial_shading_scenario(
         duty = algorithm.step(v, i, duty)
 
     if theoretical_max_power is None:
-        _, theoretical_max_power = pv_string.find_global_mpp(scenario.irradiances, scenario.temperature_c)
+        _, theoretical_max_power = pv_string.find_global_mpp(
+            scenario.irradiances, scenario.temperature_c
+        )
     theoretical_max_powers = np.full(n_samples, theoretical_max_power)
 
-    return RunResult(times, voltages, currents, powers, theoretical_max_powers, duty_cycles)
+    return RunResult(
+        times, voltages, currents, powers, theoretical_max_powers, duty_cycles
+    )
 
 
 def run_partial_shading_monte_carlo(
@@ -92,12 +96,16 @@ def run_partial_shading_monte_carlo(
 ) -> List[RunResult]:
     """Same seeding contract as scenarios.run_monte_carlo: run k always uses
     seed `base_seed + k`, so all algorithms see the same initial-duty sequence."""
-    _, theoretical_max_power = pv_string.find_global_mpp(scenario.irradiances, scenario.temperature_c)
+    _, theoretical_max_power = pv_string.find_global_mpp(
+        scenario.irradiances, scenario.temperature_c
+    )
 
     results = []
     for run_id in range(num_runs):
         rng = random.Random(base_seed + run_id)
-        initial_duty = rng.uniform(config.MPPT_DUTY_MIN + 0.05, config.MPPT_DUTY_MAX - 0.05)
+        initial_duty = rng.uniform(
+            config.MPPT_DUTY_MIN + 0.05, config.MPPT_DUTY_MAX - 0.05
+        )
         result = run_partial_shading_scenario(
             scenario,
             algorithm,
