@@ -1,0 +1,89 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+This paper compared five MPPT algorithms spanning four genuinely distinct
+design paradigms -- perturbative, rule-based, learning-based, and
+model-based nonlinear control -- under a common, open-source, statistically
+rigorous simulation framework, validated against a real commercial PV
+datasheet. Sliding mode control achieved the best steady-state tracking
+efficiency and lowest oscillation at a computational cost still an order
+of magnitude below the fuzzy and learning-based paradigms. A
+reduced $5\times5$ fuzzy rule base statistically matched the full
+$7\times7$ base's performance, a genuine rule-reduction contribution given
+fuzzy logic's substantial computational overhead. Most significantly,
+every algorithm across all four paradigms -- including the model-based SMC
+controller with its Lyapunov stability guarantee -- failed to reach the
+true global maximum power point in the majority of complex partial-shading
+patterns tested, with the failure mode differing meaningfully by paradigm:
+the perturbative and model-based algorithms converge to a shared local
+maximum, while Q-learning (never trained on multi-module shading) fails in
+a qualitatively worse way, moving to and oscillating around a
+substantially lower-power operating point instead. This paper's own peer
+review process also surfaced and fixed a genuine implementation bug in
+IncCond and SMC's boundary-case logic (Section~\ref{sec:partial-shading-results}),
+which had misread being clamped at a hard duty-cycle limit as convergence
+and never recovered once irradiance later made the true MPP reachable
+again -- the corrected results reported throughout this paper reflect
+the fix, not the original defect.
+
+\subsection{Limitations}
+Several limitations should inform how these results are read and motivate
+future work. First, the boost converter enters discontinuous conduction
+mode (DCM) at light load (Section~\ref{sec:converter-model}), where the
+small-signal model every algorithm's duty-cycle-perturbation reasoning
+implicitly relies on no longer holds; whether this contributes to any
+algorithm's degraded performance specifically in the low-irradiance and
+partial-shading scenarios has not been isolated from the algorithms'
+intrinsic global-search limitations, and would require a dedicated
+ablation to disentangle. Second, low-irradiance validation
+(Section~\ref{sec:model-validation}) is necessarily coarser than the NOCT
+point, since the datasheet gives only a single efficiency-retention claim
+at 200\,W/m$^2$ rather than a full I-V table; the model's measured $93.5\%$
+retention is close to, but not an exact match for, the datasheet's claimed
+$95.5\%$, plausibly because this simplified model does not scale shunt
+resistance with irradiance as a full five-parameter model would. Third,
+Q-learning's tabular state discretization and training protocol
+(Section~\ref{sec:q-learning-algorithm}) are one specific design point in a
+much larger learning-based MPPT design space; whether a different state
+representation, function approximation, or a training distribution that
+includes partial shading would close the gap observed in
+Section~\ref{sec:partial-shading-results} is an open question this paper
+does not attempt to answer, since doing so changes the fair-comparison
+premise of evaluating the same tabular design used throughout. Fourth, this
+is a simulation-only study; while the two-diode model is quantitatively
+validated against a real datasheet (Section~\ref{sec:model-validation}),
+hardware validation would strengthen any of these conclusions further.
+
+\subsection{Future Work}
+The clearest direction suggested by this paper's own results is a deeper,
+dedicated study of learning-based MPPT under partial shading -- explicitly
+training on shading patterns rather than only flat irradiance, and
+comparing tabular Q-learning against function-approximation and deep-RL
+alternatives such as recent fuzzy-augmented actor-critic designs
+\cite{ortizmunoz2025hybrid} -- since the generalization gap found here is a
+training-data problem, not necessarily a fundamental limitation of
+learning-based control.
+A second, complementary direction is a fair, reproducible benchmark of
+metaheuristic global-search MPPT methods (which this paper deliberately
+excludes, to avoid the saturated "yet another bio-inspired optimizer"
+pattern) against this paper's partial-shading scenarios directly, since
+metaheuristics are specifically designed for the global-search problem this
+paper's results show every non-metaheuristic paradigm struggles with.
+Finally, the DCM/light-load confound flagged above is a concrete,
+answerable question -- rerunning the low-irradiance and partial-shading
+scenarios with a converter design that stays in CCM across the full
+operating range would isolate whether DCM sensitivity contributes to any
+algorithm's measured performance independent of its global-search
+capability.
+
+\subsection*{Code and Data Availability}
+% Zenodo DOI still pending -- do not fill in a placeholder DOI here until
+% one actually exists (RESEARCH_PROGRAM.md's standing rule against
+% unproduced specifics applies to this statement as much as to any
+% numeric result). The GitHub repository below was made public 2026-07-25;
+% confirmed via `gh api repos/Deugs/mppt-comparison` before relying on this
+% statement.
+All simulation code, raw Monte Carlo results, and figures are released
+under the MIT License at \url{https://github.com/Deugs/mppt-comparison}
+and archived with a citable DOI at \texttt{[Zenodo DOI -- fill in once
+minted]}.

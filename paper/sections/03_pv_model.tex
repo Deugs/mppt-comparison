@@ -1,0 +1,158 @@
+\section{Photovoltaic System Modeling}
+\label{sec:pv-model}
+
+\subsection{Two-Diode Model}
+The reference module is a Canadian Solar CS6P-250P, a 60-cell polycrystalline
+module rated at $P_{max}=250\,$W ($V_{oc}=37.2\,$V, $I_{sc}=8.87\,$A,
+$V_{mp}=30.1\,$V, $I_{mp}=8.30\,$A at standard test conditions, STC:
+1000\,W/m$^2$, 25\textdegree C), chosen as a real, commercially available
+panel rather than an idealized one so simulated results can be validated
+quantitatively against the manufacturer's own datasheet.
+
+Each series-connected cell string is modeled by the two-diode equivalent
+circuit
+\begin{equation}
+I = I_{ph} - I_{s1}\!\left[e^{\frac{V+IR_s}{a_1 V_t}} - 1\right]
+          - I_{s2}\!\left[e^{\frac{V+IR_s}{a_2 V_t}} - 1\right]
+          - \frac{V+IR_s}{R_{sh}},
+\label{eq:two-diode}
+\end{equation}
+where $V_t = a\,N_s\,kT/q$ is the string-level thermal voltage, $N_s$ the
+number of series cells in the string, $k$ Boltzmann's constant, $T$ the
+cell temperature in Kelvin, and $q$ the electron charge. Unlike the
+single-diode model, the second diode term (with ideality $a_2$ and
+saturation current $I_{s2}$) explicitly represents recombination current in
+the depletion region, which becomes significant at low forward bias -- the
+regime relevant to correctly resolving secondary local maxima under partial
+shading. We follow \cite{ishaque2011simple} for the two-diode formulation;
+\cite{villalva2009comprehensive}'s widely-cited three-point extraction
+method is a single-diode technique and is cited here only for general
+parameter-extraction background, not as the source of
+\eqref{eq:two-diode}.
+
+\subsection{Bypass Diodes and Partial Shading}
+Following standard industry practice, one bypass diode protects every 20
+cells, giving $N_s/20=3$ bypass groups for the 60-cell reference module.
+Each group is modeled as an independent two-diode string of
+\eqref{eq:two-diode}; when a forced string current would exceed a group's
+own short-circuit current at its (possibly shaded) irradiance, that group's
+bypass diode is modeled as an ideal diode with $V_f=0.7\,$V, clamping the
+group's contributed voltage to $-V_f$ rather than driving it into deep
+reverse bias. This bypass mechanism is what allows multiple local maxima to
+appear in a shaded string's $P$-$V$ curve at all -- without it, a
+series-connected string's power curve remains unimodal regardless of
+shading, which would make the partial-shading scenarios in
+Section~\ref{sec:scenarios} unable to test any algorithm's global-search
+capability.
+
+\subsection{Parameter Extraction}
+\label{sec:parameter-extraction}
+The four free parameters $(I_{ph}, R_s, R_{sh}, a_2)$ are fit to the
+datasheet's four STC key points ($V_{oc}$, $I_{sc}$, $V_{mp}$, $I_{mp}$) via
+bounded nonlinear least squares (Trust Region Reflective), minimizing the
+residual of three conditions: the short-circuit current match, the
+current-at-$V_{mp}$ match, and $dP/dV=0$ at the reported MPP. The first
+diode's ideality factor $a_1$ is fixed at $1.0$ (the midpoint of its
+physically expected range) rather than fit, and $I_{s1}=I_{s2}$ is solved
+analytically from the open-circuit-voltage boundary condition at every
+optimizer iteration rather than treated as a free parameter. This leaves
+the extraction under-determined by one degree of freedom relative to the
+full iterative procedure in \cite{ishaque2011simple}; we flag this
+explicitly as a simplification rather than presenting it as the complete
+published procedure.
+
+For the CS6P-250P, this extraction yields $I_{ph}=8.880\,$A,
+$I_{s1}=I_{s2}=2.891\times10^{-10}\,$A, $R_s=0.308\,\Omega$,
+$R_{sh}=269.8\,\Omega$, $a_1=1.000$, $a_2=1.406$.
+
+\subsection{Model Validation}
+\label{sec:model-validation}
+Table~\ref{tab:validation} compares the simulated I-V curve at the four STC
+key points against the datasheet. The maximum relative error across all
+four points is $0.068\%$ (at $P_{max}$), well within the $2\%$ acceptance
+criterion.
+
+\begin{table}[htbp]
+\centering
+\caption{Simulated vs.\ Datasheet STC Key Points (CS6P-250P)}
+\label{tab:validation}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Quantity & Simulated & Datasheet & Rel.\ Error \\
+\midrule
+$I_{sc}$ (A)  & 8.870  & 8.870  & 0.000\% \\
+$V_{oc}$ (V)  & 37.200 & 37.200 & 0.000\% \\
+$V_{mp}$ (V)  & 30.100 & 30.100 & 0.000\% \\
+$I_{mp}$ (A)  & 8.300  & 8.300  & 0.000\% \\
+$P_{max}$ (W) & 249.83 & 250.00 & 0.068\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Temperature Dependence}
+\label{sec:temperature-dependence}
+Photocurrent and both diodes' saturation currents are temperature-dependent,
+following \cite{desoto2006improvement}:
+\begin{align}
+I_{ph}(G,T) &= I_{ph,ref}\,\frac{G}{G_{ref}}\bigl(1 + K_i(T-T_{ref})\bigr), \label{eq:iph-temp}\\
+I_{s}(T) &= I_{s,ref}\left(\frac{T}{T_{ref}}\right)^{3/a}
+  \exp\!\left[\frac{E_g q}{ak}\left(\frac{1}{T_{ref}}-\frac{1}{T}\right)\right], \label{eq:is-temp}
+\end{align}
+applied independently to $I_{s1}$ (using $a_1$) and $I_{s2}$ (using $a_2$),
+with $E_g=1.121\,$eV the silicon bandgap energy and $K_i=+0.065\%/^\circ$C
+the datasheet's short-circuit-current temperature coefficient. Both
+correction factors in \eqref{eq:iph-temp}-\eqref{eq:is-temp} are identically
+1 at $T=T_{ref}$, so STC behavior is unaffected by this extension --
+Table~\ref{tab:validation} above is unchanged whether or not temperature
+dependence is included.
+
+This addresses a real error found during development: an earlier version of
+this model let temperature affect only the thermal-voltage term $V_t(T)$,
+leaving $I_{ph}$ and $I_s$ temperature-independent. Holding $I_s$ fixed while
+$V_t$ rises with temperature makes $V_{oc}\approx V_t\ln(I_{ph}/I_s)$
+\emph{increase} with temperature -- backwards from every real PV panel,
+where $I_s$'s much stronger (exponential) growth with temperature is the
+physically dominant effect and pulls $V_{oc}$ \emph{down}. Concretely, the
+uncorrected model predicted $V_{oc}(50^\circ\text{C})=40.32\,$V against this
+panel's datasheet-implied $34.04\,$V (using its linear
+$K_v=-0.34\%/^\circ$C coefficient) -- the wrong sign, not merely an
+uncalibrated magnitude. \eqref{eq:iph-temp}-\eqref{eq:is-temp} fix this:
+the corrected model gives $V_{oc}(50^\circ\text{C})=34.31\,$V, within
+$0.8\%$ of the datasheet-implied value, and $I_{sc}(50^\circ\text{C})$
+matches to within $0.01\%$ (the \emph{temperature step} scenario in
+Section~\ref{sec:results} is the only one of this paper's eleven scenarios
+that varies temperature -- every other scenario runs at a constant
+25\textdegree C and is completely unaffected by this fix).
+
+Table~\ref{tab:noct-validation} validates the corrected model against the
+manufacturer's NOCT electrical table ($G=800\,$W/m$^2$, $T_c=45\pm2^\circ$C)
+-- data not available until the full datasheet PDF was sourced during this
+project. RMSE across the five NOCT key points is $1.35\%$, within the $2\%$
+acceptance criterion (the individual $P_{max}$ point alone is $2.44\%$,
+narrowly over 2\% on its own, though the aggregate RMSE the criterion
+specifies is not). Low-irradiance validation is necessarily coarser: the
+datasheet gives only a single retention claim ("+95.5\% module efficiency
+from 1000 to 200\,W/m$^2$"), not a full I-V table at 200\,W/m$^2$, so this
+is a single ratio check rather than a point-by-point match like NOCT. The
+model measures $93.5\%$ retention -- close to, but about 2 percentage
+points below, the datasheet's claim, plausibly because this simplified
+model holds $R_s$ and $R_{sh}$ irradiance-independent rather than scaling
+$R_{sh}$ with irradiance as a full five-parameter model would.
+
+\begin{table}[htbp]
+\centering
+\caption{NOCT Validation ($G=800$\,W/m$^2$, $T_c=45^\circ$C)}
+\label{tab:noct-validation}
+\begin{tabular}{@{}lccc@{}}
+\toprule
+Quantity & Simulated & Datasheet & Rel.\ Error \\
+\midrule
+$I_{sc}$ (A)  & 7.188  & 7.190  & 0.024\% \\
+$V_{oc}$ (V)  & 34.514 & 34.200 & 0.917\% \\
+$V_{mp}$ (V)  & 27.814 & 27.500 & 1.143\% \\
+$I_{mp}$ (A)  & 6.666  & 6.600  & 0.999\% \\
+$P_{max}$ (W) & 185.41 & 181.00 & 2.435\% \\
+\bottomrule
+\multicolumn{4}{l}{\footnotesize RMSE across all five points: 1.35\%.}
+\end{tabular}
+\end{table}

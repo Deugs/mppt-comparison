@@ -1,0 +1,178 @@
+\section{Literature Review}
+\label{sec:literature-review}
+
+% STATUS: both previously-open citation flags (7x7 fuzzy partition
+% precedent; SMC sliding-surface precedent) are now resolved with real,
+% Crossref-verified citations (fapi2025fuzzy, ahmad2020application) --
+% the three unresolved "candidate" SMC citations from the earlier search
+% (zhang2022novel, mostafa2020tracking, contreras2024novel) were removed
+% from references.bib since they were never actually a good match and are
+% now superseded. references.bib has 29 total citations, 15 of which are
+% 2023-2025 -- clears both publication_supplement.md checklist items
+% (>=20 total, >=15 recent). Every citation has been verified against
+% Crossref metadata (see references.bib comments) -- do not add a citation
+% here without the same verification.
+
+This review is organized by the same four MPPT design paradigms compared
+in this paper, both to survey prior work and to make the cross-paradigm
+framing of Section~\ref{sec:introduction} concrete, followed by recent
+cross-paradigm reviews that position this paper's own contribution.
+
+\subsection{Perturbative Methods}
+Perturb-and-observe remains the most widely deployed MPPT method for its
+simplicity and low computational cost; \cite{femia2005optimization}
+provides the adaptive-step-size design this paper's P\&O implementation
+follows, trading off oscillation amplitude against tracking speed by
+scaling the perturbation step with $|dP/dV|$. Incremental conductance
+\cite{hussein1995maximum} refines this by directly comparing $dI/dV$ against
+$-I/V$, in principle eliminating steady-state oscillation around the true
+maximum power point (MPP) at the cost of a boundary-condition singularity
+as $dV \to 0$ that must be handled explicitly. Adaptive step-size tuning
+for both methods remains an active research area:
+\cite{ibrahim2023optimizing} uses particle swarm optimization to tune the
+step size of both P\&O and IncCond for a grid-tied system, reporting
+improved steady-state oscillation over fixed-step baselines -- the same
+tradeoff this paper's adaptive-step P\&O design targets, though via a
+simpler analytical rule rather than a metaheuristic-tuned one.
+
+\subsection{Rule-Based Methods}
+Fuzzy logic control removes the need for an explicit analytical model of
+the PV/converter system by encoding tracking behavior as a linguistic rule
+base. \cite{zhu2021comprehensive} surveys four FLC-MPPT input/output
+variable choices ($dP\&dV$, $dP\&dI$, $E\&dE$, $G\&F$) at a $5\times5$
+partition size; this paper's design instead uses a $7\times7$ partition
+following common (E, $\Delta E$) $\to \Delta D$ conventions in the wider
+fuzzy-MPPT literature \cite{fapi2025fuzzy}. \cite{sunkara2024novel} presents a hybrid fuzzy
+logic MPPT controller specifically evaluated under partial shading,
+reporting improved global-search behavior over a standalone fuzzy
+controller -- directly relevant context for this paper's own finding
+(Section~\ref{sec:results}) that a non-hybrid fuzzy controller, like every
+other non-hybrid algorithm tested, fails to escape a local maximum under
+partial shading; a hybrid extension is exactly the kind of change that
+finding motivates as future work.
+
+\subsection{Learning-Based Methods}
+\cite{kofinas2017reinforcement} is the foundational reference for
+model-free reinforcement learning applied to MPPT, using tabular Q-learning
+over a discretized (voltage, $dP/dV$) state space -- the same state
+representation this paper's Q-learning implementation uses.
+\cite{chen2023research} studies Q-table design specifically, proposing an
+improved update scheme for the same tabular setting this paper uses rather
+than moving to function approximation or deep RL -- a natural point of
+comparison for whether this paper's Q-learning generalization failure
+(Section~\ref{sec:partial-shading-results}) is a consequence of the
+particular Q-table design or a more fundamental limitation of tabular
+discretization under distribution shift. A key open question for any
+learning-based MPPT controller is whether it generalizes to conditions
+outside its training distribution or merely memorizes them;
+\cite{phan2020deep} studies a deep-RL controller specifically under partial
+shading, a harder and more directly relevant generalization test than
+flat-irradiance held-out evaluation alone, and is a natural point of
+comparison for this paper's own partial-shading generalization finding
+(Section~\ref{sec:results}), where the Q-learning agent -- trained only on
+flat, single-module irradiance -- fails on multi-module shading in a
+qualitatively different way than the perturbative and model-based
+algorithms.
+
+\subsection{Model-Based Nonlinear Control}
+Sliding mode control (SMC) applies variable-structure control theory
+\cite{utkin1977variable} to MPPT by defining a sliding surface (commonly
+$s = dP/dV$ \cite{ahmad2020application}, driving the system toward the MPP condition) and a reaching
+law governing convergence to that surface. This paper's exponential
+reaching law follows \cite{gao1993variable}, and its boundary-layer
+chattering mitigation -- replacing $\mathrm{sign}(s)$ with a saturation
+function -- follows the classical treatment in \cite{slotine1991applied}.
+Chattering mitigation remains an active SMC-MPPT research area:
+\cite{liu2025photovoltaic} combines PID-type SMC with an improved grey
+wolf optimizer to tune controller gains rather than relying on a
+hand-tuned boundary layer as this paper does, illustrating one direction
+(automated gain tuning) this paper's grid-searched
+\texttt{SMC\_K}/\texttt{SMC\_Q}/\texttt{SMC\_BOUNDARY} constants
+(\texttt{config.py}) could be extended toward. Per CLAUDE.md's own caution,
+no single PV-SMC paper combines this exact surface, reaching law, and
+boundary-layer choice at once (a search for one during this literature
+review turned up several partial matches -- e.g.\ a multi-power reaching
+law with a sigmoid switching function -- but none matching all three
+design choices simultaneously); the design lineage is instead cited
+piece-by-piece: $s=dP/dV$ as the common surface choice
+\cite{ahmad2020application}, the exponential reaching law from
+\cite{gao1993variable}, and the boundary-layer chattering mitigation from
+\cite{slotine1991applied}.
+
+\subsection{PV Modeling and Boost Converter Design}
+The boost converter sizing and small-signal analysis in this paper follow
+the standard treatment in \cite{erickson2001fundamentals}, including the
+right-half-plane zero in the control-to-output transfer function that
+simplified worked examples sometimes omit. \cite{serra2024control}
+addresses boost-converter control specifically in discontinuous conduction
+mode (DCM) under a constant-power load -- directly relevant to this
+paper's own DCM finding (Section~\ref{sec:converter-model}), that this
+design's converter enters DCM at light load and that every algorithm's
+duty-cycle-perturbation reasoning implicitly assumes the CCM small-signal
+model; \cite{serra2024control}'s dedicated DCM control strategy is one
+concrete way a future revision could remove that confound rather than
+merely flag it as a limitation.
+
+\cite{villalva2009comprehensive} and \cite{ishaque2011simple} both address
+PV array modeling but at different levels: the former's contribution is a
+single-diode, three-datasheet-point parameter extraction method, while the
+two-diode model used in this paper -- which better represents recombination
+currents at low voltage and is important for correctly resolving multiple
+local maxima under partial shading -- follows \cite{ishaque2011simple}
+specifically; the two should not be conflated when citing the two-diode
+model's origin. More recent parameter-extraction work continues to refine
+this: \cite{syed2024parameter} proposes an analytical (non-iterative)
+two-diode extraction method, and \cite{moshksar2024two} compares two
+datasheet-based double-diode extraction approaches on an accuracy/
+simplicity tradeoff -- directly relevant to this paper's own extraction
+method (Section~\ref{sec:parameter-extraction}), which is explicitly
+flagged as a simplification (fixed $a_1$, analytically-solved
+$I_{s1}=I_{s2}$) relative to the full iterative procedure in
+\cite{ishaque2011simple}; both recent papers are natural points of
+comparison for tightening that simplification in future work.
+\cite{abad2025analytical} provides a recent analytical treatment of
+bypass- and blocking-diode effects on the partial-shading $P$-$V$ curve,
+complementing this paper's simulation-based bypass-diode composition
+(Section~\ref{sec:pv-model}) with an independent analytical derivation of
+the same multiple-local-maxima phenomenon this paper's Monte Carlo results
+depend on.
+
+\subsection{Cross-Paradigm Positioning}
+The most direct historical point of comparison is
+\cite{esram2007comparison}, whose 19-technique survey remains, two decades
+later, the most widely-cited broad MPPT comparison in this journal. Three
+things distinguish this paper from it, beyond the two decades of algorithm
+development in between: \cite{esram2007comparison} is a narrative survey of
+results reported by different authors under different conditions, not a
+common statistically-validated experimental comparison; it predates
+learning-based and model-based nonlinear control as MPPT paradigms
+entirely, so a four-paradigm framing was not yet possible; and it does not
+release runnable code, so its comparisons cannot be independently
+re-executed the way every result in this paper can be.
+
+\cite{endiz2025review} and \cite{yaqoob2025advanced} are both recent,
+broad reviews spanning classical, metaheuristic, and AI-based MPPT
+methods -- the same cross-paradigm scope this paper argues is missing from
+most single-comparison studies (Section~\ref{sec:introduction}). Neither,
+however, provides the specific combination this paper does: a validated
+physical model, open-source reproducible code, and Monte Carlo statistical
+rigor applied uniformly across all paradigms compared, rather than a
+literature synthesis of results reported under differing conditions by
+different authors. \cite{abdelmalek2024experimental} and
+\cite{taha2025design} are both recent examples of the "yet another
+bio-inspired/hybrid metaheuristic optimizer" pattern this paper's
+introduction explicitly declines to add to (a zebra optimization algorithm
+and a GWO-PSO hybrid, respectively) -- included here not as directly
+comparable baselines but as evidence the pattern remains active and
+crowded, reinforcing rather than undermining this paper's choice to compete
+on reproducibility and paradigm coverage instead. \cite{ashraf2025python}
+is a recent, directly relevant example of the open-source reproducibility
+movement this paper is also part of, releasing a Python framework for
+metaheuristic MPPT techniques evaluated under partial shading -- but,
+consistent with the pattern above, it is scoped to a single paradigm
+(metaheuristic optimization) rather than the four-paradigm comparison this
+paper provides.
+
+% This section's citation-count and citation-flag TODOs are now resolved;
+% remaining work before submission is a final proofread pass, not more
+% citations.

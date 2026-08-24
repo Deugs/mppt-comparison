@@ -1,0 +1,82 @@
+# Publication-ready matplotlib style sheet
+# Use with: plt.style.use('styles/publication.mplstyle')
+
+# Figure dimensions (IEEE two-column format)
+figure.figsize: 8.0, 6.0
+figure.dpi: 300
+figure.facecolor: white
+figure.edgecolor: black
+
+# Font settings
+font.family: sans-serif
+font.sans-serif: Arial, Helvetica, DejaVu Sans
+font.size: 9
+font.weight: normal
+
+# Axes settings
+axes.linewidth: 0.8
+axes.grid: False
+axes.labelsize: 10
+axes.labelweight: bold
+axes.titlesize: 11
+axes.titleweight: bold
+axes.titlelocation: center
+
+# Tick settings
+xtick.labelsize: 9
+ytick.labelsize: 9
+xtick.direction: in
+ytick.direction: in
+xtick.major.size: 5
+ytick.major.size: 5
+xtick.minor.size: 3
+ytick.minor.size: 3
+xtick.major.width: 0.8
+ytick.major.width: 0.8
+
+# Legend settings
+legend.fontsize: 9
+legend.frameon: True
+legend.framealpha: 0.9
+legend.edgecolor: black
+legend.loc: best
+
+# Line settings
+lines.linewidth: 2.0
+lines.markersize: 6
+lines.markerfacecolor: auto
+lines.markeredgewidth: 1.0
+
+# Color cycle - Colorblind-friendly palette (Okabe-Ito)
+axes.prop_cycle: cycler('color', [
+    '#E69F00',  # Orange
+    '#56B4E9',  # Sky Blue
+    '#009E73',  # Bluish Green
+    '#D55E00',  # Vermilion
+    '#CC79A7',  # Reddish Purple
+    '#0072B2',  # Blue
+    '#F0E442',  # Yellow
+    '#999999'   # Gray
+])
+
+# Grid settings (when enabled)
+grid.color: #CCCCCC
+grid.linestyle: --
+grid.linewidth: 0.5
+grid.alpha: 0.7
+
+# Error bar settings
+errorbar.capsize: 4
+errorbar.elinewidth: 1.5
+
+# Save figure settings
+savefig.dpi: 600
+savefig.format: pdf
+savefig.bbox: tight
+savefig.pad_inches: 0.1
+
+# Mathtext settings
+mathtext.fontset: cm
+mathtext.rm: Bitstream Vera Sans
+mathtext.it: Bitstream Vera Sans:italic
+mathtext.bf: Bitstream Vera Sans:bold

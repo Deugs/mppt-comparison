@@ -1,0 +1,93 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Maximum power point tracking (MPPT) is essential to extracting the
+available power from a photovoltaic (PV) module or array, whose I-V
+characteristic has a single global maximum under uniform illumination but
+can develop multiple local maxima under partial shading once bypass diodes
+begin conducting. Decades of MPPT research have produced a wide design
+space of tracking strategies; the seminal comparison in this same journal,
+\cite{esram2007comparison}, surveyed 19 such techniques, but as a narrative
+survey rather than a paradigm-structured, statistically-validated
+comparison, and predates both learning-based and model-based nonlinear
+control as MPPT approaches entirely. In the two decades since, the
+comparative literature built around that design space has instead
+converged on two recurring, increasingly saturated
+patterns: (i) re-comparing perturb-and-observe (P\&O), incremental
+conductance (IncCond), and fuzzy logic control against one another, and
+(ii) proposing yet another bio-inspired metaheuristic optimizer (grey wolf,
+particle swarm, whale, dung beetle, and so on), a pattern reviewers have
+grown visibly fatigued by. Neither pattern, on its own, demonstrates
+genuine coverage of the MPPT design space, and few published comparisons
+release open, reproducible code that a reviewer or reader can independently
+re-run.
+
+This paper takes a different approach on both axes. First, rather than
+adding a fifth variation on perturbative search or a new metaheuristic, we
+compare five algorithms chosen specifically to span four \emph{qualitatively
+distinct} MPPT design paradigms:
+\begin{itemize}
+  \item \textbf{Perturbative} -- P\&O with adaptive step size, and
+    IncCond, representing the classical baseline and its refinement;
+  \item \textbf{Rule-based} -- a fuzzy logic controller (FLC) with a
+    physically-justified 49-rule ($7\times7$) base and centroid
+    defuzzification;
+  \item \textbf{Learning-based (model-free)} -- tabular Q-learning, trained
+    on a subset of irradiance conditions and evaluated separately on
+    held-out conditions to directly test generalization rather than
+    memorization;
+  \item \textbf{Model-based nonlinear control} -- sliding mode control
+    (SMC) with a sliding surface on $dP/dV=0$, an exponential reaching law,
+    boundary-layer chattering mitigation, and an explicit Lyapunov
+    stability argument.
+\end{itemize}
+
+Second, every result in this paper is produced by a fully open-source,
+pure-Python simulation framework -- no MATLAB/Simulink dependency -- with
+pinned dependencies, a continuous-integration test suite, and Monte Carlo
+statistical rigor (50 independent runs per algorithm-scenario pair, using
+identical random seeds across algorithms for a fair paired comparison). The
+underlying photovoltaic model is a two-diode model with bypass-diode
+composition, quantitatively validated against a commercial Canadian Solar
+CS6P-250P datasheet rather than an idealized or unvalidated model, and the
+partial-shading test scenarios are constructed to produce two and three
+local maxima, directly probing each algorithm's global-search capability
+rather than only its local convergence speed.
+
+\subsection{Contributions}
+This paper makes the following contributions:
+\begin{enumerate}
+  \item A cross-paradigm comparison of five MPPT algorithms spanning
+    perturbative, rule-based, learning-based, and model-based control,
+    rather than variations on a single paradigm;
+  \item An open-source, pure-Python, CI-tested simulation framework
+    (two-diode PV model with bypass diodes, boost converter with
+    state-space small-signal model, unified algorithm interface, Monte
+    Carlo scenario runner) released for full reproducibility;
+  \item Explicit, separately-reported train-distribution and held-out
+    evaluation for the learning-based algorithm, directly addressing the
+    generalization-versus-memorization question that pooled reporting
+    would obscure;
+  \item A quantitative finding that all five algorithms -- across all four
+    paradigms, including the model-based SMC controller with its
+    Lyapunov-guaranteed local stability -- fail to reach the true global
+    maximum power point in the majority of the complex partial-shading
+    patterns tested, with the specific failure mode differing by paradigm
+    (Section~\ref{sec:results});
+  \item A fuzzy rule-base sensitivity analysis showing a reduced
+    $5\times5$ rule base statistically matches the full $7\times7$ base's
+    tracking efficiency, a result with direct computational-cost relevance
+    given fuzzy logic's substantially higher per-step cost relative to the
+    other four algorithms.
+\end{enumerate}
+
+The remainder of this paper is organized as follows.
+Section~\ref{sec:literature-review} positions this work against prior MPPT
+comparison literature, organized by the same four paradigms used above.
+Section~\ref{sec:pv-model} and Section~\ref{sec:converter-model} describe
+the photovoltaic and boost-converter models and their validation.
+Section~\ref{sec:algorithms} details all five algorithm implementations.
+Section~\ref{sec:scenarios} defines the test scenarios, Monte Carlo
+methodology, and metrics. Section~\ref{sec:results} presents statistical
+results and figures. Section~\ref{sec:conclusion} concludes with
+limitations and future work.

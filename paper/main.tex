@@ -1,0 +1,79 @@
+\documentclass[journal]{IEEEtran}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{url}
+
+\begin{document}
+
+\title{A Reproducible Open-Source Framework for Comparative MPPT Evaluation\\
+Across Perturbative, Rule-Based, Learning-Based, and Model-Based\\
+Control Paradigms Under Partial Shading}
+
+% Working title -- trim for length once the target journal's title-length
+% convention is confirmed (see CLAUDE.md, "Proposed paper title angle").
+
+\author{Eugene~Mensah-Ananoo%
+  \thanks{E. Mensah-Ananoo is with the Department of Information and
+  Communication Technology, Regional Maritime University, Accra, Ghana.
+  Manuscript prepared \today.}}
+
+\markboth{IEEE Transactions on Energy Conversion (draft manuscript)}{}
+
+\maketitle
+
+\begin{abstract}
+% 150-250 words, standalone, no citations, per publication_supplement.md's
+% pre-submission checklist. Drafted from the real project outcomes; trim to
+% length and finalize wording once the Introduction/Results text below is
+% considered final.
+Maximum power point tracking (MPPT) comparison studies are a saturated
+literature: most either compare perturb-and-observe (P\&O), incremental
+conductance (IncCond), and fuzzy logic variants, or propose yet another
+bio-inspired metaheuristic optimizer. This paper instead compares five MPPT
+algorithms spanning four genuinely distinct design paradigms --
+perturbative (P\&O, IncCond), rule-based (fuzzy logic), learning-based
+(tabular Q-learning), and model-based nonlinear control (sliding mode
+control, SMC, with a Lyapunov stability guarantee) -- under a common,
+open-source, pure-Python simulation framework. The framework uses a
+two-diode photovoltaic model with bypass-diode-induced partial shading,
+validated against a commercial Canadian Solar CS6P-250P datasheet, driving
+a boost converter under 11 test conditions (7 single-module scenarios plus
+4 partial-shading configurations), each evaluated over 50 Monte Carlo
+runs with identical random seeds across algorithms. Results show that
+sliding mode control achieves the highest steady-state tracking efficiency
+(99.90\%) and lowest oscillation, but all five algorithms -- including
+Q-learning -- fail to converge within 2\% of the true global maximum power
+point in the majority of complex partial-shading patterns tested, with
+perturbative and model-based algorithms converging instead to a shared
+local maximum and Q-learning (never trained on multi-module shading)
+failing in a qualitatively different, worse way. A reduced 5$\times$5 fuzzy
+rule base is shown to statistically match the full 7$\times$7 base's
+tracking efficiency, a rule-reduction result with direct computational
+relevance given fuzzy logic's measured $\sim$101$\times$ per-step
+computational cost relative to P\&O. All code, data, and figures are
+released under an open-source license for full reproducibility.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Maximum power point tracking, photovoltaic systems, sliding mode control,
+fuzzy logic control, reinforcement learning, partial shading, Monte Carlo
+simulation, reproducible research.
+\end{IEEEkeywords}
+
+\input{sections/01_introduction}
+\input{sections/02_literature_review}
+\input{sections/03_pv_model}
+\input{sections/04_converter_model}
+\input{sections/05_algorithms}
+\input{sections/06_scenarios}
+\input{sections/07_results}
+\input{sections/08_conclusion}
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}
