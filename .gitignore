@@ -1,9 +1,29 @@
-```
+```gitignore
+# Jupyter notebooks checkpoints
+.notebook_checkpoints/
+*/.ipynb_checkpoints/
+
 # Python
 __pycache__/
-*.py[cod]
-*$py.class
-*.so
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+.env
+.env.local
+.env.*
+.envrc
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.mypy_cache/
+.hypothesis/
+
+# Distribution / packaging
 .Python
 build/
 develop-eggs/
@@ -21,29 +41,21 @@ wheels/
 .installed.cfg
 *.egg
 
-# Logs
-logs/
-*.log
-
-# Results and data files
-results/monte_carlo/*.csv
-results/figures/
-
-# Environment
-.env
-.env.local
-.env.*
-.venv/
-venv/
-ENV/
-
-# IDE
+# IDEs
 .vscode/
 .idea/
 *.swp
 *.swo
 
-# OS
+# Logs
+*.log
+
+# OS generated files
 .DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
 Thumbs.db
 ```
