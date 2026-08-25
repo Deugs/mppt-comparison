@@ -404,7 +404,7 @@ def main():
     parser = argparse.ArgumentParser(
         description="Generate all Phase 4 figures from the MPPT comparison results."
     )
-    parser.add_argument("--input", type=str, default="results/comparison_table.csv")
+    parser.add_argument("--input", type=str, default="results/summary_table.csv")
     parser.add_argument("--output", type=str, default="results/figures/")
     parser.add_argument(
         "--skip-trajectories",
@@ -414,7 +414,8 @@ def main():
     args = parser.parse_args()
 
     df = pd.read_csv(args.input)
-    summary_df = analysis.summarize(df)
+    # summary_table.csv is already in summarized format, no need to call analyze.summarize()
+    summary_df = df
     fuzzy_df = analysis.fuzzy_sensitivity_table(summary_df)
 
     paths = generate_all_aggregate_figures(summary_df, fuzzy_df, args.output)

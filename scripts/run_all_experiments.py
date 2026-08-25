@@ -50,7 +50,7 @@ from src.simulate import pv_operating_point as simulate_pv_operating_point
 from src.pv_model import PVModule, TwoDiodeParameters, extract_two_diode_parameters
 from src import scenarios as scenarios_module
 from src import config
-from src.stats.bootstrap import bootstrap_confidence_interval
+from src.stats.bootstrap import bootstrap_confidence_interval, BootstrapCI
 from src.stats.hypothesis_tests import wilcoxon_signed_rank
 
 
@@ -59,12 +59,11 @@ class BootstrapAnalyzer:
     
     def __init__(self, n_bootstrap=1000):
         self.n_bootstrap = n_bootstrap
+        self.bootstrap_ci = BootstrapCI(n_bootstrap=n_bootstrap, confidence_level=0.95)
     
-    def confidence_interval(self, data, confidence=0.95):
+    def compute_ci(self, data, confidence=0.95):
         """Compute bootstrap confidence interval."""
-        return bootstrap_confidence_interval(
-            data, n_bootstrap=self.n_bootstrap, confidence_level=confidence
-        )
+        return self.bootstrap_ci.compute_ci(data)
 
 
 class HypothesisTester:
@@ -340,7 +339,8 @@ def compute_statistics(monte_carlo_df):
         # Bootstrap confidence intervals
         if n >= 10:
             bootstrap_analyzer = BootstrapAnalyzer(n_bootstrap=1000)
-            ci_low, ci_high = bootstrap_analyzer.confidence_interval(values.values, confidence=0.95)
+            result = bootstrap_analyzer.compute_ci(values.values)
+            ci_low, ci_high = result.ci_lower, result.ci_upper
         else:
             ci_low, ci_high = mean_val - 1.96 * std_val / np.sqrt(n), mean_val + 1.96 * std_val / np.sqrt(n)
         
@@ -395,20 +395,24 @@ def run_hypothesis_tests(stats_df):
                     data1 = scenario_data[scenario_data["algorithm"] == algo1]["mean"].values
                     data2 = scenario_data[scenario_data["algorithm"] == algo2]["mean"].values
                     
-                    if len(data1) > 0 and len(data2) > 0:
+                    if len(data1) >= 6 and len(data2) >= 6:
                         # Wilcoxon signed-rank test
-                        stat, pvalue = tester.wilcoxon_test(data1, data2)
-                        
-                        test_results.append({
-                            "scenario": scenario,
-                            "metric": metric,
-                            "algorithm_1": algo1,
-                            "algorithm_2": algo2,
-                            "test_statistic": stat,
-                            "p_value": pvalue,
-                            "significant_at_0.05": pvalue < 0.05,
-                            "significant_at_0.01": pvalue < 0.01,
-                        })
+                        try:
+                            stat, pvalue = tester.wilcoxon_test(data1, data2)
+                            
+                            test_results.append({
+                                "scenario": scenario,
+                                "metric": metric,
+                                "algorithm_1": algo1,
+                                "algorithm_2": algo2,
+                                "test_statistic": stat,
+                                "p_value": pvalue,
+                                "significant_at_0.05": pvalue < 0.05,
+                                "significant_at_0.01": pvalue < 0.01,
+                            })
+                        except ValueError:
+                            # Skip if test fails (e.g., all differences are zero)
+                            pass
     
     return pd.DataFrame(test_results)
 
