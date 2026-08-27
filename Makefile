@@ -30,9 +30,9 @@ DATA_DIR := data
 
 # Files
 REQUIREMENTS := requirements.txt
-MAIN_SCRIPT := scripts/run_all_experiments.py
+MONTE_CARLO_RUNS := 50
 
-.PHONY: all test lint format run plot paper clean docker-build docker-run help
+.PHONY: all test test-cov lint format check-format run analyze plot paper paper-clean clean clean-data clean-figs clean-pycache docker-build docker-run docker-shell repro-check help
 
 # ==============================================================================
 # Default target: complete pipeline
@@ -74,29 +74,21 @@ check-format:
 # Experiments
 # ==============================================================================
 run:
-	@echo "Running all experiments..."
-	$(PYTHON) $(MAIN_SCRIPT)
+	@echo "Running full Monte Carlo sweep ($(MONTE_CARLO_RUNS) runs x 11 scenarios x 5 algorithms)..."
+	$(PYTHON) -m src.scenarios --monte-carlo $(MONTE_CARLO_RUNS) --output $(RESULTS_DIR)/
 	@echo "✓ Experiments completed"
 
-run-partial:
-	@echo "Running partial shading experiments..."
-	$(PYTHON) scripts/run_partial_shading.py
-
-run-monte-carlo:
-	@echo "Running Monte Carlo simulations..."
-	$(PYTHON) scripts/monte_carlo_analysis.py --n-runs 100
+analyze:
+	@echo "Running statistical analysis (ANOVA, paired t-tests, summary tables)..."
+	$(PYTHON) -m src.analysis --input $(RESULTS_DIR)/comparison_table.csv --output $(RESULTS_DIR)/
 
 # ==============================================================================
 # Visualization
 # ==============================================================================
-plot:
+plot: analyze
 	@echo "Generating publication-ready figures..."
-	$(PYTHON) scripts/generate_figures.py --style publication
+	$(PYTHON) -m src.plotting --input $(RESULTS_DIR)/summary_table.csv --output $(FIGURES_DIR)/
 	@echo "✓ Figures saved to $(FIGURES_DIR)/"
-
-plot-interactive:
-	@echo "Generating interactive dashboard..."
-	$(PYTHON) scripts/interactive_dashboard.py
 
 # ==============================================================================
 # Paper Compilation
@@ -181,13 +173,11 @@ help:
 	@echo "    make check-format Check formatting without changes"
 	@echo ""
 	@echo "  Experiments:"
-	@echo "    make run          Execute all experiments"
-	@echo "    make run-partial  Run partial shading experiments"
-	@echo "    make run-monte-carlo  Run Monte Carlo analysis"
+	@echo "    make run          Run full Monte Carlo sweep (50 runs x 11 scenarios x 5 algorithms)"
+	@echo "    make analyze      Compute summary/ANOVA/t-test tables from results/comparison_table.csv"
 	@echo ""
 	@echo "  Visualization:"
 	@echo "    make plot         Generate publication figures"
-	@echo "    make plot-interactive  Create interactive dashboard"
 	@echo ""
 	@echo "  Paper:"
 	@echo "    make paper        Compile LaTeX paper"

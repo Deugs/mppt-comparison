@@ -3,21 +3,22 @@
 ## Pre-Submission Verification
 
 ### ✅ Codebase Status
-- [x] All experiments rerun with updated scripts
-- [x] Results generated (38,500 Monte Carlo data points)
-- [x] Figures created in `results/figures/` (16 files, PNG + SVG)
-- [x] Statistical analysis completed (bootstrap CI, hypothesis testing)
-- [x] SOTA baselines implemented (PSO-MPPT, Neural Network MPPT)
+- [x] Results generated: 5 algorithms x 11 scenarios x 50-run Monte Carlo sweep (`results/comparison_table.csv`)
+- [x] Figures created in `results/figures/` (PNG + SVG)
+- [x] Statistical analysis completed (ANOVA, paired t-tests, Wilson-score convergence-rate CIs -- `src/analysis.py`)
 - [x] Reproducibility tools ready (Dockerfile, Makefile)
-- [x] Git tag created: `v1.0-submission`
+- [ ] **Action Required**: Tag release (e.g. `v1.0.0-ieee-submission` per `CLAUDE.md`'s Open-Source Strategy) once ready to submit
+
+Out of scope for this paper: metaheuristic (PSO) and ANN-based MPPT baselines
+are explicitly reserved for Papers 2-3 of the research program -- see
+`RESEARCH_PROGRAM.md`. Do not add them here.
 
 ### ✅ Documentation Status
 - [x] `README.md` updated with latest results and reproduction commands
 - [x] `main.tex` updated with new figures, tables, and statistical results
-- [x] `docs/paper_draft.md` synchronized with experimental findings
-- [x] `docs/research_plan.md` marked as complete
 - [x] Cover letter draft created: `docs/cover_letter.md`
 - [x] Data availability statement: `docs/data_availability.md`
+- [ ] **Action Required**: `CLAUDE.md`'s Status/TODO section reflects the current checklist -- review before submission
 
 ### ✅ Manuscript Quality
 - [ ] **Action Required**: Compile `main.tex` and verify PDF output
@@ -30,9 +31,9 @@
 - [ ] **Action Required**: Push all changes to remote repository
   ```bash
   git push origin main
-  git push origin v1.0-submission
+  git push origin v1.0.0-ieee-submission
   ```
-- [ ] **Action Required**: Create GitHub Release from tag `v1.0-submission`
+- [ ] **Action Required**: Create GitHub Release from tag `v1.0.0-ieee-submission`
 - [ ] **Action Required**: Connect repository to Zenodo for DOI generation
 - [ ] **Action Required**: Verify repository is public (or set to public before submission)
 
@@ -60,8 +61,8 @@
 - [ ] Prepare cover letter emphasizing novelty
 
 ### ✅ Supplementary Materials
-- [ ] Docker image built and tested locally
-- [ ] `run_all_experiments.sh` verified on clean environment
+- [ ] Docker image built and tested locally (`make docker-build`)
+- [ ] Full pipeline (`make run analyze plot`) verified on a clean environment
 - [ ] Raw data files organized and documented
 - [ ] README includes troubleshooting section
 
