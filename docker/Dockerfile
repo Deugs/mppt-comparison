@@ -50,8 +50,8 @@ FROM base as runtime
 # Copy only necessary files
 COPY src/ ./src/
 COPY data/ ./data/
-COPY results/ ./results/ 2>/dev/null || true
-COPY scripts/ ./scripts/ 2>/dev/null || true
+COPY results/ ./results/
+COPY scripts/ ./scripts/
 COPY Makefile ./
 
 # Create non-root user for security
@@ -93,7 +93,7 @@ RUN tlmgr install \
     xcolor
 
 COPY paper/ ./paper/
-COPY results/ ./results/ 2>/dev/null || true
+COPY results/ ./results/
 
 WORKDIR /paper/paper
 CMD ["pdflatex", "-interaction=nonstopmode", "main.tex"]

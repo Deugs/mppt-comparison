@@ -29,11 +29,13 @@ make all
 
 # Or run steps individually:
 
-# Run the full Monte Carlo sweep with 9 algorithms across 5 scenarios (~2 hours)
-python scripts/run_all_experiments.py --n-runs 10
+# Run the full Monte Carlo sweep: 5 algorithms x 11 scenarios x 50 runs (~90 min)
+python -m src.scenarios --monte-carlo 50 --output results/
+# -> results/comparison_table.csv (long-format raw data)
 
-# Statistical analysis is automatically computed during experiments
-# Results saved to results/summary_table.csv and results/comparison_table.csv
+# Compute summary statistics, ANOVA, and paired t-tests
+python -m src.analysis --input results/comparison_table.csv --output results/
+# -> results/summary_table.csv, results/statistical_tests.csv, results/fuzzy_sensitivity_table.csv
 
 # Generate all figures (.png + .svg at 300 DPI, colorblind-safe)
 python -m src.plotting --input results/summary_table.csv --output results/figures/
@@ -41,38 +43,31 @@ python -m src.plotting --input results/summary_table.csv --output results/figure
 
 ## Results Summary
 
-**Latest Run:** August 24, 2026  
-**Total Experiments:** 38,500 data points (9 algorithms × 5 scenarios × 10 runs × ~8 metrics)  
-
-### Key Findings (STC Steady-State)
-
-| Algorithm | Tracking Efficiency (%) | Convergence Time (s) | Energy Yield (J) |
-|-----------|------------------------|---------------------|------------------|
-| PSO-MPPT | 99.4 ± 0.3 | 0.08 ± 0.02 | 69.8 ± 0.5 |
-| Fuzzy (5×5) | 99.1 ± 0.4 | 0.06 ± 0.01 | 69.4 ± 0.6 |
-| Fuzzy (3×3) | 96.5 ± 0.8 | 0.30 ± 0.05 | 67.6 ± 1.2 |
-| P&O | 97.7 ± 0.6 | 0.15 ± 0.03 | 68.4 ± 0.9 |
-| Neural MPPT | 98.2 ± 0.5 | 0.12 ± 0.02 | 68.9 ± 0.7 |
-| IncCond | 79.2 ± 2.1 | — | 55.5 ± 3.2 |
-
-*Values shown as mean ± 95% CI. Full statistical analysis in `results/summary_table.csv`.*
+See `CLAUDE.md`'s Phase 4 notes for the full, verified set of headline
+findings from the 50-run x 11-scenario x 5-algorithm sweep (partial-shading
+global-search failure, the Q-learning train/held-out generalization gap, the
+fuzzy 5x5-vs-7x7 rule-reduction result, and per-algorithm computational
+burden). Per-metric numbers with confidence intervals live in
+`results/summary_table.csv`; ANOVA/paired-t-test results live in
+`results/statistical_tests.csv`. Only 5 algorithms are compared in this
+paper — see `RESEARCH_PROGRAM.md` for why metaheuristic/ANN baselines are
+out of scope here and reserved for later papers in the series.
 
 ### Generated Figures
 
-All figures available in `results/figures/` in both PNG (300 DPI) and SVG formats:
+Figures are written to `results/figures/` in both PNG (300 DPI) and SVG formats:
 
 - **Metric Comparisons:** Bar charts with error bars for tracking efficiency, energy yield ratio, oscillation metrics
 - **Convergence Heatmaps:** Algorithm performance across scenarios for convergence and settling rates
-- **Fuzzy Sensitivity Analysis:** Impact of rule base size (3×3 vs 5×5) on performance
+- **Fuzzy Sensitivity Analysis:** Impact of rule base size (3×3 vs 5×5 vs 7×7) on performance
 - **Tracking Trajectories:** Time-series plots showing power tracking during steady-state and partial shading
-- **Computational Burden:** Comparison of execution time and memory usage
+- **Computational Burden:** Comparison of per-step execution time
 - **Q-Learning Analysis:** Training vs. held-out performance comparison
 
 ### Statistical Validation
 
-- Bootstrap confidence intervals (95%) computed for all metrics
-- Wilcoxon signed-rank tests for pairwise algorithm comparisons
-- Convergence rates with Wilson score intervals
+- One-way ANOVA and paired t-tests (paired by Monte Carlo run ID) across the 5 core algorithms — `src/analysis.py`
+- Convergence/settling rates reported with Wilson-score 95% confidence intervals
 - Full hypothesis test results in `results/statistical_tests.csv`
 
 ## Reference Panel

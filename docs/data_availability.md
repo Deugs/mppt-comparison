@@ -8,13 +8,13 @@ All data, code, and experimental configurations supporting the findings of this 
 
 The repository includes:
 
-1. **Source Code**: Complete implementation of all 9 MPPT algorithms (P&O, Incremental Conductance, Fuzzy Logic, Sliding Mode, Q-Learning, PSO-MPPT, Neural Network MPPT, etc.), PV system models, DC-DC converter simulations, and statistical analysis modules.
+1. **Source Code**: Complete implementation of all 5 MPPT algorithms compared in this paper (P&O, Incremental Conductance, Fuzzy Logic, Q-Learning, Sliding Mode Control), the two-diode PV model, and DC-DC boost converter model. Metaheuristic (PSO) and ANN-based MPPT are explicitly out of scope for this paper -- see `RESEARCH_PROGRAM.md`.
 
-2. **Experimental Data**: 
-   - Raw Monte Carlo simulation results (38,500 data points)
-   - Aggregated performance metrics with 95% confidence intervals
-   - Statistical test results (Wilcoxon signed-rank tests, ANOVA)
-   - Located in: `results/data/`
+2. **Experimental Data**:
+   - Raw Monte Carlo simulation results: 5 algorithms x 11 scenarios x 50 runs per scenario-algorithm pair, long format (`results/comparison_table.csv`)
+   - Aggregated performance metrics with 95% confidence intervals (`results/summary_table.csv`)
+   - Statistical test results (one-way ANOVA, paired t-tests -- `results/statistical_tests.csv`)
+   - Fuzzy rule-base sensitivity analysis (`results/fuzzy_sensitivity_table.csv`)
 
 3. **Figures and Visualizations**:
    - All publication-quality figures in PNG and SVG formats
@@ -23,13 +23,12 @@ The repository includes:
 
 4. **Reproducibility Tools**:
    - Dockerfile for containerized environment
-   - Makefile with one-command reproduction (`make all`)
-   - Master experiment scripts
+   - Makefile with `run`/`analyze`/`plot` targets (`make all` for the full pipeline)
    - Located in: root directory and `scripts/`
 
 5. **Documentation**:
    - README.md with setup and usage instructions
-   - Research plan and methodology documentation
+   - `CLAUDE.md` with the full research/implementation plan and status log
    - Cover letter template
    - LaTeX manuscript source files
    - Located in: `docs/`
@@ -40,8 +39,8 @@ The repository includes:
 ```bash
 git clone [GitHub Repository URL]
 cd [repository-name]
-docker build -t mppt-benchmark .
-docker run --rm mppt-benchmark make all
+make docker-build
+make docker-run
 ```
 
 #### Option 2: Zenodo Archive (upon acceptance)
@@ -59,7 +58,7 @@ For questions regarding the data or code, please contact:
 
 ### Version Information
 
-- **Current Version**: v1.0-submission
+- **Current Version**: v1.0.0-ieee-submission
 - **Tag Date**: [Date]
 - **Commit Hash**: [Git Commit SHA]
 

@@ -3,376 +3,309 @@
 Generate Jupyter notebooks from experiment results for interactive exploration.
 Creates notebooks for:
 1. Results overview and summary statistics
-2. Algorithm comparison visualizations
-3. Statistical analysis deep-dive
-4. Reproducibility demonstration
+2. Statistical analysis deep-dive (ANOVA / paired t-tests)
+3. Reproducibility demonstration
+
+Notebooks are built as plain Python dicts and written with json.dump() so
+that cell source code (which routinely contains embedded double quotes,
+e.g. f"...") is escaped correctly by the json module instead of by hand.
 """
 
-import os
 import json
 from pathlib import Path
 
 NOTEBOOKS_DIR = Path(__file__).parent.parent / "notebooks"
 RESULTS_DIR = Path(__file__).parent.parent / "results"
-# Find the latest raw data file
-MONTE_CARLO_DIR = RESULTS_DIR / "monte_carlo"
-DATA_FILES = list(MONTE_CARLO_DIR.glob("raw_data_*.csv"))
-if DATA_FILES:
-    DATA_FILE = max(DATA_FILES, key=lambda p: p.stat().st_mtime)
-else:
-    DATA_FILE = None
+
+SUMMARY_FILE = RESULTS_DIR / "summary_table.csv"
+COMPARISON_FILE = RESULTS_DIR / "comparison_table.csv"
+STATS_FILE = RESULTS_DIR / "statistical_tests.csv"
+
+
+def _lines(text):
+    """Split multi-line text into an nbformat source list (each line, '\\n'-terminated except the last)."""
+    parts = text.strip("\n").split("\n")
+    return [p + "\n" for p in parts[:-1]] + [parts[-1]]
+
+
+def _cell(cell_type, source_text):
+    cell = {
+        "cell_type": cell_type,
+        "metadata": {},
+        "source": _lines(source_text),
+    }
+    if cell_type == "code":
+        cell["execution_count"] = None
+        cell["outputs"] = []
+    return cell
+
+
+NOTEBOOK_METADATA = {
+    "kernelspec": {"display_name": "Python 3", "language": "python", "name": "python3"},
+    "language_info": {"name": "python", "version": "3.11.0"},
+}
+
+
+def _write_notebook(filename, cells):
+    notebook = {
+        "cells": cells,
+        "metadata": NOTEBOOK_METADATA,
+        "nbformat": 4,
+        "nbformat_minor": 4,
+    }
+    path = NOTEBOOKS_DIR / filename
+    with open(path, "w") as f:
+        json.dump(notebook, f, indent=1)
+        f.write("\n")
+    print(f"✓ Created: {filename}")
 
 
 def create_overview_notebook():
     """Create notebook 1: Results Overview"""
-    content = '''{
- "cells": [
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "# MPPT Algorithm Comparison: Results Overview\\n",
-    "\\n",
-    "This notebook provides an interactive exploration of the Monte Carlo simulation results comparing 9 MPPT algorithms across 5 scenarios.\\n",
-    "\\n",
-    "**Key Metrics:**\\n",
-    "- Tracking Efficiency (%)\\n",
-    "- Convergence Time (s)\\n",
-    "- Steady-State Ripple (%)\\n",
-    "- Computational Burden (ms/step)\\n",
-    "\\n",
-    "**Algorithms:** P&O, Incremental Conductance, Fuzzy Logic, Sliding Mode, Q-Learning, PSO-MPPT, Neural MPPT, Hill Climbing, Beta Method\\n",
-    "\\n",
-    "**Scenarios:** Steady State, Step Change, Temperature Variation, Partial Shading, Rapid Irradiance Change"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "import pandas as pd\\n",
-    "import numpy as np\\n",
-    "import matplotlib.pyplot as plt\\n",
-    "import seaborn as sns\\n",
-    "\\n",
-    "plt.style.use('../styles/publication.mplstyle')\\n",
-    "%matplotlib inline"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Load aggregated results\\n",
-    "df = pd.read_csv('../results/aggregated_results.csv')\\n",
-    "print(f\"Total experiments: {len(df)}\")\\n",
-    "print(f\"\\\\nColumns: {list(df.columns)}\")\\n",
-    "df.head()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Summary statistics by algorithm\\n",
-    "summary = df.groupby('algorithm')[['efficiency_mean', 'convergence_time_mean', 'ripple_mean']].agg(['mean', 'std', 'min', 'max'])\\n",
-    "summary"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Performance heatmap\\n",
-    "pivot_eff = df.pivot_table(values='efficiency_mean', index='scenario', columns='algorithm', aggfunc='mean')\\n",
-    "plt.figure(figsize=(12, 6))\\n",
-    "sns.heatmap(pivot_eff, annot=True, fmt='.2f', cmap='YlGnBu', linewidths=0.5)\\n",
-    "plt.title('Tracking Efficiency (%) by Algorithm and Scenario')\\n",
-    "plt.tight_layout()\\n",
-    "plt.savefig('../results/figures/notebook_efficiency_heatmap.png', dpi=300)\\n",
-    "plt.show()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Convergence time comparison\\n",
-    "plt.figure(figsize=(12, 6))\\n",
-    "sns.boxplot(data=df, x='algorithm', y='convergence_time_mean', palette='colorblind')\\n",
-    "plt.xticks(rotation=45, ha='right')\\n",
-    "plt.ylabel('Convergence Time (s)')\\n",
-    "plt.title('Convergence Time Distribution Across Scenarios')\\n",
-    "plt.tight_layout()\\n",
-    "plt.savefig('../results/figures/notebook_convergence_boxplot.png', dpi=300)\\n",
-    "plt.show()"
-   ]
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "name": "python",
-   "version": "3.12.0"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 4
-}'''
-    
-    with open(NOTEBOOKS_DIR / "01_results_overview.ipynb", 'w') as f:
-        f.write(content)
-    print("✓ Created: 01_results_overview.ipynb")
+    cells = [
+        _cell(
+            "markdown",
+            """
+# MPPT Algorithm Comparison: Results Overview
+
+Interactive exploration of the Monte Carlo simulation results comparing the
+5 MPPT algorithms in this paper -- spanning perturbative (P&O, IncCond),
+rule-based (Fuzzy Logic), learning-based (Q-learning), and model-based
+(Sliding Mode Control) paradigms -- across 11 test scenarios (steady state,
+irradiance/temperature transients, partial shading, sensor noise, and
+rapid fluctuation).
+
+**Key metrics:** tracking efficiency (%), convergence time (s), settling
+time (s), steady-state oscillation, energy yield ratio, and per-step
+execution time. See `CLAUDE.md` for full scenario and metric definitions.
+""",
+        ),
+        _cell(
+            "code",
+            """
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+
+plt.style.use('../styles/publication.mplstyle')
+%matplotlib inline
+""",
+        ),
+        _cell(
+            "code",
+            """
+# Per (algorithm, scenario, metric) descriptive statistics, produced by:
+#   python -m src.analysis --input results/comparison_table.csv --output results/
+summary = pd.read_csv('../results/summary_table.csv')
+print(f"Rows: {len(summary)}")
+print(f"Algorithms: {sorted(summary['algorithm'].unique())}")
+print(f"Scenarios: {sorted(summary['scenario'].unique())}")
+summary.head()
+""",
+        ),
+        _cell(
+            "code",
+            """
+# Tracking efficiency heatmap: algorithm x scenario
+eff = summary[summary['metric'] == 'tracking_efficiency_pct']
+pivot_eff = eff.pivot_table(values='mean', index='scenario', columns='algorithm')
+
+fig, ax = plt.subplots(figsize=(12, 6))
+im = ax.imshow(pivot_eff.values, cmap='viridis', aspect='auto')
+ax.set_xticks(range(len(pivot_eff.columns)))
+ax.set_xticklabels(pivot_eff.columns, rotation=45, ha='right')
+ax.set_yticks(range(len(pivot_eff.index)))
+ax.set_yticklabels(pivot_eff.index)
+for i in range(pivot_eff.shape[0]):
+    for j in range(pivot_eff.shape[1]):
+        val = pivot_eff.values[i, j]
+        if not np.isnan(val):
+            ax.text(j, i, f"{val:.1f}", ha='center', va='center', color='white', fontsize=8)
+ax.set_title('Tracking Efficiency (%) by Algorithm and Scenario')
+fig.colorbar(im, ax=ax, label='Tracking efficiency (%)')
+plt.tight_layout()
+plt.savefig('../results/figures/notebook_efficiency_heatmap.png', dpi=300)
+plt.show()
+""",
+        ),
+        _cell(
+            "code",
+            """
+# Convergence time distribution per algorithm, from the raw Monte Carlo runs
+raw = pd.read_csv('../results/comparison_table.csv')
+conv = raw[raw['metric'] == 'convergence_time_s'].dropna(subset=['value'])
+
+fig, ax = plt.subplots(figsize=(12, 6))
+algorithms = sorted(conv['algorithm'].unique())
+data = [conv[conv['algorithm'] == a]['value'].values for a in algorithms]
+ax.boxplot(data, tick_labels=algorithms)
+ax.set_xticklabels(algorithms, rotation=45, ha='right')
+ax.set_ylabel('Convergence time (s)')
+ax.set_title('Convergence Time Distribution Across Scenarios')
+plt.tight_layout()
+plt.savefig('../results/figures/notebook_convergence_boxplot.png', dpi=300)
+plt.show()
+""",
+        ),
+    ]
+    _write_notebook("01_results_overview.ipynb", cells)
 
 
 def create_statistical_analysis_notebook():
     """Create notebook 2: Statistical Analysis Deep-Dive"""
-    content = '''{
- "cells": [
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "# Statistical Analysis of MPPT Algorithms\\n",
-    "\\n",
-    "This notebook performs rigorous statistical validation of performance differences between algorithms.\\n",
-    "\\n",
-    "**Analyses:**\\n",
-    "- Bootstrap Confidence Intervals (95%)\\n",
-    "- Wilcoxon Signed-Rank Tests\\n",
-    "- ANOVA for multi-algorithm comparison\\n",
-    "- Effect Size Calculations"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "import pandas as pd\\n",
-    "import numpy as np\\n",
-    "from scipy import stats\\n",
-    "import sys\\n",
-    "sys.path.append('../src')\\n",
-    "from stats.bootstrap import bootstrap_confidence_interval, hypothesis_test\\n",
-    "\\n",
-    "import matplotlib.pyplot as plt\\n",
-    "plt.style.use('../styles/publication.mplstyle')"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "df = pd.read_csv('../results/aggregated_results.csv')\\n",
-    "print(f\"Dataset: {len(df)} experiments\")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Bootstrap confidence intervals for top performers\\n",
-    "algorithms = df['algorithm'].unique()\\n",
-    "print(\"95% Confidence Intervals for Tracking Efficiency:\\\\n\")\\n",
-    "for algo in algorithms:\\n",
-    "    data = df[df['algorithm'] == algo]['efficiency_mean'].values\\n",
-    "    ci_low, ci_high = bootstrap_confidence_interval(data, n_bootstrap=1000, confidence_level=0.95)\\n",
-    "    mean_eff = np.mean(data)\\n",
-    "    print(f\"{algo:20s}: {mean_eff:.2f}% [{ci_low:.2f}%, {ci_high:.2f}%]\")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Pairwise Wilcoxon tests (PSO-MPPT vs others)\\n",
-    "baseline = df[df['algorithm'] == 'PSO-MPPT']['efficiency_mean'].values\\n",
-    "print(\"\\\\nWilcoxon Signed-Rank Test (vs PSO-MPPT):\\\\n\")\\n",
-    "for algo in algorithms:\\n",
-    "    if algo != 'PSO-MPPT':\\n",
-    "        other = df[df['algorithm'] == algo]['efficiency_mean'].values\\n",
-    "        stat, pvalue = stats.wilcoxon(baseline[:len(other)], other)\\n",
-    "        sig = "***" if pvalue < 0.001 else "**" if pvalue < 0.01 else "*" if pvalue < 0.05 else "ns"\\n",
-    "        print(f"{algo:20s}: p={pvalue:.4f} {sig}")"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# One-way ANOVA across all algorithms\\n",
-    "groups = [df[df['algorithm'] == algo]['efficiency_mean'].values for algo in algorithms]\\n",
-    "f_stat, p_value = stats.f_oneway(*groups)\\n",
-    "print(f\"\\\\nANOVA Results:\")\\n",
-    "print(f\"F-statistic: {f_stat:.2f}\")\\n",
-    "print(f\"p-value: {p_value:.2e}\")\\n",
-    "print(f\"Significant difference: {'Yes' if p_value < 0.05 else 'No'}\")"
-   ]
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "name": "python",
-   "version": "3.12.0"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 4
-}'''
-    
-    with open(NOTEBOOKS_DIR / "02_statistical_analysis.ipynb", 'w') as f:
-        f.write(content)
-    print("✓ Created: 02_statistical_analysis.ipynb")
+    cells = [
+        _cell(
+            "markdown",
+            """
+# Statistical Analysis of MPPT Algorithms
+
+Loads the ANOVA and paired-t-test results produced by `src/analysis.py`
+(`run_anova`, `run_pairwise_ttests`) over the 5 core algorithms, paired by
+Monte Carlo run ID per the identical-seed design in `src/scenarios.py`.
+
+**Analyses:**
+- One-way ANOVA across all 5 algorithms, per (scenario, metric)
+- Paired t-tests between each algorithm pair, per (scenario, metric)
+- Convergence/settling rates with Wilson-score 95% confidence intervals
+""",
+        ),
+        _cell(
+            "code",
+            """
+import pandas as pd
+
+summary = pd.read_csv('../results/summary_table.csv')
+stats_df = pd.read_csv('../results/statistical_tests.csv')
+print(f"Summary rows: {len(summary)}")
+print(f"Statistical test rows: {len(stats_df)} ({(stats_df['test'] == 'anova').sum()} ANOVA, "
+      f"{(stats_df['test'] == 'paired_ttest').sum()} paired t-test)")
+""",
+        ),
+        _cell(
+            "code",
+            """
+# Mean tracking efficiency with 95% CI at steady state, per algorithm
+steady = summary[(summary['scenario'] == 'steady_state') & (summary['metric'] == 'tracking_efficiency_pct')]
+steady[['algorithm', 'mean', 'ci95_low', 'ci95_high', 'n_valid']].sort_values('mean', ascending=False)
+""",
+        ),
+        _cell(
+            "code",
+            """
+# ANOVA across all 5 algorithms for tracking efficiency, one row per scenario
+anova = stats_df[(stats_df['test'] == 'anova') & (stats_df['metric'] == 'tracking_efficiency_pct')]
+anova
+""",
+        ),
+        _cell(
+            "code",
+            """
+# Paired t-tests for tracking efficiency at steady state
+ttests = stats_df[
+    (stats_df['test'] == 'paired_ttest')
+    & (stats_df['scenario'] == 'steady_state')
+    & (stats_df['metric'] == 'tracking_efficiency_pct')
+]
+ttests
+""",
+        ),
+    ]
+    _write_notebook("02_statistical_analysis.ipynb", cells)
 
 
 def create_reproducibility_notebook():
     """Create notebook 3: Reproducibility Demo"""
-    content = '''{
- "cells": [
-  {
-   "cell_type": "markdown",
-   "metadata": {},
-   "source": [
-    "# Reproducibility Demonstration\\n",
-    "\\n",
-    "This notebook demonstrates how to reproduce key results from the paper using the provided codebase.\\n",
-    "\\n",
-    "**Steps:**\\n",
-    "1. Load raw simulation data\\n",
-    "2. Recreate Figure 3 (Tracking Trajectories)\\n",
-    "3. Verify statistical claims\\n",
-    "4. Run custom scenario"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "import pandas as pd\\n",
-    "import matplotlib.pyplot as plt\\n",
-    "import sys\\n",
-    "sys.path.append('../src')\\n",
-    "\\n",
-    "plt.style.use('../styles/publication.mplstyle')\\n",
-    "%matplotlib inline"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Load raw trace data\\n",
-    "trace_file = '../results/raw_data/pso_mppt_steady_state_run_0.csv'\\n",
-    "trace_df = pd.read_csv(trace_file)\\n",
-    "print(f\"Loaded trace: {len(trace_df)} time steps\")\\n",
-    "trace_df.head()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Recreate tracking trajectory plot\\n",
-    "fig, ax = plt.subplots(figsize=(10, 6))\\n",
-    "ax.plot(trace_df['time'], trace_df['power'], label='Output Power', linewidth=2)\\n",
-    "ax.plot(trace_df['time'], trace_df['p_ref'], '--', label='Reference Power', linewidth=2)\\n",
-    "ax.set_xlabel('Time (s)')\\n",
-    "ax.set_ylabel('Power (W)')\\n",
-    "ax.legend()\\n",
-    "ax.grid(True, alpha=0.3)\\n",
-    "plt.tight_layout()\\n",
-    "plt.savefig('../results/figures/notebook_reproduced_trajectory.png', dpi=300)\\n",
-    "plt.show()"
-   ]
-  },
-  {
-   "cell_type": "code",
-   "execution_count": null,
-   "metadata": {},
-   "outputs": [],
-   "source": [
-    "# Verify efficiency calculation\\n",
-    "efficiency = (trace_df['power'].mean() / trace_df['p_ref'].mean()) * 100\\n",
-    "print(f\"Calculated efficiency: {efficiency:.2f}%\")\\n",
-    "print(f\"Reported efficiency in paper: ~99.4%\")\\n",
-    "print(f\"Match: {abs(efficiency - 99.4) < 1.0}\")"
-   ]
-  }
- ],
- "metadata": {
-  "kernelspec": {
-   "display_name": "Python 3",
-   "language": "python",
-   "name": "python3"
-  },
-  "language_info": {
-   "name": "python",
-   "version": "3.12.0"
-  }
- },
- "nbformat": 4,
- "nbformat_minor": 4
-}'''
-    
-    with open(NOTEBOOKS_DIR / "03_reproducibility_demo.ipynb", 'w') as f:
-        f.write(content)
-    print("✓ Created: 03_reproducibility_demo.ipynb")
+    cells = [
+        _cell(
+            "markdown",
+            """
+# Reproducibility Demonstration
+
+Demonstrates reproducing a tracking-trajectory result directly from the
+codebase (no stored per-timestep trace files are shipped -- trajectories
+are always regenerated live from `src/scenarios.py`, the same code path
+used to produce the paper's trajectory figures).
+
+**Steps:**
+1. Build the validated PV model and the 5 MPPT algorithms
+2. Re-simulate the steady-state (STC) scenario for P&O
+3. Recreate a tracking-trajectory plot
+4. Recompute tracking efficiency and compare against `results/summary_table.csv`
+""",
+        ),
+        _cell(
+            "code",
+            """
+import sys
+sys.path.append('..')
+import numpy as np
+import matplotlib.pyplot as plt
+
+plt.style.use('../styles/publication.mplstyle')
+%matplotlib inline
+""",
+        ),
+        _cell(
+            "code",
+            """
+from src import config
+from src.pv_model import TwoDiodeModel, extract_two_diode_parameters
+from src.scenarios import build_default_algorithms, scenario_steady_state, run_scenario
+
+panel_params = extract_two_diode_parameters(
+    voc=config.PANEL_VOC_STC, isc=config.PANEL_ISC_STC,
+    vmp=config.PANEL_VMP_STC, imp=config.PANEL_IMP_STC,
+)
+pv_model = TwoDiodeModel(panel_params, num_cells=config.PANEL_NS)
+algorithms = build_default_algorithms(pv_model)
+result = run_scenario(scenario_steady_state(), algorithms['p_and_o'], pv_model)
+print(f"Simulated {len(result.times)} time steps for P&O at STC")
+""",
+        ),
+        _cell(
+            "code",
+            """
+fig, ax = plt.subplots(figsize=(10, 6))
+ax.plot(result.times, result.powers, label='Output Power', linewidth=2)
+ax.plot(result.times, result.theoretical_max_powers, '--', label='Theoretical MPP', linewidth=2)
+ax.set_xlabel('Time (s)')
+ax.set_ylabel('Power (W)')
+ax.legend()
+ax.grid(True, alpha=0.3)
+plt.tight_layout()
+plt.savefig('../results/figures/notebook_reproduced_trajectory.png', dpi=300)
+plt.show()
+""",
+        ),
+        _cell(
+            "code",
+            """
+efficiency = 100.0 * np.trapz(result.powers, result.times) / np.trapz(result.theoretical_max_powers, result.times)
+print(f"Calculated tracking efficiency: {efficiency:.2f}%")
+print("Compare against results/summary_table.csv (algorithm=p_and_o, scenario=steady_state, metric=tracking_efficiency_pct)")
+""",
+        ),
+    ]
+    _write_notebook("03_reproducibility_demo.ipynb", cells)
 
 
 def main():
     """Generate all notebooks"""
     print("Generating Jupyter notebooks from experiment results...\n")
-    
-    # Ensure directory exists
+
     NOTEBOOKS_DIR.mkdir(parents=True, exist_ok=True)
-    
-    # Check if results exist
-    if DATA_FILE is None or not DATA_FILE.exists():
-        print(f"❌ Error: No Monte Carlo data files found in {MONTE_CARLO_DIR}")
-        print("Please run experiments first: python scripts/run_all_experiments.py")
+
+    if not SUMMARY_FILE.exists() or not COMPARISON_FILE.exists():
+        print(f"❌ Error: results not found ({SUMMARY_FILE}, {COMPARISON_FILE})")
+        print("Please run the pipeline first:")
+        print("  python -m src.scenarios --monte-carlo 50 --output results/")
+        print("  python -m src.analysis --input results/comparison_table.csv --output results/")
         return
-    
-    print(f"Using data file: {DATA_FILE.name}\n")
-    
+
     create_overview_notebook()
     create_statistical_analysis_notebook()
     create_reproducibility_notebook()
-    
+
     print("\n✅ All notebooks generated successfully!")
     print(f"Location: {NOTEBOOKS_DIR}/")
     print(f"\nTo view: jupyter notebook {NOTEBOOKS_DIR}")
