@@ -159,14 +159,23 @@ def create_statistical_analysis_notebook():
             """
 # Statistical Analysis of MPPT Algorithms
 
-Loads the ANOVA and paired-t-test results produced by `src/analysis.py`
-(`run_anova`, `run_pairwise_ttests`) over the 5 core algorithms, paired by
-Monte Carlo run ID per the identical-seed design in `src/scenarios.py`.
+Loads the ANOVA, paired-t-test, and Friedman results produced by
+`src/analysis.py` over the 5 core algorithms, paired by Monte Carlo run ID
+per the identical-seed design in `src/scenarios.py`.
 
 **Analyses:**
-- One-way ANOVA across all 5 algorithms, per (scenario, metric)
-- Paired t-tests between each algorithm pair, per (scenario, metric)
+- One-way ANOVA across all 5 algorithms, per (scenario, metric), with
+  eta-squared effect size
+- Paired t-tests between each algorithm pair, per (scenario, metric), with
+  paired Cohen's d and a Holm-Bonferroni-adjusted p-value (`p_holm`)
+  controlling the family-wise error rate across each metric's ~10 pairwise
+  comparisons
+- Friedman test: a rank-based, repeated-measures companion to the ANOVA
+  that (unlike the one-way ANOVA) actually uses the run-id pairing
 - Convergence/settling rates with Wilson-score 95% confidence intervals
+
+See `src/analysis.py`'s module docstring for a caveat on reading `cohens_d`
+and the Friedman test's degenerate (all-tied) case.
 """,
         ),
         _cell(
@@ -178,7 +187,8 @@ summary = pd.read_csv('../results/summary_table.csv')
 stats_df = pd.read_csv('../results/statistical_tests.csv')
 print(f"Summary rows: {len(summary)}")
 print(f"Statistical test rows: {len(stats_df)} ({(stats_df['test'] == 'anova').sum()} ANOVA, "
-      f"{(stats_df['test'] == 'paired_ttest').sum()} paired t-test)")
+      f"{(stats_df['test'] == 'paired_ttest').sum()} paired t-test, "
+      f"{(stats_df['test'] == 'friedman').sum()} Friedman)")
 """,
         ),
         _cell(
@@ -192,21 +202,29 @@ steady[['algorithm', 'mean', 'ci95_low', 'ci95_high', 'n_valid']].sort_values('m
         _cell(
             "code",
             """
-# ANOVA across all 5 algorithms for tracking efficiency, one row per scenario
+# ANOVA (with eta-squared) and its Friedman companion, for tracking efficiency, one row per scenario
 anova = stats_df[(stats_df['test'] == 'anova') & (stats_df['metric'] == 'tracking_efficiency_pct')]
-anova
+friedman = stats_df[(stats_df['test'] == 'friedman') & (stats_df['metric'] == 'tracking_efficiency_pct')]
+anova[['scenario', 'f_stat', 'p_value', 'eta_squared']]
 """,
         ),
         _cell(
             "code",
             """
-# Paired t-tests for tracking efficiency at steady state
+friedman[['scenario', 'stat', 'p_value', 'n_complete_runs']]
+""",
+        ),
+        _cell(
+            "code",
+            """
+# Paired t-tests for tracking efficiency at steady state: raw p-value,
+# Holm-corrected p-value, and paired Cohen's d effect size
 ttests = stats_df[
     (stats_df['test'] == 'paired_ttest')
     & (stats_df['scenario'] == 'steady_state')
     & (stats_df['metric'] == 'tracking_efficiency_pct')
 ]
-ttests
+ttests[['algorithm_a', 'algorithm_b', 'n_pairs', 't_stat', 'p_value', 'p_holm', 'cohens_d']]
 """,
         ),
     ]

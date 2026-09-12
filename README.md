@@ -66,7 +66,8 @@ Figures are written to `results/figures/` in both PNG (300 DPI) and SVG formats:
 
 ### Statistical Validation
 
-- One-way ANOVA and paired t-tests (paired by Monte Carlo run ID) across the 5 core algorithms — `src/analysis.py`
+- One-way ANOVA and paired t-tests (paired by Monte Carlo run ID) across the 5 core algorithms, with eta-squared and paired Cohen's d effect sizes and a Holm-Bonferroni-adjusted p-value per pairwise comparison — `src/analysis.py`
+- Friedman test as a rank-based, repeated-measures companion to the ANOVA (exploits the same run-ID pairing the paired t-tests use, rather than treating algorithms as independent groups)
 - Convergence/settling rates reported with Wilson-score 95% confidence intervals
 - Full hypothesis test results in `results/statistical_tests.csv`
 
