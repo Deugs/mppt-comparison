@@ -475,3 +475,41 @@ def test_build_full_friedman_table_excludes_computational_burden_scenario():
     )
     assert "_computational_burden" not in set(result["scenario"])
     assert "steady_state" in set(result["scenario"])
+
+
+def test_fuzzy_sensitivity_stats_covers_only_fuzzy_variants():
+    df = pd.DataFrame(
+        _rows(
+            "fuzzy_logic",
+            "steady_state",
+            "tracking_efficiency_pct",
+            [99.9, 99.8, 99.85, 99.87, 99.9],
+        )
+        + _rows(
+            "fuzzy_5x5",
+            "steady_state",
+            "tracking_efficiency_pct",
+            [99.8, 99.7, 99.75, 99.77, 99.8],
+        )
+        + _rows(
+            "fuzzy_3x3",
+            "steady_state",
+            "tracking_efficiency_pct",
+            [98.9, 98.8, 98.85, 98.87, 98.9],
+        )
+        + _rows(
+            "p_and_o", "steady_state", "tracking_efficiency_pct", [99.5, 99.4, 99.45, 99.47, 99.5]
+        )
+    )
+    result = analysis.fuzzy_sensitivity_stats(df)
+    assert set(result["test"]) == {"anova", "paired_ttest", "friedman"}
+
+    anova_algos = result[result["test"] == "anova"]["algorithms_used"].iloc[0]
+    assert set(anova_algos.split(",")) == set(analysis.FUZZY_VARIANT_ALGORITHMS)
+    assert "p_and_o" not in anova_algos
+
+    ttest_rows = result[result["test"] == "paired_ttest"]
+    involved_algos = set(ttest_rows["algorithm_a"]) | set(ttest_rows["algorithm_b"])
+    assert involved_algos == set(analysis.FUZZY_VARIANT_ALGORITHMS)
+    assert "p_holm" in ttest_rows.columns
+    assert "cohens_d" in ttest_rows.columns

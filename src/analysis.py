@@ -28,6 +28,10 @@ This module turns that raw table into:
     that running ~10 pairwise comparisons per metric doesn't inflate the
     family-wise false-positive rate -- added as a `p_holm` column alongside
     the raw `p_value`, not a replacement for it.
+  - `fuzzy_sensitivity_stats()`: the same ANOVA/paired-t-test/Friedman
+    treatment, restricted to the 3 fuzzy rule-base variants instead of the
+    5 core algorithms, so the "5x5 matches 7x7" sensitivity claim rests on
+    a real test rather than eyeballing overlapping confidence intervals.
 
 Non-convergence handling (see CLAUDE.md's Q-learning/partial-shading Known
 Risks): `convergence_time_s`/`settling_time_s` are NaN whenever a run never
@@ -465,6 +469,29 @@ def fuzzy_sensitivity_table(summary_df: pd.DataFrame) -> pd.DataFrame:
     ].reset_index(drop=True)
 
 
+def fuzzy_sensitivity_stats(df: pd.DataFrame) -> pd.DataFrame:
+    """ANOVA, paired-t-test (with p_holm/cohens_d), and Friedman test across
+    the 3 fuzzy rule-base variants (fuzzy_logic/fuzzy_5x5/fuzzy_3x3) --
+    the same statistical treatment build_full_anova_table()/
+    build_full_ttest_table()/build_full_friedman_table() give the 5 core
+    algorithms, just restricted to FUZZY_VARIANT_ALGORITHMS instead. Lets
+    the fuzzy sensitivity analysis (CLAUDE.md's "5x5 matches 7x7" claim)
+    rest on a real test rather than eyeballing overlapping confidence
+    intervals in fuzzy_sensitivity_table().
+    """
+    anova_df = build_full_anova_table(df, algorithms=FUZZY_VARIANT_ALGORITHMS)
+    ttest_df = build_full_ttest_table(df, algorithms=FUZZY_VARIANT_ALGORITHMS)
+    friedman_df = build_full_friedman_table(df, algorithms=FUZZY_VARIANT_ALGORITHMS)
+    return pd.concat(
+        [
+            anova_df.assign(test="anova"),
+            ttest_df.assign(test="paired_ttest"),
+            friedman_df.assign(test="friedman"),
+        ],
+        ignore_index=True,
+    )
+
+
 def main():
     import argparse
     import os
@@ -483,6 +510,7 @@ def main():
     ttest_df = build_full_ttest_table(df)
     friedman_df = build_full_friedman_table(df)
     fuzzy_df = fuzzy_sensitivity_table(summary_df)
+    fuzzy_stats_df = fuzzy_sensitivity_stats(df)
 
     os.makedirs(args.output, exist_ok=True)
     summary_df.to_csv(os.path.join(args.output, "summary_table.csv"), index=False)
@@ -497,11 +525,15 @@ def main():
     fuzzy_df.to_csv(
         os.path.join(args.output, "fuzzy_sensitivity_table.csv"), index=False
     )
+    fuzzy_stats_df.to_csv(
+        os.path.join(args.output, "fuzzy_sensitivity_stats.csv"), index=False
+    )
 
     print(
         f"Wrote {len(summary_df)} summary rows, {len(anova_df)} ANOVA rows, "
         f"{len(ttest_df)} paired-t-test rows, {len(friedman_df)} Friedman rows, "
-        f"{len(fuzzy_df)} fuzzy-sensitivity rows."
+        f"{len(fuzzy_df)} fuzzy-sensitivity rows, {len(fuzzy_stats_df)} "
+        f"fuzzy-sensitivity-stats rows."
     )
 
 

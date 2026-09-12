@@ -83,11 +83,27 @@ fraction of the 50 Monte Carlo runs reaching within 2\% of the true global
 MPP -- for all five core algorithms across all eleven scenarios. The
 result is unambiguous: every algorithm, across all four paradigms,
 achieves \textbf{0\% convergence} on three of the four partial-shading
-configurations (\emph{simple}, \emph{Pattern A}, \emph{Pattern B}). Only
-\emph{Pattern C} -- the mildest configuration, with only two effective
-local maxima -- shows partial success, and even there IncCond converges in
-only 44\% of runs. Fig.~\ref{fig:convergence-heatmap} shows this pattern
-across every scenario, not only the partial-shading ones.
+configurations (\emph{simple}, \emph{Pattern A}, \emph{Pattern B}) --
+uniformly zero, so an ANOVA/Friedman comparison would be degenerate there
+(every group constant at 0\%; see the caveat in \texttt{src/analysis.py}'s
+module docstring) and is not meaningful to report. Only \emph{Pattern C} --
+the mildest configuration, with only two effective local maxima -- shows
+partial success and, correspondingly, real cross-algorithm variance worth
+testing: a one-way ANOVA on tracking efficiency is significant
+($F=39.11$, $p=2.63\times10^{-25}$, $\eta^2=0.390$), and a Friedman test
+agrees ($\chi^2=175.15$, $p=8.19\times10^{-37}$, $n=50$). Holm-corrected
+paired $t$-tests confirm IncCond -- the only algorithm below 100\%
+convergence here, at 44\% -- is significantly, and substantially, worse
+than every other algorithm (vs.\ P\&O: $t=-7.71$,
+$p_{\text{Holm}}=3.7\times10^{-9}$, $d=-1.09$; vs.\ fuzzy logic: $t=-7.59$,
+$p_{\text{Holm}}=4.9\times10^{-9}$, $d=-1.07$; vs.\ SMC: $t=-7.56$,
+$p_{\text{Holm}}=4.9\times10^{-9}$, $d=-1.07$; vs.\ Q-learning: $t=-5.78$,
+$p_{\text{Holm}}=5.1\times10^{-7}$, $d=-0.82$) -- all large effect sizes,
+confirming the 44\% convergence figure reflects a real, substantial
+tracking-efficiency deficit rather than a handful of borderline runs
+pulling a summary statistic down. Fig.~\ref{fig:convergence-heatmap} shows
+the raw convergence-rate pattern across every scenario, not only the
+partial-shading ones.
 
 \begin{table}[htbp]
 \centering
@@ -238,17 +254,31 @@ Table~\ref{tab:fuzzy-sensitivity} reports steady-state tracking efficiency
 for the full $7\times7$ rule base against reduced $5\times5$ and
 $3\times3$ variants (Section~\ref{sec:algorithms}). The $5\times5$
 variant's 95\% confidence interval ($[99.83, 99.93]$) overlaps almost
-entirely with the full $7\times7$ base's ($[99.82, 99.92]$), i.e. the two
-are statistically indistinguishable at steady state -- real support for
-the "reduced rule base matches full performance" contribution this
-sensitivity analysis was designed to test. The $3\times3$ variant is
-measurably, though modestly, lower ($99.01\%$, CI $[98.58, 99.43]$). This
+entirely with the full $7\times7$ base's ($[99.82, 99.92]$) -- but
+overlapping CIs are not the same claim as "statistically
+indistinguishable," and a direct test shows they are not: a one-way ANOVA
+across all three variants is significant ($F=16.38$, $p=3.77\times10^{-7}$,
+$\eta^2=0.182$), a Friedman test agrees ($\chi^2=76.44$,
+$p=2.52\times10^{-17}$, $n=50$), and the Holm-corrected paired $t$-test
+between $7\times7$ and $5\times5$ specifically is itself significant
+($t=-4.05$, $p_{\text{Holm}}=1.8\times10^{-4}$, $d=-0.57$, a medium effect
+by convention). With $n=50$ paired samples, even the $0.01$ percentage
+point gap between $99.87\%$ and $99.88\%$ reaches significance -- so the
+correct claim is not "indistinguishable" but "a real, medium-sized effect
+that is nonetheless practically negligible at the percentage-point level,"
+a materially more precise version of the "reduced rule base matches full
+performance" contribution this sensitivity analysis was designed to test.
+The $3\times3$ variant is a clearer story: measurably lower ($99.01\%$, CI
+$[98.58, 99.43]$) and a larger effect against both other variants (vs.\
+$7\times7$: $t=4.65$, $p_{\text{Holm}}=7.7\times10^{-5}$, $d=0.66$; vs.\
+$5\times5$: $t=4.64$, $p_{\text{Holm}}=7.7\times10^{-5}$, $d=0.66$). This
 result has direct practical relevance given the computational-burden
 finding below: fuzzy logic's $49$-rule Mamdani inference is measured at
 roughly $101\times$ P\&O's per-step cost (Table~\ref{tab:burden}), so a
-rule-base reduction that preserves performance directly reduces that
-overhead. Fig.~\ref{fig:fuzzy-sensitivity} shows the full per-scenario
-comparison, not only the steady-state figures quoted above.
+rule-base reduction that preserves performance at a practical, if not
+perfectly statistical, level directly reduces that overhead.
+Fig.~\ref{fig:fuzzy-sensitivity} shows the full per-scenario comparison,
+not only the steady-state figures quoted above.
 
 \begin{table}[htbp]
 \centering
