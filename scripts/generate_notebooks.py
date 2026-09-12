@@ -159,14 +159,23 @@ def create_statistical_analysis_notebook():
             """
 # Statistical Analysis of MPPT Algorithms
 
-Loads the ANOVA and paired-t-test results produced by `src/analysis.py`
-(`run_anova`, `run_pairwise_ttests`) over the 5 core algorithms, paired by
-Monte Carlo run ID per the identical-seed design in `src/scenarios.py`.
+Loads the ANOVA, paired-t-test, and Friedman results produced by
+`src/analysis.py` over the 5 core algorithms, paired by Monte Carlo run ID
+per the identical-seed design in `src/scenarios.py`.
 
 **Analyses:**
-- One-way ANOVA across all 5 algorithms, per (scenario, metric)
-- Paired t-tests between each algorithm pair, per (scenario, metric)
+- One-way ANOVA across all 5 algorithms, per (scenario, metric), with
+  eta-squared effect size
+- Paired t-tests between each algorithm pair, per (scenario, metric), with
+  paired Cohen's d and a Holm-Bonferroni-adjusted p-value (`p_holm`)
+  controlling the family-wise error rate across each metric's ~10 pairwise
+  comparisons
+- Friedman test: a rank-based, repeated-measures companion to the ANOVA
+  that (unlike the one-way ANOVA) actually uses the run-id pairing
 - Convergence/settling rates with Wilson-score 95% confidence intervals
+
+See `src/analysis.py`'s module docstring for a caveat on reading `cohens_d`
+and the Friedman test's degenerate (all-tied) case.
 """,
         ),
         _cell(
@@ -178,7 +187,8 @@ summary = pd.read_csv('../results/summary_table.csv')
 stats_df = pd.read_csv('../results/statistical_tests.csv')
 print(f"Summary rows: {len(summary)}")
 print(f"Statistical test rows: {len(stats_df)} ({(stats_df['test'] == 'anova').sum()} ANOVA, "
-      f"{(stats_df['test'] == 'paired_ttest').sum()} paired t-test)")
+      f"{(stats_df['test'] == 'paired_ttest').sum()} paired t-test, "
+      f"{(stats_df['test'] == 'friedman').sum()} Friedman)")
 """,
         ),
         _cell(
@@ -192,21 +202,87 @@ steady[['algorithm', 'mean', 'ci95_low', 'ci95_high', 'n_valid']].sort_values('m
         _cell(
             "code",
             """
-# ANOVA across all 5 algorithms for tracking efficiency, one row per scenario
+# ANOVA (with eta-squared) and its Friedman companion, for tracking efficiency, one row per scenario
 anova = stats_df[(stats_df['test'] == 'anova') & (stats_df['metric'] == 'tracking_efficiency_pct')]
-anova
+friedman = stats_df[(stats_df['test'] == 'friedman') & (stats_df['metric'] == 'tracking_efficiency_pct')]
+anova[['scenario', 'f_stat', 'p_value', 'eta_squared']]
 """,
         ),
         _cell(
             "code",
             """
-# Paired t-tests for tracking efficiency at steady state
+friedman[['scenario', 'stat', 'p_value', 'n_complete_runs']]
+""",
+        ),
+        _cell(
+            "code",
+            """
+# Paired t-tests for tracking efficiency at steady state: raw p-value,
+# Holm-corrected p-value, and paired Cohen's d effect size
 ttests = stats_df[
     (stats_df['test'] == 'paired_ttest')
     & (stats_df['scenario'] == 'steady_state')
     & (stats_df['metric'] == 'tracking_efficiency_pct')
 ]
-ttests
+ttests[['algorithm_a', 'algorithm_b', 'n_pairs', 't_stat', 'p_value', 'p_holm', 'cohens_d']]
+""",
+        ),
+        _cell(
+            "markdown",
+            """
+## Partial Shading Pattern C: The One Scenario With Real Cross-Algorithm Variance
+
+The other 3 partial-shading scenarios are 0% convergence for every
+algorithm -- a degenerate case (every group constant) where ANOVA/Friedman
+are not meaningful, so they're skipped rather than reported as a
+misleadingly precise-looking number. Pattern C (the mildest shading
+pattern) is different: IncCond alone converges in only 44% of runs, and
+that shows up as real variance to test.
+""",
+        ),
+        _cell(
+            "code",
+            """
+pattern_c = stats_df[(stats_df['scenario'] == 'partial_shading_complex_pattern_c') & (stats_df['metric'] == 'tracking_efficiency_pct')]
+pattern_c[pattern_c['test'] == 'anova'][['f_stat', 'p_value', 'eta_squared']]
+""",
+        ),
+        _cell(
+            "code",
+            """
+# IncCond vs. every other algorithm: large effect sizes confirm its 44%
+# convergence rate reflects a real, substantial deficit, not a few
+# borderline runs.
+pattern_c_tt = pattern_c[pattern_c['test'] == 'paired_ttest']
+pattern_c_tt = pattern_c_tt[(pattern_c_tt['algorithm_a'] == 'inc_cond') | (pattern_c_tt['algorithm_b'] == 'inc_cond')]
+pattern_c_tt[['algorithm_a', 'algorithm_b', 't_stat', 'p_value', 'p_holm', 'cohens_d']]
+""",
+        ),
+        _cell(
+            "markdown",
+            """
+## Fuzzy Rule-Base Sensitivity: A Real Test, Not Just Overlapping CIs
+
+`results/fuzzy_sensitivity_stats.csv` applies the same ANOVA/paired-t-test/
+Friedman treatment to the 3 fuzzy rule-base variants. This caught a real
+inaccuracy in an earlier draft: 7x7 vs. 5x5 looked "indistinguishable" from
+overlapping confidence intervals alone, but the paired test (which exploits
+n=50 matched samples) shows they *are* significantly different -- just
+with a smaller effect size than either has against 3x3.
+""",
+        ),
+        _cell(
+            "code",
+            """
+fuzzy_stats = pd.read_csv('../results/fuzzy_sensitivity_stats.csv')
+fuzzy_steady = fuzzy_stats[(fuzzy_stats['scenario'] == 'steady_state') & (fuzzy_stats['metric'] == 'tracking_efficiency_pct')]
+fuzzy_steady[fuzzy_steady['test'] == 'anova'][['f_stat', 'p_value', 'eta_squared']]
+""",
+        ),
+        _cell(
+            "code",
+            """
+fuzzy_steady[fuzzy_steady['test'] == 'paired_ttest'][['algorithm_a', 'algorithm_b', 't_stat', 'p_value', 'p_holm', 'cohens_d']]
 """,
         ),
     ]
